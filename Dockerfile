@@ -3,7 +3,7 @@ MAINTAINER Marcel Wiget
 
 # Install enough packages to compile snabb and qemu
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends net-tools iproute2 dosfstools
+RUN apt-get install -y --no-install-recommends net-tools iproute2 dosfstools expect
 
 # Download and compile snabb and qemu, then cleanup
 RUN apt-get install -y --no-install-recommends build-essential git ca-certificates \
@@ -21,6 +21,9 @@ RUN apt-get install -y --no-install-recommends build-essential git ca-certificat
 
 COPY launch.sh README.md snabbvmx_manager.pl add_license.sh \
   launch_snabbvmx_manager.sh launch_snabb.sh /
+
+# Only during development: Overwrite the one built above. Useful to test before commit
+COPY snabb /usr/local/bin/
 
 ENTRYPOINT ["/launch.sh"]
 

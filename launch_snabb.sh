@@ -19,7 +19,7 @@ do
   fi
   echo "launch snabbvmx for $INT1 and $INT2 ..."
   $SNABB gc # removing stale runtime files created by Snabb
-  CMD="taskset -c $CPUS $SNABB snabbvmx lwaftr --conf snabbvmx-lwaftr-${INT1}-${INT2}.cfg --v1id $INT1 --v1pci `cat pci_$INT1` --v1mac `cat mac_$INT1` --v2id $INT2 --v2pci `cat pci_$INT2` --v2mac `cat mac_$INT2` --sock %s.socket"
+  CMD="taskset -c $CPUS $SNABB snabbvmx lwaftr --conf snabbvmx-lwaftr-${INT1}-${INT2}.cfg --v6_id $INT1 --v6_pci `cat pci_$INT1` --v6_mac `cat mac_$INT1` --v4_id $INT2 --v4_pci `cat pci_$INT2` --v4_mac `cat mac_$INT2` --sock %s.socket"
   echo $CMD
   $CMD
   sleep 5

@@ -5,6 +5,8 @@
 my $ip=shift;
 my $identity=shift;
 
+my $snabbvmx_binding_file = "snabbvmx-lwaftr.binding";
+
 sub file_changed {
   my ($file) = @_;
   my $new = "$file.new";
@@ -21,13 +23,11 @@ sub file_changed {
   }
 }
 
-
 sub process_new_config {
   my ($file) = @_;
   open IN,"$file" or die $@;
   my $snabbvmx_config_file;
   my $snabbvmx_lwaftr_file;
-  my $snabbvmx_binding_file;
   my $closeme = 0;
   my @br_addresses;
   my $br_address;
@@ -43,6 +43,10 @@ sub process_new_config {
     chomp;
     if ($_ =~ /snabbvmx-lwaftr-(\w+)-(\w+)/) {
       if ("" ne $snabbvmx_config_file) {
+        if ($closeme == 1) {
+          print CFG "  },\n";
+        }
+        print CFG "}\n";
         close CFG;
         close LWA;
       }
@@ -60,13 +64,13 @@ sub process_new_config {
       open LWA,">$snabbvmx_lwaftr_file.new" or die $@;
       print CFG "return {\n  lwaftr = \"$snabbvmx_lwaftr_file\",\n";
       print LWA "vlan_tagging = false,\n";
-    } elsif ($_ =~ /snabbvmx-lwaftr-binding-table/) {
-      $snabbvmx_binding_file = "snabbvmx-lwaftr.binding";
       print LWA "binding_table = $snabbvmx_binding_file,\n";
+    } elsif ($_ =~ /snabbvmx-lwaftr-binding/) {
       open BDG,">$snabbvmx_binding_file.new" or die $@;
     } elsif ($_ =~ /apply-macro ipv6_interface/) {
       if ($closeme == 1) {
         print CFG "  },\n";
+        $closeme = 0;
       }
       print CFG "  ipv6_interface = {\n";
       $closeme = 1;
@@ -81,7 +85,7 @@ sub process_new_config {
       print CFG "    description = \"b4\",\n";
       print LWA "aftr_ipv6_ip = $1,\n";
       print LWA "aftr_mac_inet_side = $mac2,\n";
-      print LWA "inet_mac = 66:66:66:66:66:66,\n";
+      print LWA "inet_mac = 44:44:44:44:44:44,\n";
     } elsif ($_ =~ /next_hop_mac ([\w.:-]+)/) {
       print CFG "    next_hop_mac = \"$1\",\n";
     } elsif ($_ =~ /service_mac ([\w.:-]+)/) {
@@ -91,7 +95,7 @@ sub process_new_config {
       print CFG "    description = \"aftr\",\n";
       print LWA "aftr_ipv4_ip = $1,\n";
       print LWA "aftr_mac_b4_side = $mac1,\n";
-      print LWA "b4_mac = 44:44:44:44:44:44,\n";
+      print LWA "next_hop6_mac = 66:66:66:66:66:66,\n";
     } elsif ($_ =~ /debug_level (\d+)/) {
       print CFG "    debug_level = $1,\n";
     } elsif ($_ =~ /fragmentation (\w+)/) {
@@ -156,7 +160,7 @@ sub process_new_config {
   if (&file_changed($snabbvmx_binding_file) > 0) {
     $node=0;
     print("Binding table changed. Recompiling on node $node...\n");
-    `numactl --physcpubind 0 /usr/local/bin/snabb snabbvmx lwaftr -D 0 --conf $snabbvmx_config_file --v1pci 0000:00:00.0 --v2pci 0000:00:00.0 --v1mac 02:AA:AA:AA:AA:AA --v2mac 02:AA:AA:AA:AA:AA`;
+    `numactl --physcpubind 0 /usr/local/bin/snabb lwaftr compile-binding-table $snabbvmx_binding_file`;
     print("Recompiling complete. Signaling running snabbvmx ...\n");
     `/usr/local/bin/snabb gc`;  # removing stale counters 
     $signal='HUP';
