@@ -4,6 +4,11 @@
 
 my $ip=shift;
 my $identity=shift;
+my $cores=shift;
+
+unless ($cores) {
+  $cores = "0";
+}
 
 my $snabbvmx_binding_file = "snabbvmx-lwaftr.binding";
 
@@ -158,12 +163,17 @@ sub process_new_config {
   # compare the generated files and kick snabbvmx accordingly!
   my $signal="";   # default is no change, no signal needed
   if (&file_changed($snabbvmx_binding_file) > 0) {
-    $node=0;
-    print("Binding table changed. Recompiling on node $node...\n");
-    `numactl --physcpubind 0 /usr/local/bin/snabb lwaftr compile-binding-table $snabbvmx_binding_file`;
+    print("Binding table changed. Recompiling on cpus $cores...\n");
+    `taskset -c $cores /usr/local/bin/snabb lwaftr compile-binding-table $snabbvmx_binding_file`;
+    `ls -l $snabbvmx_binding_file.o`;
+    sleep 1;
     print("Recompiling complete. Signaling running snabbvmx ...\n");
+    $psids=`ps ax|grep 'snabb snabbvmx'|grep -v grep|awk {'print \$1'}`;
+    for (split ' ', $psids) {
+      print("Forcing reload for snabb process id $_\n");
+      `taskset -c $cores /usr/local/bin/snabb lwaftr control $_ reload`;
+    }
     `/usr/local/bin/snabb gc`;  # removing stale counters 
-    $signal='HUP';
   }
 
   foreach my $file (@files) {

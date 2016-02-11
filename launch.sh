@@ -26,6 +26,8 @@ docker run --name <name> --rm -v \$PWD:/u:ro \\
      (required to access lwaftr config via netconf)
 
  -m  Specify the amount of memory for the vRE (default 8000kB)
+ -V  number of vCPU's to assign to the vRR
+
  -C  pin snabb to a specific core(s) (in taskset -c format, defaults to 0)
 
  -d  Enable debug shell (launched before and after qemu runs)
@@ -50,6 +52,8 @@ function cleanup {
   echo ""
   echo ""
   echo "vMX terminated."
+
+  pkill snabb
 
   if [ ! -z "$PCIDEVS" ]; then
     echo "Giving 10G ports back to linux kernel"
@@ -174,13 +178,17 @@ echo "Juniper Networks vMX lwaftr Docker Container (unsupported prototype)"
 echo ""
 VCPMEM="8000"
 CPUS="0"
-while getopts "h?c:m:l:i:C:d" opt; do
+VCPCPU="1"
+
+while getopts "h?c:m:l:i:C:dV:" opt; do
   case "$opt" in
     h|\?)
       show_help
       exit 1
       ;;
     C)  CPUS=$OPTARG
+      ;;
+    V)  VCPCPU=$OPTARG
       ;;
     m)  VCPMEM=$OPTARG
       ;;
@@ -288,13 +296,13 @@ if [ -f /u/$LICENSE ]; then
   ./add_license.sh $MGMTIP $IDENTITY $LICENSE &
 fi
 
-./launch_snabbvmx_manager.sh $MGMTIP $IDENTITY &
+./launch_snabbvmx_manager.sh $MGMTIP $IDENTITY $CPUS &
 
 if [ ! -z "$DEBUG" ]; then
   launch_debug_shell
 fi
 
-CMD="$qemu -M pc --enable-kvm -cpu host -m $VCPMEM -numa node,memdev=mem \
+CMD="$qemu -M pc --enable-kvm -cpu host -smp $VCPCPU -m $VCPMEM -numa node,memdev=mem \
   -object memory-backend-file,id=mem,size=${VCPMEM}M,mem-path=/hugetlbfs,share=on \
   -drive if=ide,file=$VCPIMAGE -drive if=ide,file=$HDDIMAGE \
   -usb -usbdevice disk:format=raw:metadata.img \

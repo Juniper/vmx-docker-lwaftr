@@ -1,6 +1,7 @@
 #!/bin/bash
 MGMTIP=$1
 IDENTITY=$2
+CORES=$3
 
 if [ -z "$IDENTITY" ]; then
   echo "Usage: $0 management-ip-address identity.key"
