@@ -43,6 +43,7 @@ sub process_new_config {
   my $mac2;
   my @files_config;
   my @files_lwaftr;
+  my @files;
 
   while(<IN>) {
     chomp;
@@ -109,6 +110,11 @@ sub process_new_config {
       print CFG "    cache_refresh_interval = $1,\n";
     } elsif ($_ =~ /vlan (\d+)/) {
       print CFG "    vlan = $1,\n";
+    } elsif ($_ =~ /(\w+filter)\s+([^;]+)/) {
+      my $filter_name="$1";
+      my $filter_expr=$2;
+      $filter_expr =~ s/"//g;
+      print CFG "    $filter_name = \"$filter_expr\",\n";
     } elsif (/apply-macro softwires_([\w:]+)/) {
       $br_address_idx++;
       $br_address=$1;

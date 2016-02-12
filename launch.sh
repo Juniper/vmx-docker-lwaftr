@@ -55,6 +55,8 @@ function cleanup {
 
   pkill snabb
 
+  sleep 2
+
   if [ ! -z "$PCIDEVS" ]; then
     echo "Giving 10G ports back to linux kernel"
     for PCI in $PCIDEVS; do
@@ -63,6 +65,8 @@ function cleanup {
       fi
     done
   fi
+
+  sleep 1
   exit 0
 
 }
