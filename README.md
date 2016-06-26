@@ -103,8 +103,9 @@ $ ls -l vmxlwaftr-v0.9.img
 ```
 docker run --name <name> --rm -v \$PWD:/u:ro \\
    --privileged -i -t marcelwiget/vmxlwaftr[:version] \\
-   -c <junos_config_file> -i identity [-l license_file] \\
-   [-m <kbytes>] [-M <kBytes>] [-V <cores>] [-W <cores>] \\
+   -c <junos_config_file> -i identity [-l license_file]\\
+   [-V <# of cores>] [-W <# of cores>] [-P <cores>] [-R <cores>] \\
+   [-m <kbytes>] [-M <kBytes>] \\
    <image> <pci-address/core> [<pci-address/core> ...]
 
 [:version]       Container version. Defaults to :latest
@@ -113,30 +114,35 @@ docker run --name <name> --rm -v \$PWD:/u:ro \\
                  docker is executed from (ro forces read-only access)
                  The file will be copied from this location
 
- -l  license_file to be loaded at startup (requires user snabbvmx with ssh
-     private key given via option -i)
+ <image>         vMX distribution tar file, e.g. vmx-bundle-16.1R1.6.tgz
 
- -i  ssh private key for user snabbvmx 
-     (required to access lwaftr config via netconf)
+ <pci-address/core> [<pci-address/core> ..]
+                 One or more PCI addresses and physical core to lock
+                 the Snabb process to. For simulation purposes use
+                 'tap' instead of the pci-address. 
+
+ -i  username,password for the JETapp to communicate with the Junos
+     control plane. Must also be configured in the Junos config with
+     super-user privileges
+
+ -c  Junos configuration file
+
+ -l  Junos license key file
 
  -m  Specify the amount of memory for the vRE/VCP (default $VCPMEM kB)
  -M  Specify the amount of memory for the vPFE/VFP (default $VFPMEM kB)
 
- -V  number of vCPU's to assign to the vRE/VCP (default $VCPCPU)
- -W  number of vCPU's to assign to vPFE/VFP (default $VFPCPU)
+ -P  Cores to pin the VFP to via numactl --physcpubind <cores>
+ -R  Cores to pin the VCP to via numactl --physcpubind <cores>
+ 
+ -V  number of virtual cores to assign to VCP (default 1)
+ -W  number of virtual cores to assign to VFP (default 3)
 
- -d  launch debug shell before launching vMX
-
- -X  cpu list for vPFE and vRE
-
-<pci-address/core>  PCI Address of the Intel 825999 based 10GE port with core to pin snabb on.  Multiple ports can be specified, space separated
-```
-
-Example:
+ -d  launch debug shell before launching vMX and before existing the container
 
 ```
-docker run --name lwaftr1 --rm --privileged -v \$PWD:/u:ro \\
-  -i -t marcelwiget/vmxlwaftr -c lwaftr1.txt -i snabbvmx.key \\
-  jinstall64-vrr-14.2R5.8-domestic.img 0000:05:00.0/7 0000:05:00.0/8
-```
+
+See tests/run1.sh and tests/run2.sh for examples on how to launch. The 
+vMX distribution tar file must be on the local directory from which the container
+is launched.
 

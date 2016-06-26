@@ -125,33 +125,6 @@ function create_vmxhdd {
   echo "/tmp/vmxhdd.img"
 }
 
-# prepare cloud-init config drive for non-vMX mode
-function create_cloud_init {
-  echo "create_cloud_init called"
-  mkdir config_drive
-  mkdir -p config_drive/openstack/2012-08-10
-  ln -s 2012-08-10 config_drive/openstack/latest
-  cat > config_drive/openstack/latest/meta_data.json << EOF
-{
-  "uuid": "$VMIMAGE",
-  "files": [
-{
-  "content_path": "/latest/user_data",
-  "path": "/etc/network/interfaces"
-}
-]
-}
-EOF
-
-  echo "cloud-init userdata file: $USERDATA"
-
-  if [ -f "/u/$USERDATA" ]; then
-   echo "creating user_data ..."
-   cat /u/$USERDATA > config_drive/openstack/latest/user_data
-  fi
-  mkisofs -R -V config-2 -o disk.config config_drive
-}
-
 function create_config_drive {
   >&2 echo "Creating config drive (metadata.img) ..."
   mkdir config_drive
@@ -231,7 +204,7 @@ echo "Juniper Networks vMX lwaftr Docker Container"
 cat /VERSION
 echo ""
 
-while getopts "h?c:m:l:i:V:W:M:P:R:du:" opt; do
+while getopts "h?c:m:l:i:V:W:M:P:R:d" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -250,8 +223,6 @@ while getopts "h?c:m:l:i:V:W:M:P:R:du:" opt; do
     l)  LICENSE=$OPTARG
       ;;
     i)  IDENTITY=$OPTARG
-      ;;
-    u)  USERDATA=$OPTARG
       ;;
     P)  QEMUVFPCPUS=$OPTARG
       ;;
@@ -324,11 +295,8 @@ elif [[ "$image" =~ \.tgz$ ]]; then
   VFPIMAGE="/tmp/$(basename $VFPIMAGE)"
   rm -rf /tmp/vmx*
 else
-  echo "Using $image in non-vMX mode"
-  cp /u/$image /tmp
-  VMIMAGE="/tmp/$image"
-  $(mount_hugetables)
-  $(create_cloud_init)
+  echo "Don't know how to handle $image"
+  exit 1
 fi
 
 if [ ! -z "$VCPIMAGE" ]; then
