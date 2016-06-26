@@ -1,9 +1,9 @@
 
-## Juniper Networks vMX lwaftr Docker Container
+# Juniper Networks vMX lwaftr Docker Container
 
 The vmxlwaftr Docker Container contains everything thats required to successfully launch vMX 16.1 and newer images with a configuration file and license key. This document describes how that container can be built from source. The actual vMX images is NOT part of the Container. It will be loaded from the official vMX tar file placed in the local directory from where the Container is launched.
 
-### Build instructions
+## Build instructions
 
 The Container vmxlwaftr is based on the official Ubuntu Docker 14.04.4 base container and includes the following elements:
 
@@ -16,7 +16,7 @@ The build process requires a Docker Engine, ideally on a Linux based host. It is
 
 The individual steps are:
 
-1) Build qemu
+### 1. Build qemu
 
 ```
 $ cd qemu
@@ -29,7 +29,7 @@ cd ..
 This will clone branch v2.4.1-snabb from a private qemu repository, build the Docker container *buildqemu* to compile and create a binary tar file for qemu into the current directory, from where it will be copied during the final step into the toplevel build directory by the top level Makefile.
 In case the qemu must be cloned from a public qemu repository, its imperative to apply the patch qemu/qemu-snabb.diff to allow Snabb to re-connect to the VhostUser Socket after it terminated. The patch works also on v2.5.0 but needs adjustements for v2.6.0
 
-2) Build Snabb
+### 2. Build Snabb
 
 ```
 $ cd snabb
@@ -46,7 +46,7 @@ $ cd ..
 
 This will clone the branch 1to1_mapping from a private Snabb repository, build the Docker container *buildsnabb* to compile snabb and place it in the current directory. Snabb is a single application that will be placed in /usr/local/bin/ in the vmxlwaftr Docker Container further below.
 
-3) Download JET Toolkit
+### 3. Download JET Toolkit
 
 The toplevel Makefile will automatically download the jet-1.tar.gz from Juniper's internal /volume/build/ folder for 16.1. This is a temporary solution until the toolkit can be downloaded from an external/public repository.
 
@@ -56,7 +56,7 @@ For a manual download, use:
 scp svpod1-vmm.englab.juniper.net:/volume/build/junos/16.1/release/16.1R1.6/ship/jet-1.tar.gz .
 ```
 
-4) Build the vmxlwaftr container
+### 4. Build the vmxlwaftr container
 
 Edit the name and version of the container in the toplevel file VERSION:
 
@@ -88,6 +88,8 @@ buildqemu                        latest              5c8eace386ab        35 minu
 
 The images buildsnabb and buildqemu can be removed via 'make clean' from the qemu, respectively snabb directory. Only the 'vmxlwaftr' container is required.
 
+### 5. Save vmxlwaftr Container to file
+
 To save the vmxlwaftr container into an image file use:
 
 ```
@@ -96,7 +98,7 @@ $ ls -l vmxlwaftr-v0.9.img
 -rw------- 1 mwiget mwiget 447854592 Jun 26 18:54 vmxlwaftr-v0.9.img
 ```
 
-### Running the vmxlwaftr Container
+## Running the vmxlwaftr Container
 
 ```
 docker run --name <name> --rm -v \$PWD:/u:ro \\
