@@ -14,12 +14,12 @@ function show_help {
   cat <<EOF
   Usage:
 
-  docker run --name <name> --rm -v \$PWD:/u:ro \\
-  --privileged -i -t marcelwiget/vmxlwaftr[:version] \\
-  -c <junos_config_file> -i identity [-l license_file] \\
-  [-m <kbytes>] [-M <kBytes>] [-V <cores>] [-W <cores>] \\
-  [-d] [-u <user_data_file> ] \\
-  <image> <pci-address/core> [<pci-address/core> ...]
+docker run --name <name> --rm -v \$PWD:/u:ro \\
+   --privileged -i -t marcelwiget/vmxlwaftr[:version] \\
+   -c <junos_config_file> -i identity [-l license_file] \\
+   [-V <# of cores>] [-W <# of cores>] [-P <cores>] [-R <cores>] \\
+   [-m <kbytes>] [-M <kBytes>] \\
+   <image> <pci-address/core> [<pci-address/core> ...] 
 
 EOF
 }
