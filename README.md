@@ -1,11 +1,11 @@
 
 # Juniper Networks vMX lwaftr Docker Container
 
-The vmxlwaftr Docker Container contains everything thats required to successfully launch vMX 16.1 and newer images with a configuration file and license key. This document describes how that container can be built from source. The actual vMX images is NOT part of the Container. It will be loaded from the official vMX tar file placed in the local directory from where the Container is launched.
+The vmxlwaftr Docker Container contains everything thats required to successfully launch vMX 16.1 and newer images with a configuration file and license key. This document describes how that Container can be built from source. The actual vMX images is NOT part of the Container. It will be loaded from the official vMX tar file placed in the local directory from where the Container is launched.
 
 ## Build instructions
 
-The Container vmxlwaftr is based on the official Ubuntu Docker 14.04.4 base container and includes the following elements:
+The Container vmxlwaftr is based on the official Ubuntu Docker 14.04.4 base Container and includes the following elements:
 
 * Qemu 2.4.1 with reconnect patch downloaded and built from source in qemu/
 * Snabb, downloaded and built from source in snabb/
@@ -26,7 +26,7 @@ qemu-v2.4.1-snabb.tgz
 cd ..
 ```
 
-This will clone branch v2.4.1-snabb from a private qemu repository, build the Docker container *buildqemu* to compile and create a binary tar file for qemu into the current directory, from where it will be copied during the final step into the toplevel build directory by the top level Makefile.
+This will clone branch v2.4.1-snabb from a private qemu repository, build the Docker Container *buildqemu* to compile and create a binary tar file for qemu into the current directory, from where it will be copied during the final step into the toplevel build directory by the top level Makefile.
 In case the qemu must be cloned from a public qemu repository, its imperative to apply the patch qemu/qemu-snabb.diff to allow Snabb to re-connect to the VhostUser Socket after it terminated. The patch works also on v2.5.0 but needs adjustements for v2.6.0
 
 ### 2. Build Snabb
@@ -44,7 +44,7 @@ c18e43a1bbc434860275618d446c1eef  snabb
 $ cd ..
 ```
 
-This will clone the branch 1to1_mapping from a private Snabb repository, build the Docker container *buildsnabb* to compile snabb and place it in the current directory. Snabb is a single application that will be placed in /usr/local/bin/ in the vmxlwaftr Docker Container further below.
+This will clone the branch 1to1_mapping from a private Snabb repository, build the Docker Container *buildsnabb* to compile snabb and place it in the current directory. Snabb is a single application that will be placed in /usr/local/bin/ in the vmxlwaftr Docker Container further below.
 
 ### 3. Download JET Toolkit
 
@@ -56,18 +56,18 @@ For a manual download, use:
 scp svpod1-vmm.englab.juniper.net:/volume/build/junos/16.1/release/16.1R1.6/ship/jet-1.tar.gz .
 ```
 
-### 4. Build the vmxlwaftr container
+### 4. Build the vmxlwaftr Container
 
-Edit the name and version of the container in the toplevel file VERSION:
+Edit the name and version of the Container in the toplevel file VERSION:
 
 ```
 $ cat VERSION
 vmxlwaftr:v0.9
 ```
 
-If the container is to be pushed onto docker hub, then the name will probably be something like *juniper/vmxlwaftr:vx.y*
+If the Container is to be pushed onto docker hub, then the name will probably be something like *juniper/vmxlwaftr:vx.y*
 
-Run the toplevel Makefile to build the container:
+Run the toplevel Makefile to build the Container:
 
 ```
 $ make
@@ -86,11 +86,11 @@ buildqemu                        latest              5c8eace386ab        35 minu
 . . .
 ```
 
-The images buildsnabb and buildqemu can be removed via 'make clean' from the qemu, respectively snabb directory. Only the 'vmxlwaftr' container is required.
+The images buildsnabb and buildqemu can be removed via 'make clean' from the qemu, respectively snabb directory. Only the 'vmxlwaftr' Container is required.
 
 ### 5. Save vmxlwaftr Container to file
 
-To save the vmxlwaftr container into an image file use:
+To save the vmxlwaftr Container into an image file use:
 
 ```
 $ docker save -o vmxlwaftr-v0.9.img vmxlwaftr:v0.9
