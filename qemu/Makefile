@@ -6,7 +6,8 @@ docker:	build/Makefile
 	docker build -t buildqemu .
 
 build/Makefile:
-	git clone -b v2.4.1-snabb https://github.com/mwiget/qemu.git build
+	git clone -b v2.5.1.1 https://github.com/qemu/qemu.git build
+	cd build && patch -p1 < ../qemu-snabb.diff
 
 clean:
 	docker rmi buildqemu 2>/dev/null || true 

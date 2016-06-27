@@ -14,7 +14,7 @@ RUN mv /usr/sbin/tcpdump /sbin/
 
 COPY build/snabb /usr/local/bin/
 
-COPY build/qemu-v2.4.1-snabb.tgz /
+COPY build/qemu-v2.5.1.1-snabb.tgz /
 RUN tar zxf /qemu-v*-snabb.tgz -C /usr/local/
 
 # install JET
