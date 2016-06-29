@@ -8,11 +8,12 @@ SLEEP=${INT:2:1}
 
 if [ "tap" == "$PCI" ]; then
    NODE=0
+   NUMACTL=""
 else
    CPU=$(cat /sys/class/pci_bus/${PCI%:*}/cpulistaffinity | cut -d'-' -f1 | cut -d',' -f1)
    NODE=$(numactl -H | grep "cpus: $CPU" | cut -d " " -f 2)
+   NUMACTL="numactl --membind=$NODE --physcpubind=$CORE"
 fi
-NUMACTL="numactl --membind=$NODE --physcpubind=$CORE"
 
 while :
 do
