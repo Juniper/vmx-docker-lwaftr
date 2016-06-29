@@ -527,7 +527,7 @@ if [ ! -z "$VCPIMAGE" ]; then
 
   CMD="$QEMUVCPNUMA $qemu -M pc --enable-kvm -cpu host -smp $VCPCPU -m $VCPMEM \
     -drive if=ide,file=$VCPIMAGE -drive if=ide,file=$HDDIMAGE \
-    -usb -usbdevice disk:format=raw:/metadata.img \
+    -drive if=ide,file=/metadata.img \
     -device cirrus-vga,id=video0,bus=pci.0,addr=0x2 \
     -netdev tap,id=tc0,ifname=$VCPMGMT,script=no,downscript=no \
     -device e1000,netdev=tc0,mac=$MACP:A0 \
