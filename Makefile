@@ -1,6 +1,7 @@
-vmxlwaftr: qemu/qemu-v2.5.1.1-snabb.tgz snabb/snabb jet-1.tar.gz 
+vmxlwaftr: jet-1.tar.gz 
 	mkdir build || true
-	cp qemu/qemu-v2.5.1.1-snabb.tgz build
+	cp qemu/qemu-v2.4.0-snabb.tgz build
+#	cp qemu/qemu-v2.5.1.1-snabb.tgz build
 	cp snabb/snabb build
 	tar zcf jetapp.tgz --exclude ".git" jetapp
 	docker build -t $$(cat VERSION) .

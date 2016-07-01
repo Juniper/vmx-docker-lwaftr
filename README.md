@@ -7,7 +7,7 @@ The vmxlwaftr Docker Container contains everything thats required to successfull
 
 The Container vmxlwaftr is based on the official Ubuntu Docker 14.04.4 base Container and includes the following elements:
 
-* Qemu 2.5.1.1 with reconnect patch downloaded and built from source in qemu/
+* Qemu 2.4.0 with reconnect patch downloaded and built from source in qemu/
 * Snabb, downloaded and built from source in snabb/
 * JET toolkit 16.1 (jet-1.tar.gz)
 * JET application in the directory jetapp/
@@ -22,12 +22,12 @@ The individual steps are:
 $ cd qemu
 $ make
 $ ls qemu-*tgz
-qemu-v2.5.1.1-snabb.tgz
+qemu-v2.4.0-snabb.tgz
 cd ..
 ```
 
-This will clone tag v2.5.1.1 from the official github qemu repository, apply the required reconnect patch and build the Docker Container *buildqemu* to compile and create a binary tar file for qemu into the current directory, from where it will be copied during the final step into the toplevel build directory by the top level Makefile.
-The patch qemu/qemu-snabb.diff allows Snabb to re-connect to the VhostUser Socket after it terminated. The patch will needs adjustements to work with v2.6.0 and newer versions of qemu.
+This will clone a tagged release version from the official github qemu repository, apply the required reconnect patch and build the Docker Container *buildqemu* to compile and create a binary tar file for qemu into the current directory, from where it will be copied during the final step into the toplevel build directory by the top level Makefile.
+The patch qemu/qemu-snabb.diff allows Snabb to re-connect to the VhostUser Socket after it terminated. The patch will needs adjustements to work with v2.6.0 and newer versions of qemu. While the patch works with v2.5.1.1, the vPFE image became unstable (show chassis fpc reporting 'unresponsive').
 
 ### 2. Build Snabb
 
