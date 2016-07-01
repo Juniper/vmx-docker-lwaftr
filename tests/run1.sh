@@ -13,5 +13,5 @@ LICENSE="license-eval.txt"
 INTERFACES="tap/6 tap/7"
 
 docker rm $NAME 2>/dev/null
-docker run --name $NAME -ti --privileged -v $PWD:/u:ro $CONTAINER -i $IDENTITY -l $LICENSE -c $CFG $@ $VMX $INTERFACES
+docker run --name $NAME -ti --privileged -v $PWD:/u:ro $CONTAINER -i $IDENTITY -l $LICENSE -c $CFG $VMX $INTERFACES
 docker rm $NAME
