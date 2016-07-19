@@ -55,14 +55,13 @@ module jnx-softwire {
       default false;
     }
     leaf cache_refresh_interval {
-      type unit32;
+      type uint32;
       units seconds;
       default 1;
     }
     container icmpv6_rate_limiter {
       leaf n_packets {
         type uint32;
-        mandatory true;
       }
       leaf n_seconds {
         type uint32;
@@ -75,11 +74,11 @@ module jnx-softwire {
           enum ALLOW;
           enum DROP;
         }
-        leaf outgoing {
-          type enumeration {
-            enum ALLOW;
-            enum DROP;
-          }
+      }
+      leaf outgoing {
+        type enumeration {
+          enum ALLOW;
+          enum DROP;
         }
       }
     }
@@ -89,11 +88,11 @@ module jnx-softwire {
           enum ALLOW;
           enum DROP;
         }
-        leaf outgoing {
-          type enumeration {
-            enum ALLOW;
-            enum DROP;
-          }
+      }
+      leaf outgoing {
+        type enumeration {
+          enum ALLOW;
+          enum DROP;
         }
       }
     }
