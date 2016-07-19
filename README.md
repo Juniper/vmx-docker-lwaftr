@@ -9,8 +9,6 @@ The Container vmxlwaftr is based on the official Ubuntu Docker 14.04.4 base Cont
 
 * Qemu 2.4.0 with reconnect patch downloaded and built from source in qemu/
 * Snabb, downloaded and built from source in snabb/
-* JET toolkit 16.1 (jet-1.tar.gz)
-* JET application in the directory jetapp/
 
 The build process requires a Docker Engine, ideally on a Linux based host. It is however possible to build it entirely on Docker for OS/X.
 
@@ -46,15 +44,7 @@ $ cd ..
 
 This will clone the branch 1to1_mapping from a private Snabb repository, build the Docker Container *buildsnabb* to compile snabb and place it in the current directory. Snabb is a single application that will be placed in /usr/local/bin/ in the vmxlwaftr Docker Container further below.
 
-### 3. Download JET Toolkit
-
-The toplevel Makefile will automatically download the jet-1.tar.gz from Juniper's internal /volume/build/ folder for 16.1. This is a temporary solution until the toolkit can be downloaded from an external/public repository.
-
-For a manual download, use:
-
-```
-scp svpod1-vmm.englab.juniper.net:/volume/build/junos/16.1/release/16.1R1.6/ship/jet-1.tar.gz .
-```
+### 3. skipped (was JET)
 
 ### 4. Build the vmxlwaftr Container
 

@@ -18,9 +18,11 @@ COPY build/qemu-v2.4.0-snabb.tgz /
 #COPY build/qemu-v2.5.1.1-snabb.tgz /
 RUN tar zxf /qemu-v*-snabb.tgz -C /usr/local/
 
+
 COPY launch.sh launch_snabb.sh top.sh topl.sh README.md VERSION \
-   launch_snabb_manager.sh snabbvmx_manager.pl add_bindings.sh
-   show_affinity.sh nexthop.sh /
+  launch_snabbvmx_manager.sh snabbvmx_manager.pl add_bindings.sh \
+  yang/ietf-inet-types.yang  yang/ietf-softwire.yang  yang/jnx-softwire.yang \
+  show_affinity.sh nexthop.sh monitor.sh /
 
 RUN date >> /VERSION
 
