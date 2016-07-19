@@ -317,18 +317,17 @@ module ietf-softwire {
                 "The maximum number of tunnels that can be created on
                 the lwAFTR.";
             }
-            leaf tunnel-mtu {
+            leaf tunnel-payload-mtu {
               type uint16;
               mandatory true;
               description
-                "The MTU for Lightweight 4over6 tunnel.";
+                "The payload MTU for Lightweight 4over6 tunnel.";
             }
-            leaf fragment-mru {
+            leaf tunnel-path-mru {
               type uint16;
               mandatory true;
               description
-                "The fragmentation MRU for Lightweight 4over6
-                tunnel.";
+                "The path MRU for Lightweight 4over6 tunnel.";
             }
             container binding-table {
               description "id";
