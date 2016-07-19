@@ -145,7 +145,7 @@ EOF
     >&2 echo "copying $LICENSE"
     cp /u/$LICENSE config_drive/config/license/
   fi
-  yangfiles=$(ls /jetapp/yang/*/*.yang)     # issues currently with junos-extension.yang
+  yangfiles=$(ls /*.yang)
   if [ ! -z "$yangfiles" ]; then
      yangcmd=""
      for file in $yangfiles; do 
