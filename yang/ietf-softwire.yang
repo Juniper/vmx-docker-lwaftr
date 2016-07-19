@@ -338,25 +338,6 @@ module ietf-softwire {
                 uses binding-entry;
               }
             }
-            /* Snabb specific */
-            container ipv6_interface {
-              leaf address {
-                type inet:ipv6-address;
-              }
-              uses interface-params;
-            }
-            container ipv4_interface {
-              leaf address {
-                type inet:ipv4-address;
-              }
-              uses interface-params;
-            }
-            leaf vlan-tagging {
-              type boolean;
-            }
-            leaf hairpinning {
-              type boolean;
-            }
           }
         }
       }
