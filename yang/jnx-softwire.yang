@@ -1,0 +1,115 @@
+module jnx-softwire {
+  namespace "http://yang.juniper.net/software/aug";
+  prefix "jnx-swire";
+
+  import ietf-inet-types {prefix inet; }
+  import ietf-softwire {prefix sw; }
+
+  organization "Juniper Networks, Inc.";
+
+  revision 2016-07-19 {
+    description
+      "Juniper software augments. ";
+  }
+
+  augment "/sw:softwire-config/sw:lw4over6/sw:lwaftr" {
+    leaf binding-table {
+      type string;
+      description "Complete path of the binding table file";
+    }
+  }
+
+  augment "/sw:softwire-config/sw:lw4over6/sw:lwaftr/sw:lwaftr-instances/sw:lwaftr-instance" {
+    leaf ipv6_address {
+      type inet:ipv6-address;
+    }
+    leaf ipv4_address {
+      type inet:ipv4-address;
+    }
+    leaf ipv6_mtu {
+      type uint16 {
+        range 128..9600;
+      }
+    }
+    leaf ipv4_mtu {
+      type uint16 {
+        range 128..9600;
+      }
+    }
+    leaf ipv6_vlan {
+      type uint16 {
+        range 0..4094;
+      }
+    }
+    leaf ipv4_vlan {
+      type uint16 {
+        range 0..4094;
+      }
+    }
+    leaf hairpinning {
+      type boolean;
+    }
+    container icmpv6_rate_limiter {
+      leaf n_packets {
+        type uint32;
+        mandatory true;
+      }
+      leaf n_seconds {
+        type uint32;
+        default 1;
+      }
+    }
+    container policy_icmpv6 {
+      leaf incoming {
+        type enumeration {
+          enum ALLOW;
+          enum DROP;
+        }
+        leaf outgoing {
+          type enumeration {
+            enum ALLOW;
+            enum DROP;
+          }
+        }
+      }
+    }
+    container policy_icmpv4 {
+      leaf incoming {
+        type enumeration {
+          enum ALLOW;
+          enum DROP;
+        }
+        leaf outgoing {
+          type enumeration {
+            enum ALLOW;
+            enum DROP;
+          }
+        }
+      }
+    }
+    container ipv6_filter {
+      leaf ingress {
+        type string;
+        description
+          "IPv6 ingress filter in libpcap format";
+      }
+      leaf egress {
+        type string;
+        description
+          "IPv6 egress filter in libpcap format";
+      }
+    }
+    container ipv4_filter {
+      leaf ingress {
+        type string;
+        description
+          "IPv4 ingress filter in libpcap format";
+      }
+      leaf egress {
+        type string;
+        description
+          "IPv4 egress filter in libpcap format";
+      }
+    }
+  }
+}
