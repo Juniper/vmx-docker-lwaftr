@@ -48,6 +48,16 @@ module jnx-softwire {
     }
     leaf hairpinning {
       type boolean;
+      default false;
+    }
+    leaf fragmentation {
+      type boolean;
+      default false;
+    }
+    leaf cache_refresh_interval {
+      type unit32;
+      units seconds;
+      default 1;
     }
     container icmpv6_rate_limiter {
       leaf n_packets {
