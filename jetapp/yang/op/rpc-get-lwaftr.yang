@@ -1,0 +1,45 @@
+/*
+* Copyright (c) 2014 Juniper Networks, Inc.
+* All rights reserved.
+*/
+
+module rpc-get-lwaftr {
+  namespace "http://yang.juniper.net/yang/1.1/jrpc";
+  prefix jrpc;
+
+  import junos-extension-odl{
+    prefix junos-odl;
+  }
+
+  import junos-extension{
+    prefix junos;
+  }
+
+  organization
+    "Juniper Networks, Inc.";
+
+  description
+    "Junos YANG module for fetching Snabb Lwaftr statistics";
+
+rpc get-lwaftr-state {
+    description "Fetch state information of all the Snabb instances";
+    junos:command "show lwaftr state";
+    junos:action-execute {
+    junos:script "rpc_get_lwaftr_state.py";
+    }
+}
+
+rpc get-lwaftr-statistics {
+    description "Fetch statistics of the Snabb instances";
+    input {
+        leaf id {
+            description "ID of the snabb instance";
+            type string;
+        }
+    }
+    junos:command "show lwaftr statistics";
+    junos:action-execute {
+    junos:script "rpc_get_lwaftr_statistics.py";
+    }
+}
+}

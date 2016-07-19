@@ -1,0 +1,47 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ lwaftr (rx/tx/txdrop in Mpps)   rx      tx      rxGb    txGb    txdrop
+ lwaftr_v4                       0.06    0.06    0.27    0.27    0.000000
+ lwaftr_v6                       0.06    0.06    0.29    0.29    0.000000
+
+                                               Total           per second
+ lwaftr_v4 rcvdPacket                    34482216635                63167
+ lwaftr_v4 sentPacket                    35750770895                63158
+ lwaftr_v4 rcvdByte                   18413503683090             33731178
+ lwaftr_v4 sentByte                   19090911657930             33726372
+ lwaftr_v4 droppedPacket                   535153840                    0
+ lwaftr_v4 reassemble_ok                           0                    0
+ lwaftr_v4 reassemble_invalid                      0                    0
+ lwaftr_v4 fragment_ok                             0                    0
+ lwaftr_v4 fragment_forbidden                      0                    0
+
+                                               Total           per second
+ nic ifInDiscards                                  0                    0
+
+                                               Total           per second
+ lwaftr_v6 rcvdPacket                    36315290088                63232
+ lwaftr_v6 sentPacket                    33947062795                63241
+ lwaftr_v6 rcvdByte                   20844976510512             36295168
+ lwaftr_v6 sentByte                   19485614044330             36300334
+ lwaftr_v6 droppedPacket                   564519193                    0
+ lwaftr_v6 reassemble_ok                           0                    0
+ lwaftr_v6 reassemble_invalid                      0                    0
+ lwaftr_v6 fragment_ok                             0                    0
+ lwaftr_v6 fragment_forbidden                      0                    0
