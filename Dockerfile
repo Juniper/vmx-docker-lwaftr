@@ -5,7 +5,7 @@ MAINTAINER Marcel Wiget
 RUN apt-get -o Acquire::ForceIPv4=true update \
   && apt-get -o Acquire::ForceIPv4=true install -y --no-install-recommends \
   net-tools iproute2 dosfstools tcpdump bridge-utils numactl genisoimage \
-  libaio1 libspice-server1 libncurses5 
+  libaio1 libspice-server1 libncurses5 openssh-client
 
 # fix usr/sbin/tcpdump by moving it into /sbin: 
 #  error while loading shared libraries: libcrypto.so.1.0.0: 
