@@ -68,32 +68,28 @@ module jnx-softwire {
         default 1;
       }
     }
-    container policy_icmpv6 {
-      leaf incoming {
-        type enumeration {
-          enum ALLOW;
-          enum DROP;
-        }
-      }
-      leaf outgoing {
-        type enumeration {
-          enum ALLOW;
-          enum DROP;
-        }
+    leaf policy_icmpv6_incoming {
+      type enumeration {
+        enum allow;
+        enum drop;
       }
     }
-    container policy_icmpv4 {
-      leaf incoming {
-        type enumeration {
-          enum ALLOW;
-          enum DROP;
-        }
+    leaf policy_icmpv6_outgoing {
+      type enumeration {
+        enum allow;
+        enum drop;
       }
-      leaf outgoing {
-        type enumeration {
-          enum ALLOW;
-          enum DROP;
-        }
+    }
+    leaf policy_icmpv4_incoming {
+      type enumeration {
+        enum allow;
+        enum drop;
+      }
+    }
+    leaf policy_icmpv4_outgoing {
+      type enumeration {
+        enum allow;
+        enum drop;
       }
     }
     container ipv6_filter {
