@@ -456,7 +456,7 @@ AFFINITY_MASK=$(printf '%x\n' $AFFINITY_MASK)
 #taskset -p $AFFINITY_MASK $$
 echo "taskset -p $AFFINITY_MASK \$\$" >> /root/.bashrc
 
-BINDINGS=$(grep binding_table_file /u/$CONFIG | awk '{print $2}'|cut -d';' -f1)
+BINDINGS=$(grep binding-table-file /u/$CONFIG | awk '{print $2}'|cut -d';' -f1)
 if [ -f /u/$BINDINGS ]; then
   cp /u/$BINDINGS /tmp/
   BINDINGS=$(basename $BINDINGS)

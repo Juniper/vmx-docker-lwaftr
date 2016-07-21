@@ -44,8 +44,10 @@ sub process_new_config {
     if ($_ =~ /lwaftr-instance (\d+)/) {
       $port = "xe$1";
       if ("" ne $snabbvmx_config_file) {
+        print CFG "  settings = {\n";
+        print CFG "  },\n";
         if ($ipv6_address) {
-          print CFG "  ipv6_interface {\n";
+          print CFG "  ipv6_interface = {\n";
           print CFG "    ipv6_address = \"$ipv6_address\",\n";
           if ($cache_refresh_interval) {
             print CFG "    cache_refresh_intervael = $cache_refresh_interval,\n";
@@ -58,7 +60,7 @@ sub process_new_config {
           print CFG "  },\n";
         }
         if ($ipv4_address) {
-          print CFG "  ipv4_interface {\n";
+          print CFG "  ipv4_interface = {\n";
           print CFG "    ipv4_address = \"$ipv4_address\",\n";
           $ipv4_address = "";
           if ($cache_refresh_interval) {
@@ -133,8 +135,10 @@ sub process_new_config {
     }
   }
 
+  print CFG "  settings = {\n";
+  print CFG "  },\n";
   if ($ipv6_address) {
-    print CFG "  ipv6_interface {\n";
+    print CFG "  ipv6_interface = {\n";
     print CFG "    ipv6_address = \"$ipv6_address\",\n";
     $ipv6_address = "";
     if ($cache_refresh_interval) {
@@ -147,7 +151,7 @@ sub process_new_config {
     print CFG "  },\n";
   }
   if ($ipv4_address) {
-    print CFG "  ipv4_interface {\n";
+    print CFG "  ipv4_interface = {\n";
     print CFG "    ipv4_address = \"$ipv4_address\",\n";
     $ipv4_address = "";
     if ($cache_refresh_interval) {
@@ -230,7 +234,7 @@ sub check_config {
   open IP, "/tmp/config.new1" or die "can't open file /tmp/config.new1";
   my $file;
   while (<IP>) {
-    if ($_ =~ /binding_table_file\s+([\w.]+)/) {
+    if ($_ =~ /binding-table-file\s+([\w.]+)/) {
       $file=$1;
       print("getting file $file from $ip ...\n");
       my $f="/var/db/scripts/commit/$file";
@@ -269,7 +273,7 @@ if ("" eq $identity && -f $ip) {
   open IP, "$ip" or die "can't open file $ip";
   my $file;
   while (<IP>) {
-    if ($_ =~ /binding_table_file\s+([\w.]+)/) {
+    if ($_ =~ /binding-table-file\s+([\w.]+)/) {
       $file=$1;
       print("reading file $file ...\n");
       open R, "$file" or die "can't open file $file";

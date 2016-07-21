@@ -13,7 +13,7 @@ module jnx-softwire {
   }
 
   augment "/sw:softwire-config/sw:lw4over6/sw:lwaftr" {
-    leaf binding-table {
+    leaf binding-table-file {
       type string;
       description "Complete path of the binding table file";
     }
