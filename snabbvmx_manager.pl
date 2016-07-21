@@ -39,6 +39,8 @@ sub process_new_config {
   my @files_lwaftr;
   my @files;
 
+  open BDG,">$snabbvmx_binding_file.new" or die $@;
+
   while(<IN>) {
     chomp;
     if ($_ =~ /lwaftr-instance (\d+)/) {
