@@ -92,29 +92,25 @@ module jnx-softwire {
         enum drop;
       }
     }
-    container ipv6_filter {
-      leaf ingress {
-        type string;
-        description
-          "IPv6 ingress filter in libpcap format";
-      }
-      leaf egress {
-        type string;
-        description
-          "IPv6 egress filter in libpcap format";
-      }
+    leaf ipv6_ingress_filter {
+      type string;
+      description
+        "IPv6 ingress filter in libpcap format";
     }
-    container ipv4_filter {
-      leaf ingress {
+    leaf ipv6_egress_filter {
+      type string;
+      description
+        "IPv6 egress filter in libpcap format";
+    }
+    leaf ipv4_ingress_filter {
         type string;
         description
           "IPv4 ingress filter in libpcap format";
-      }
-      leaf egress {
-        type string;
-        description
-          "IPv4 egress filter in libpcap format";
-      }
+    }
+    leaf ipv4_egress_filter {
+      type string;
+      description
+        "IPv4 egress filter in libpcap format";
     }
   }
 }

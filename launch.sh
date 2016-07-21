@@ -470,6 +470,14 @@ if [ ! -z "\$sx" ] && [ -f ./snabbvmx_manager.pl ]; then
     numactl --membind=$NUMANODE /snabbvmx_manager.pl /u/$CONFIG
 fi
 
+# Check config for softwire entries. If there are any
+# run its manager to create an intial set of configs for snabbvmx
+sx="\$(grep 'lwaftr-instance' /u/$CONFIG)"
+if [ ! -z "\$sx" ] && [ -f ./snabbvmx_manager.pl ]; then
+  cd /tmp/
+  numactl --membind=$NUMANODE /snabbvmx_manager.pl /u/$CONFIG
+fi
+
 # Launching snabb processes after we set excluded the cores
 # from the scheduler
 for INT in $INTLIST; do

@@ -41,22 +41,45 @@ sub process_new_config {
 
   while(<IN>) {
     chomp;
-    if ($_ =~ /snabbvmx-lwaftr-(xe\d+)/) {
+    if ($_ =~ /lwaftr-instance (\d+)/) {
+      $port = "xe$1";
       if ("" ne $snabbvmx_config_file) {
-        if ($closeme == 1) {
+        if ($ipv6_address) {
+          print CFG "  ipv6_interface {\n";
+          print CFG "    ipv6_address = \"$ipv6_address\",\n";
+          if ($cache_refresh_interval) {
+            print CFG "    cache_refresh_intervael = $cache_refresh_interval,\n";
+          }
+          $ipv6_address = "";
+          if ($ipv6_filter) {
+            print CFG $ipv6_filter;
+          }
+          $ipv6_filter = "";
           print CFG "  },\n";
-          $closeme = 0;
+        }
+        if ($ipv4_address) {
+          print CFG "  ipv4_interface {\n";
+          print CFG "    ipv4_address = \"$ipv4_address\",\n";
+          $ipv4_address = "";
+          if ($cache_refresh_interval) {
+            print CFG "    cache_refresh_intervael = $cache_refresh_interval,\n";
+          }
+          if ($ipv4_filter) {
+            print CFG $ipv4_filter;
+          }
+          $ipv4_filter = "";
+          print CFG "  },\n";
         }
         print CFG "}\n";
         close CFG;
         close LWA;
       }
-      $mac = do{local(@ARGV,$/)="mac_$1";<>};
+      $mac = do{local(@ARGV,$/)="mac_$port";<>};
       chomp($mac);
       print $file_content,"\n";
 
-      $snabbvmx_config_file = "snabbvmx-lwaftr-$1.cfg";
-      $snabbvmx_lwaftr_file = "snabbvmx-lwaftr-$1.conf";
+      $snabbvmx_config_file = "snabbvmx-lwaftr-$port.cfg";
+      $snabbvmx_lwaftr_file = "snabbvmx-lwaftr-$port.conf";
       push @files, $snabbvmx_config_file;
       push @files, $snabbvmx_lwaftr_file;
       open CFG,">$snabbvmx_config_file.new" or die $@;
@@ -64,63 +87,26 @@ sub process_new_config {
       print CFG "return {\n  lwaftr = \"$snabbvmx_lwaftr_file\",\n";
       print LWA "vlan_tagging = false,\n";
       print LWA "binding_table = $snabbvmx_binding_file,\n";
-    } elsif ($_ =~ /snabbvmx-lwaftr-binding/) {
-      open BDG,">$snabbvmx_binding_file.new" or die $@;
-    } elsif ($_ =~ /apply-macro settings/) {
-      if ($closeme == 1) {
-        print CFG "  },\n";
-        $closeme = 0;
-      }
-      print CFG "  settings = {\n";
-      $closeme = 1;
-    } elsif ($_ =~ /apply-macro ipv6_interface/) {
-      if ($closeme == 1) {
-        print CFG "  },\n";
-        $closeme = 0;
-      }
-      print CFG "  ipv6_interface = {\n";
-      $closeme = 1;
-    } elsif ($_ =~ /apply-macro ipv4_interface/) {
-      if ($closeme == 1) {
-        print CFG "  },\n";
-      }
-      print CFG "  ipv4_interface = {\n";
-      $closeme = 1;
     } elsif ($_ =~ /ipv6_address\s+([\w:]+)/) {
-      print CFG "    ipv6_address = \"$1\",\n";
-      print LWA "aftr_ipv6_ip = $1,\n";
+      $ipv6_address = $1;
+      print LWA "aftr_ipv6_ip = $ipv6_address,\n";
       print LWA "aftr_mac_inet_side = $mac,\n";
       print LWA "inet_mac = 44:44:44:44:44:44,\n";
-    } elsif ($_ =~ /next_hop_mac\s+([\w.:-]+)/) {
-      print CFG "    next_hop_mac = \"$1\",\n";
-    } elsif ($_ =~ /service_mac\s+([\w.:-]+)/) {
-      print CFG "    service_mac = \"$1\",\n";
     } elsif ($_ =~ /ipv4_address\s+([\w.]+)/) {
-      print CFG "    ipv4_address = \"$1\",\n";
-      print LWA "aftr_ipv4_ip = $1,\n";
+      $ipv4_address = $1;
+      print LWA "aftr_ipv4_ip = $ipv4_address,\n";
       print LWA "aftr_mac_b4_side = $mac,\n";
       print LWA "next_hop6_mac = 66:66:66:66:66:66,\n";
-    } elsif ($_ =~ /ring_buffer_size\s+(\d+)/) {
-      print CFG "    ring_buffer_size = $1,\n";
-    } elsif ($_ =~ /debug\s+(\d+)/) {
-      print CFG "    debug = $1,\n";
-    } elsif ($_ =~ /fragmentation/) {
-      print CFG "    fragmentation = true,\n";
+    } elsif ($_ =~ /fragmentation (\s+)/) {
+      print CFG "    fragmentation = $1,\n";
     } elsif ($_ =~ /cache_refresh_interval\s+(\d+)/) {
-      print CFG "    cache_refresh_interval = $1,\n";
-    } elsif ($_ =~ /vlan\s+(\d+)/) {
-      print CFG "    vlan = $1,\n";
-    } elsif ($_ =~ /discard_threshold\s+(\d+)/) {
-      print CFG "    discard_threshold = $1,\n";
-    } elsif ($_ =~ /discard_check_timer\s+(\d+)/) {
-      print CFG "    discard_check_timer = $1,\n";
-    } elsif ($_ =~ /discard_wait\s+(\d+)/) {
-      print CFG "    discard_wait = $1,\n";
-    } elsif ($_ =~ /(\w+filter)\s+([^;]+)/) {
-      my $filter_name="$1";
-      my $filter_expr=$2;
-      $filter_expr =~ s/"//g;
-      print CFG "    $filter_name = \"$filter_expr\",\n";
+      $cache_refresh_interval = $1;
+    } elsif ($_ =~ /ipv6_vlan\s+(\d+)/) {
+      print CFG "    v6_vlan_tag = $1,\n";
+    } elsif ($_ =~ /ipv4_vlan\s+(\d+)/) {
+      print CFG "    v4_vlan_tag = $1,\n";
+    } elsif ($_ =~ /(\w+_filter)\s+([^;]+)/) {
+      $ipv6_filter .= "    $1 = \"$2\",\n";
     } elsif (/apply-macro softwires_([\w:]+)/) {
       $br_address_idx++;
       $br_address=$1;
@@ -132,8 +118,8 @@ sub process_new_config {
       print LWA "$1 = $2,\n";
     } elsif (/(ipv\d_mtu)\s+(\d+)/) {
       print LWA "$1 = $2,\n";
-    } elsif (/no_hairpinning/) {
-      print LWA "hairpinning = false,\n";
+    } elsif (/hairpinning (\s+)/) {
+      print LWA "hairpinning = $1,\n";
     } elsif (/([\w:]+)+\s+(\d+.\d+.\d+.\d+),(\d+),(\d+),(\d+)/) {
       # binding entry ipv6 ipv4,psid,psid_len,offset
       my $shift=16 - $4 - $5;
@@ -147,9 +133,33 @@ sub process_new_config {
     }
   }
 
-  if ($closeme == 1) {
+  if ($ipv6_address) {
+    print CFG "  ipv6_interface {\n";
+    print CFG "    ipv6_address = \"$ipv6_address\",\n";
+    $ipv6_address = "";
+    if ($cache_refresh_interval) {
+      print CFG "    cache_refresh_intervael = $cache_refresh_interval,\n";
+    }
+    if ($ipv6_filter) {
+      print CFG $ipv6_filter;
+    }
+    $ipv6_filter = "";
     print CFG "  },\n";
   }
+  if ($ipv4_address) {
+    print CFG "  ipv4_interface {\n";
+    print CFG "    ipv4_address = \"$ipv4_address\",\n";
+    $ipv4_address = "";
+    if ($cache_refresh_interval) {
+      print CFG "    cache_refresh_intervael = $cache_refresh_interval,\n";
+    }
+    if ($ipv4_filter) {
+      print CFG $ipv4_filter;
+    }
+    $ipv4_filter = "";
+    print CFG "  },\n";
+  }
+
   print CFG "}\n";
 
   print BDG "psid_map {\n";
