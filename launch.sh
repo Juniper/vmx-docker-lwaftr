@@ -282,8 +282,8 @@ if [ -d "/u/$image" ]; then
   echo "Occam VCPIMAGE=$VCPIMAGE VFPIMAGE=$VFPIMAGE"
 elif [[ "$image" =~ \.tgz$ ]]; then
   echo "extracting VMs from $image ..."
-  tar -zxf /u/$image -C /tmp/ --wildcards vmx*/images/junos*qcow2 --wildcards vmx*/images/vFPC*img --wildcards vmx*/images/jinstall*img --wildcards vmx*/images/vPFE-2*img
-  VCPIMAGE=$(ls /tmp/vmx*/images/jinstall64-vmx*img /tmp/vmx*/images/junos*qcow2)
+  tar -zxf /u/$image -C /tmp/ --wildcards vmx*/images/junos*qcow2 --wildcards vmx*/images/vFPC*img
+  VCPIMAGE=$(ls /tmp/vmx*/images/junos*qcow2)
   mv $VCPIMAGE /tmp
   VCPIMAGE="/tmp/$(basename $VCPIMAGE)"
   VFPIMAGE="`ls /tmp/vmx*/images/vFPC*img 2>/dev/null`"
@@ -415,7 +415,7 @@ do
  IP6=\$(grep -A1 softwires /tmp/*binding|tail -1|cut -d= -f4|cut -d, -f1)
  COUNT=\$(grep psid /tmp/*binding|wc -l)
  echo "IP6=\$IP6 IP4=\$IP4 AFTR=\$AFTR COUNT=\$COUNT"
- if [ $COUNT -gt 0 ]; then
+ if [ \$COUNT -gt 0 ]; then
     snabb snabbvmx generator --tap $TAPP --mtu 9000 --mac $SRCMAC --ipv4 \$IP4 --ipv6 \$IP6 --lwaftr \$AFTR --count \$COUNT --size 500 --port 1024 --rate 1 \$@
  fi
  sleep 3
@@ -462,20 +462,13 @@ if [ -f /u/$BINDINGS ]; then
   BINDINGS=$(basename $BINDINGS)
 fi
 
-# Check config for snabbvmx group entries. If there are any
-# run its manager to create an intial set of configs for snabbvmx 
-sx="\$(grep ' snabbvmx-' /u/$CONFIG)"
-if [ ! -z "\$sx" ] && [ -f ./snabbvmx_manager.pl ]; then
-    cd /tmp/
-    numactl --membind=$NUMANODE /snabbvmx_manager.pl /u/$CONFIG
-fi
-
 # Check config for softwire entries. If there are any
 # run its manager to create an intial set of configs for snabbvmx
 sx="\$(grep 'lwaftr-instance' /u/$CONFIG)"
 if [ ! -z "\$sx" ] && [ -f ./snabbvmx_manager.pl ]; then
   cd /tmp/
-  numactl --membind=$NUMANODE /snabbvmx_manager.pl /u/$CONFIG
+  /snabbvmx_manager.pl /u/$CONFIG
+  ls -l /tmp/snabbvmx-lwaftr*
 fi
 
 # Launching snabb processes after we set excluded the cores

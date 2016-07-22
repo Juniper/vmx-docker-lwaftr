@@ -229,7 +229,7 @@ sub process_new_config {
 }
 
 sub check_config {
-  `/usr/bin/ssh -o StrictHostKeyChecking=no -i $identity snabbvmx\@$ip show conf groups > /tmp/config.new1`;
+  `/usr/bin/ssh -o StrictHostKeyChecking=no -i $identity snabbvmx\@$ip show conf ietf-softwire:softwire-config > /tmp/config.new1`;
 
   my $newfile = "/tmp/config.new";
   open NEW, ">$newfile" or die "can't write to file $newfile";
