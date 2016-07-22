@@ -156,48 +156,39 @@ routing-instances {
     }
 }
 ietf-softwire:softwire-config {
-    description "Snabb commit";
-    lw4over6 {
-        lwaftr {
-            binding-table /var/db/scripts/commit/binding_table_2m.txt;
-            lwaftr-instances {
-                lwaftr-instance 0 {
-                    softwire-num-threshold 2;
-                    tunnel-mtu 1090;
-                    fragment-mru 1200;
-                    ipv6_interface {
-                        address fd00:4601::12;
-                        mtu 3400;
-                        icmp-params {
-                            policy {
-                                incoming ALLOW;
-                                outgoing DENY;
-                            }
-                            rate-limit {
-                                n_packets 22323;
-                                n_seconds 23;
-                            }
-                        }
-                        cache_refresh_interval 3;
-                    }
-                    ipv4_interface {
-                        address 1.1.1.1;
-                        mtu 3400;
-                        icmp-params {
-                            policy {
-                                incoming ALLOW;
-                                outgoing DENY;
-                            }
-                            rate-limit {
-                                n_packets 345;
-                                n_seconds 23;
-                            }
-                        }
-                        cache_refresh_interval 3;
-                    }
-                    hairpinning true;
-                }
-            }
+  lw4over6 {
+    lwaftr {
+      lwaftr-instances {
+        lwaftr-instance 0 {
+          softwire-num-threshold 4000000;
+          ipv6_address 2a02:587:f700:1::35;
+          ipv4_address 172.16.1.35;
+          ipv6_mtu 9500;
+          ipv4_mtu 9500;
+          tunnel-payload-mtu 9000;
+          tunnel-path-mru 9000;
+          cache_refresh_interval 1;
+          policy_icmpv6_incoming drop;
+          policy_icmpv6_outgoing drop;
+          policy_icmpv4_incoming drop;
+          policy_icmpv4_outgoing drop;
         }
+        lwaftr-instance 1 {
+          softwire-num-threshold 4000000;
+          ipv6_address 2a02:587:f700:2::35;
+          ipv4_address 172.16.2.35;
+          ipv6_mtu 9500;
+          ipv4_mtu 9500;
+          tunnel-payload-mtu 9000;
+          tunnel-path-mru 9000;
+          cache_refresh_interval 1;
+          policy_icmpv6_incoming drop;
+          policy_icmpv6_outgoing drop;
+          policy_icmpv4_incoming drop;
+          policy_icmpv4_outgoing drop;
+        }
+      }
+      binding-table-file binding_table_2m.txt;
     }
+  }
 }
