@@ -59,14 +59,12 @@ module jnx-softwire {
       units seconds;
       default 1;
     }
-    container icmpv6_rate_limiter {
-      leaf n_packets {
-        type uint32;
-      }
-      leaf n_seconds {
-        type uint32;
-        default 1;
-      }
+    leaf icmpv6_rate_limiter_n_packets {
+      type uint32;
+    }
+    leaf icmpv6_rate_limiter_n_seconds {
+      type uint32;
+      default 1;
     }
     leaf policy_icmpv6_incoming {
       type enumeration {
@@ -112,5 +110,12 @@ module jnx-softwire {
       description
         "IPv4 egress filter in libpcap format";
     }
+  }
+
+  deviation "/sw:softwire-config/sw:lw4over6/sw:lwaftr/sw:lwaftr-instances/sw:lwaftr-instance/sw:tunnel-payload-mtu" {
+    deviate replace { mandatory false; }
+  }
+  deviation "/sw:softwire-config/sw:lw4over6/sw:lwaftr/sw:lwaftr-instances/sw:lwaftr-instance/sw:tunnel-path-mru" {
+    deviate replace { mandatory false; }
   }
 }
