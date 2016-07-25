@@ -1,5 +1,5 @@
-## Last commit: 2016-06-25 16:48:36 UTC by mwiget
-version 16.1R1.6;
+## Last commit: 2016-07-24 10:55:21 UTC by mwiget
+version 16.1R1.8;
 system {
     host-name lwaftr1;
     root-authentication {
@@ -156,39 +156,92 @@ routing-instances {
     }
 }
 ietf-softwire:softwire-config {
-  lw4over6 {
-    lwaftr {
-      lwaftr-instances {
-        lwaftr-instance 0 {
-          softwire-num-threshold 4000000;
-          ipv6_address 2a02:587:f700:1::35;
-          ipv4_address 172.16.1.35;
-          ipv6_mtu 9500;
-          ipv4_mtu 9500;
-          tunnel-payload-mtu 9000;
-          tunnel-path-mru 9000;
-          cache_refresh_interval 1;
-          policy_icmpv6_incoming drop;
-          policy_icmpv6_outgoing drop;
-          policy_icmpv4_incoming drop;
-          policy_icmpv4_outgoing drop;
+    lw4over6 {
+        lwaftr {
+            lwaftr-instances {
+                lwaftr-instance 0 {
+                    softwire-num-threshold 4000000;
+                    tunnel-payload-mtu 9000;
+                    tunnel-path-mru 9000;
+                    binding-table {
+                        binding-entry 2004:400:400::1 {
+                            binding-ipv4-addr 4.4.4.1;
+                            port-set {
+                                offset 0;
+                                psid 1;
+                                psid-len 6;
+                            }
+                            lwaftr-ipv6-addr 2004:400::1;
+                        }
+                        binding-entry 2004:400:400::2 {
+                            binding-ipv4-addr 4.4.4.1;
+                            port-set {
+                                offset 0;
+                                psid 2;
+                                psid-len 6;
+                            }
+                            lwaftr-ipv6-addr 2004:400::1;
+                        }
+                        binding-entry 2004:400:400::3 {
+                            binding-ipv4-addr 4.4.4.1;
+                            port-set {
+                                offset 0;
+                                psid 3;
+                                psid-len 6;
+                            }
+                            lwaftr-ipv6-addr 2004:400::1;
+                        }
+                        binding-entry 2004:400:400::4 {
+                            binding-ipv4-addr 4.4.4.1;
+                            port-set {
+                                offset 0;
+                                psid 4;
+                                psid-len 6;
+                            }
+                            lwaftr-ipv6-addr 2004:400::1;
+                        }
+                        binding-entry 2004:400:400::5 {
+                            binding-ipv4-addr 4.4.4.1;
+                            port-set {
+                                offset 0;
+                                psid 5;
+                                psid-len 6;
+                            }
+                            lwaftr-ipv6-addr 2004:400::1;
+                        }
+                    }
+                    ipv6_address 2a02:587:f700:1::35;
+                    ipv4_address 172.16.1.35;
+                    ipv6_mtu 9500;
+                    ipv4_mtu 9500;
+                    cache_refresh_interval 1;
+                    icmpv6_rate_limiter_n_packets 300000;
+                    icmpv6_rate_limiter_n_seconds 4;
+                    policy_icmpv6_incoming drop;
+                    policy_icmpv6_outgoing drop;
+                    policy_icmpv4_incoming drop;
+                    policy_icmpv4_outgoing drop;
+                    ipv6_ingress_filter ip6;
+                    ipv6_egress_filter ip6;
+                    ipv4_ingress_filter ip;
+                    ipv4_egress_filter ip;
+                }
+                lwaftr-instance 1 {
+                    softwire-num-threshold 4000000;
+                    tunnel-payload-mtu 9000;
+                    tunnel-path-mru 9000;
+                    ipv6_address 2a02:587:f700:2::35;
+                    ipv4_address 172.16.2.35;
+                    ipv6_mtu 9500;
+                    ipv4_mtu 9500;
+                    cache_refresh_interval 1;
+                    policy_icmpv6_incoming drop;
+                    policy_icmpv6_outgoing drop;
+                    policy_icmpv4_incoming drop;
+                    policy_icmpv4_outgoing drop;
+                }
+            }
+            binding-table-file binding_table_2m.txt;
         }
-        lwaftr-instance 1 {
-          softwire-num-threshold 4000000;
-          ipv6_address 2a02:587:f700:2::35;
-          ipv4_address 172.16.2.35;
-          ipv6_mtu 9500;
-          ipv4_mtu 9500;
-          tunnel-payload-mtu 9000;
-          tunnel-path-mru 9000;
-          cache_refresh_interval 1;
-          policy_icmpv6_incoming drop;
-          policy_icmpv6_outgoing drop;
-          policy_icmpv4_incoming drop;
-          policy_icmpv4_outgoing drop;
-        }
-      }
-      binding-table-file binding_table_2m.txt;
     }
-  }
 }
