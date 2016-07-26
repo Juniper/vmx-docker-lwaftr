@@ -469,12 +469,12 @@ fi
 
 # Check config for softwire entries. If there are any
 # run its manager to create an intial set of configs for snabbvmx
-sx="\$(grep 'lwaftr-instance' /u/$CONFIG)"
-if [ ! -z "\$sx" ] && [ -f ./snabbvmx_manager.pl ]; then
-  cd /tmp/
-  /snabbvmx_manager.pl /u/$CONFIG
-  ls -l /tmp/snabbvmx-lwaftr*
-fi
+#sx="\$(grep 'lwaftr-instance' /u/$CONFIG)"
+#if [ ! -z "\$sx" ] && [ -f ./snabbvmx_manager.pl ]; then
+#  cd /tmp/
+#  /snabbvmx_manager.pl /u/$CONFIG
+#  ls -l /tmp/snabbvmx-lwaftr*
+#fi
 
 # Launching snabb processes after we set excluded the cores
 # from the scheduler
