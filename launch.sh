@@ -151,8 +151,13 @@ EOF
      for file in $yangfiles; do 
         if [ -f "$file" ]; then
            filebase=$(basename $file)
-           >&2 echo "YANG file $file"
-           yangcmd="$yangcmd -m /var/db/vmm/vmxlwaftr/$filebase"
+           if [ -z "$(grep deviation\ \" $file)" ]; then
+            >&2 echo "YANG file $file"
+            yangcmd="$yangcmd -m /var/db/vmm/vmxlwaftr/$filebase"
+           else
+            >&2 echo "YANG deviation file $file"
+            yangcmd="$yangcmd -d /var/db/vmm/vmxlwaftr/$filebase"
+           fi
            cp $file config_drive/var/db/vmm/vmxlwaftr
         fi
      done

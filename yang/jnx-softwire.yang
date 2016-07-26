@@ -111,11 +111,4 @@ module jnx-softwire {
         "IPv4 egress filter in libpcap format";
     }
   }
-
-  deviation "/sw:softwire-config/sw:lw4over6/sw:lwaftr/sw:lwaftr-instances/sw:lwaftr-instance/sw:tunnel-payload-mtu" {
-    deviate replace { mandatory false; }
-  }
-  deviation "/sw:softwire-config/sw:lw4over6/sw:lwaftr/sw:lwaftr-instances/sw:lwaftr-instance/sw:tunnel-path-mru" {
-    deviate replace { mandatory false; }
-  }
 }
