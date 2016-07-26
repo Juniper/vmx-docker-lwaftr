@@ -1,0 +1,21 @@
+module jnx-softwire-dev {
+  namespace "http://yang.juniper.net/software/aug";
+  prefix "jnx-swire";
+
+  import ietf-inet-types {prefix inet; }
+  import ietf-softwire {prefix sw; }
+
+  organization "Juniper Networks, Inc.";
+
+  revision 2016-07-19 {
+    description
+      "Juniper software augments. ";
+  }
+
+  deviation "/sw:softwire-config/sw:lw4over6/sw:lwaftr/sw:lwaftr-instances/sw:lwaftr-instance/sw:tunnel-payload-mtu" {
+    deviate replace { mandatory false; }
+  }
+  deviation "/sw:softwire-config/sw:lw4over6/sw:lwaftr/sw:lwaftr-instances/sw:lwaftr-instance/sw:tunnel-path-mru" {
+    deviate replace { mandatory false; }
+  }
+}
