@@ -8,6 +8,7 @@ VMX="vmx-bundle-16.1R1.8.tgz"
 #CONTAINER="marcelwiget/vmxlwaftr:v0.8"
 CONTAINER="vmxlwaftr:v0.9"
 IDENTITY="snabbvmx.key"
+chmod 400 $IDENTITY
 #INTERFACES="0000:05:00.0 0000:05:00.0"
 LICENSE="license-eval.txt"
 INTERFACES="tap/6 tap/7"
