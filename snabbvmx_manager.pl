@@ -173,12 +173,14 @@ sub process_new_config {
       foreach my $xy (@$be) {
         my $portset = $xy->{"port-set"};
         my $lwaftripv6 = $xy->{"lwaftr-ipv6-addr"}; 
-        # TODO: this won't performa well for large binding tables .. use something else than string concatination
-        $bindings{$lwaftripv6} .= $xy->{"binding-ipv6info"} . " " . join(",", $xy->{"binding-ipv4-addr"},$portset->{"psid"},$portset->{"psid-len"},$portset->{"offset"}) . "\n";
+        push @{$bindings{$lwaftripv6}}, $xy->{"binding-ipv6info"} . " " . join(",", $xy->{"binding-ipv4-addr"},$portset->{"psid"},$portset->{"psid-len"},$portset->{"offset"});
       }
+
       foreach my $lwaftripv6 (sort keys %bindings) {
         print BDF "lwaftr-ipv6-addr $lwaftripv6\n";
-        print BDF $bindings{$lwaftripv6};
+        foreach my $entry (@{$bindings{$lwaftripv6}}) {
+          print BDF $entry . "\n";
+        }
       }
       close BDF;
     }
