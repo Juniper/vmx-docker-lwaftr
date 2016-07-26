@@ -187,13 +187,6 @@ sub process_new_config {
     my $snabbvmx_lwaftr_file = "snabbvmx-lwaftr-$id.conf";
 
     open CFG,">$snabbvmx_config_file.new" or die $@;
-    #print CFG "return {\n  lwaftr = \"$snabbvmx_lwaftr_file\",\n";
-    #
-    ## Set some defaults
-    $instance->{"policy_icmpv4_incoming"} = "allow" unless ($instance->{"policy_icmpv4_incoming"});
-    $instance->{"policy_icmpv4_outgoing"} = "allow" unless ($instance->{"policy_icmpv4_outgoing"});
-    $instance->{"policy_icmpv6_incoming"} = "allow" unless ($instance->{"policy_icmpv6_incoming"});
-    $instance->{"policy_icmpv6_outgoing"} = "allow" unless ($instance->{"policy_icmpv6_outgoing"});
     # WARN user if ipv6 and ipv4 vlan differ
     my $vlan = "nil";
     if ($instance->{"ipv6_vlan"}) {
@@ -246,15 +239,14 @@ aftr_mac_inet_side = $mac,
 inet_mac = 44:44:44:44:44:44,
 aftr_mac_b4_side = $mac,
 next_hop6_mac = 66:66:66:66:66:66,
-policy_icmpv4_incoming = $instance->{"policy_icmpv4_incoming"},
-policy_icmpv4_outgoing = $instance->{"policy_icmpv4_outgoing"},
-policy_icmpv6_incoming = $instance->{"policy_icmpv6_incoming"},
-policy_icmpv6_outgoing = $instance->{"policy_icmpv6_outgoing"},
 ipv4_mtu = $instance->{"ipv4_mtu"},
 ipv6_mtu = $instance->{"ipv6_mtu"},
 EOF
-print LWA "hairpinning = $instance->{'hairpinning'}," if $instance->{'hairpinning'};
-
+    print LWA "hairpinning = $instance->{'hairpinning'}," if $instance->{'hairpinning'};
+    print LWA "policy_icmpv4_incoming = $instance->{'policy_icmpv4_incoming'}," if $instance->{'policy_icmpv4_incoming'};
+    print LWA "policy_icmpv4_outgoing = $instance->{'policy_icmpv4_outgoing'}," if $instance->{'policy_icmpv4_outgoing'};
+    print LWA "policy_icmpv6_incoming = $instance->{'policy_icmpv6_incoming'}," if $instance->{'policy_icmpv6_incoming'};
+    print LWA "policy_icmpv6_outgoing = $instance->{'policy_icmpv6_outgoing'}," if $instance->{'policy_icmpv6_outgoing'};
     close LWA;
 
     my $rv = &process_binding_table_file($bdf);
