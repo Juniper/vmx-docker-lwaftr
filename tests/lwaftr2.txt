@@ -188,7 +188,7 @@ ietf-softwire:softwire-config {
           policy_icmpv4_outgoing drop;
         }
       }
-      binding-table-file binding_table_2m.txt;
+      binding-table-file binding_table_60k.txt;
     }
   }
 }
