@@ -136,3 +136,11 @@ See tests/run1.sh and tests/run2.sh for examples on how to launch. The
 vMX distribution tar file must be on the local directory from which the container
 is launched.
 
+Operational Junos show commands (show lwaftr) depend on vMX running in "flex" mode.
+This can be achieved by making the flex Junos addon package available in the launch
+directory. Such file has a filename similar to
+os-kernel-inv-x86-64-20160621.221546_fbsd-builder_stable_10.tgz and must be requested
+or downloaded from the Juniper software download page.
+The file will automatically be detected at Container startup and installed. A successful
+installation will show the Junos version extended with "(INVARIANTS)"
+
