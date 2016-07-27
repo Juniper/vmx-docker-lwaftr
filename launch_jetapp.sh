@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/bash
+echo "$0: Launching jetapp server"
 while :
 do
   python /jetapp/main.py

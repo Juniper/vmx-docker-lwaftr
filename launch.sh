@@ -548,8 +548,6 @@ fi
 
 if [ ! -z "$VCPIMAGE" ]; then
 
-  chmod a+rx /*\.sh
-
   if [ -z "$JETUSER" ]; then
    cd /tmp && numactl --membind=$NUMANODE /launch_snabbvmx_manager.sh $MGMTIP $IDENTITY $BINDINGS &
   else

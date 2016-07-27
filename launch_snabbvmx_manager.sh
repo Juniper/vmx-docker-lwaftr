@@ -1,7 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/bash
 MGMTIP=$1
 IDENTITY=$2
 BINDINGS=$3
+
+echo "$0: launching snabbvmx manager $MGMTIP $IDENTITY $BINDINGS"
 
 if [ -z "$IDENTITY" ]; then
   echo "Usage: $0 management-ip-address identity.key"
