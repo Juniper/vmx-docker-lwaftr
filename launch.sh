@@ -145,7 +145,8 @@ EOF
     >&2 echo "copying $LICENSE"
     cp /u/$LICENSE config_drive/config/license/
   fi
-  yangfiles=$(ls /*.yang)
+  yangfiles=$(ls /yang/*.yang)
+  yangrpc=$(ls /yang/rpc*py)
   if [ ! -z "$yangfiles" ]; then
      yangcmd=""
      for file in $yangfiles; do 
@@ -161,33 +162,55 @@ EOF
            cp $file config_drive/var/db/vmm/vmxlwaftr
         fi
      done
+     if [ ! -z "$yangrpc" ]; then
+       for file in $yangrpc; do
+           filebase=$(basename $file)
+           >&2 echo "YANG action script $file"
+           yangcmd="$yangcmd -a /var/db/vmm/vmxlwaftr/$filebase"
+           chmod a+rx $file
+           cp $file config_drive/var/db/vmm/vmxlwaftr
+       done
+     fi
     cat > config_drive/var/db/vmm/etc/rc.vmm <<EOF
 echo "YANG import started"
 ls /var/db/vmm/vmxlwaftr
 echo "arg=$yangcmd"
 /bin/sh /usr/libexec/ui/yang-pkg add -X -i lwafr $yangcmd
 echo "YANG import completed"
-cp /var/etc/mosquitto.conf /var/etc/mosquitto.conf.orig
-cp /var/db/vmm/mosquitto.conf.new /var/etc/mosquitto.conf
+#cp /var/etc/mosquitto.conf /var/etc/mosquitto.conf.orig
+#cp /var/db/vmm/mosquitto.conf.new /var/etc/mosquitto.conf
 EOF
-# TODO: make sure mosquitto.conf gets updated even without YANG files !!
-#    cli -c "request system yang add $yangmodules package vmxlwaftr-yang"
     chmod a+rx config_drive/var/db/vmm/etc/rc.vmm
   fi
-  cat > config_drive/var/db/vmm/mosquitto.conf.new <<EOF
-bind_address 128.0.0.1
-port 1883
-junos_iri 1
-user nobody
-log_dest syslog
-listener 1883
-max_connections 20
-max_queued_messages 0
-max_inflight_messages 20
-retry_interval 20
-listener 41883 0.0.0.0 1
-pid_file /var/run/mosquitto_jet.pid
+  oskernelinv=$(ls /u/os-kernel-inv-x86-64*tgz)
+  if [ ! -z "$oskernelinv" ]; then
+    filebase=$(basename $oskernelinv)
+    cp $oskernelinv config_drive/var/db/vmm/
+    cat >> config_drive/var/db/vmm/etc/rc.vmm <<EOF
+    installed=\$(pkg info | grep os-kernel-inv)
+    echo $installed >/root/iwashere
+    if [ -z "\$installed" ]; then
+      echo "Enable INVARIANTS kernel"
+      pkg add /var/db/vmm/$filebase
+      echo "Enable INVARIANTS kernel DONE. Rebooting now ..."
+      reboot
+    fi
 EOF
+  fi
+#  cat > config_drive/var/db/vmm/mosquitto.conf.new <<EOF
+#bind_address 128.0.0.1
+#port 1883
+#junos_iri 1
+#user nobody
+#log_dest syslog
+#listener 1883
+#max_connections 20
+#max_queued_messages 0
+#max_inflight_messages 20
+#retry_interval 20
+#listener 41883 0.0.0.0 1
+#pid_file /var/run/mosquitto_jet.pid
+#EOF
   cp /u/$CONFIG config_drive/config/juniper.conf
   cd config_drive
   tar zcf vmm-config.tgz *
@@ -525,11 +548,14 @@ fi
 
 if [ ! -z "$VCPIMAGE" ]; then
 
+  chmod a+rx /*\.sh
+
   if [ -z "$JETUSER" ]; then
    cd /tmp && numactl --membind=$NUMANODE /launch_snabbvmx_manager.sh $MGMTIP $IDENTITY $BINDINGS &
   else
    cd /tmp && numactl --membind=$NUMANODE /launch_jetapp.sh $MGMTIP $JETUSER $JETPASS &
   fi
+  /launch_jetapp.sh &
 
   CMD="$QEMUVCPNUMA $qemu -M pc --enable-kvm -cpu host -smp $VCPCPU -m $VCPMEM \
     -drive if=ide,file=$VCPIMAGE -drive if=ide,file=$HDDIMAGE \
