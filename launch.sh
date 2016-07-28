@@ -438,10 +438,11 @@ for DEV in $@; do # ============= loop thru interfaces start
 #!/bin/bash
 while true;
 do
- AFTR=\$(grep -A1 br_addresses /tmp/*binding|tail -1|cut -d, -f1|sed 's/ *//')
- IP4=\$(grep -A1 psid_map /tmp/*binding|tail -1|cut -d{ -f1|sed 's/ *//')
- IP6=\$(grep -A1 softwires /tmp/*binding|tail -1|cut -d= -f4|cut -d, -f1)
- COUNT=\$(grep psid /tmp/*binding|wc -l)
+ FILE=\$(grep binding /tmp/snabbvmx-lwaftr-$TAP.conf|cut -d' ' -f3|cut -d',' -f1)
+ AFTR=\$(grep -A1 br_addresses /tmp/\$FILE|tail -1|cut -d, -f1|sed 's/ *//')
+ IP4=\$(grep -A1 psid_map /tmp/\$FILE|tail -1|cut -d{ -f1|sed 's/ *//')
+ IP6=\$(grep -A1 softwires /tmp/\$FILE|tail -1|cut -d= -f4|cut -d, -f1)
+ COUNT=\$(grep psid /tmp/\$FILE|wc -l)
  echo "IP6=\$IP6 IP4=\$IP4 AFTR=\$AFTR COUNT=\$COUNT"
  if [ \$COUNT -gt 0 ]; then
     snabb snabbvmx generator --tap $TAPP --mtu 9000 --mac $SRCMAC --ipv4 \$IP4 --ipv6 \$IP6 --lwaftr \$AFTR --count \$COUNT --size 500 --port 1024 --rate 1 \$@
@@ -488,6 +489,8 @@ BINDINGS=$(grep binding-table-file /u/$CONFIG | awk '{print $2}'|cut -d';' -f1)
 if [ -f /u/$BINDINGS ]; then
   cp /u/$BINDINGS /tmp/
   BINDINGS=$(basename $BINDINGS)
+else
+  echo "WARNING: Binding table file $BINDINGS not found"
 fi
 
 # Check config for softwire entries. If there are any

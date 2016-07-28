@@ -44,7 +44,8 @@ sub process_binding_table_file {
   }
 
   # binding table file has changed. Process it.
-  
+ 
+  print "reading binding file $btf\n";
   open IN,"$btf" or die $@;
   while(<IN>) {
     chomp;

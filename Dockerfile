@@ -33,7 +33,8 @@ COPY jetapp/src/op/opglobals.py jetapp/src/op/opserver.py jetapp/src/op/__init__
 COPY jetapp/src/utils/jetapplog.py jetapp/src/utils/__init__.py /jetapp/utils/
 
 COPY launch.sh launch_snabb.sh launch_jetapp.sh top.sh topl.sh README.md VERSION \
-  launch_snabbvmx_manager.sh snabbvmx_manager.pl show_affinity.sh nexthop.sh monitor.sh /
+  launch_snabbvmx_manager.sh snabbvmx_manager.pl show_affinity.sh nexthop.sh monitor.sh \
+  add_bindings.sh /
 
 RUN date >> /VERSION
 
