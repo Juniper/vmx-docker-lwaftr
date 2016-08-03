@@ -15,7 +15,7 @@ RUN mv /usr/sbin/tcpdump /sbin/
 # JET
 COPY paho-mqtt-1.2.tar.gz thrift-0.9.3.tar.gz ez_setup.py jet-1.tar.gz /
 RUN tar zxf paho-mqtt-*.tar.gz && cd paho-mqtt-* && python setup.py install && cd .. \
-  && python ez_setup.py \
+  && python ez_setup.py && easy_install Jinja2 \
   && tar zxf thrift-*.tar.gz && cd thrift-* && python setup.py install && cd .. \
   && mkdir jet-1 && cd jet-1 && tar zxf ../jet-1.tar.gz && python setup.py install \
   && cd ..
