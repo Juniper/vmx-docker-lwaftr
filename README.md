@@ -44,7 +44,18 @@ $ cd ..
 
 This will clone the branch 1to1_mapping from a private Snabb repository, build the Docker Container *buildsnabb* to compile snabb and place it in the current directory. Snabb is a single application that will be placed in /usr/local/bin/ in the vmxlwaftr Docker Container further below.
 
-### 3. skipped (was JET)
+### 3. JET
+
+Download the following files from the Internet. They will be installed into the Container by step 4.
+
+```
+wget https://pypi.python.org/packages/82/d9/7064d3a0a1d62756a1a809c85b99f864c641b66de84c15458f72193b7708/paho-mqtt-1.2.tar.gz
+wget https://pypi.python.org/packages/ae/58/35e3f0cd290039ff862c2c9d8ae8a76896665d70343d833bdc2f748b8e55/thrift-0.9.3.tar.gz
+wget https://bootstrap.pypa.io/ez_setup.py
+```
+
+Download jet-1.tar.gz from the juniper.net support download page for JET:
+http://www.juniper.net/support/downloads/?p=jet#sw
 
 ### 4. Build the vmxlwaftr Container
 
