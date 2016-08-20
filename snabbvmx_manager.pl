@@ -232,6 +232,9 @@ EOF
       chomp $mac;
     }
 
+    my $ipv4_mtu = $instance->{"tunnel-payload-mtu"};
+    my $ipv6_mtu = $instance->{"tunnel-path-mru"};
+
     open LWA,">$snabbvmx_lwaftr_file.new" or die $@;
     print LWA <<EOF;
 vlan_tagging = false,
@@ -242,8 +245,8 @@ aftr_mac_inet_side = $mac,
 inet_mac = 44:44:44:44:44:44,
 aftr_mac_b4_side = $mac,
 next_hop6_mac = 66:66:66:66:66:66,
-ipv4_mtu = $instance->{"ipv4_mtu"},
-ipv6_mtu = $instance->{"ipv6_mtu"},
+ipv4_mtu = $ipv4_mtu,
+ipv6_mtu = $ipv6_mtu,
 EOF
     print LWA "hairpinning = $instance->{'hairpinning'}," if $instance->{'hairpinning'};
     print LWA "policy_icmpv4_incoming = $instance->{'policy_icmpv4_incoming'}," if $instance->{'policy_icmpv4_incoming'};

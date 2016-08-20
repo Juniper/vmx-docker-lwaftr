@@ -212,8 +212,6 @@ ietf-softwire:softwire-config {
                     }
                     ipv6_address 2a02:587:f700:1::35;
                     ipv4_address 172.16.1.35;
-                    ipv6_mtu 9500;
-                    ipv4_mtu 9500;
                     cache_refresh_interval 1;
                     icmpv6_rate_limiter_n_packets 300000;
                     icmpv6_rate_limiter_n_seconds 4;
@@ -232,8 +230,6 @@ ietf-softwire:softwire-config {
                     tunnel-path-mru 9000;
                     ipv6_address 2a02:587:f700:2::35;
                     ipv4_address 172.16.2.35;
-                    ipv6_mtu 9500;
-                    ipv4_mtu 9500;
                     cache_refresh_interval 1;
                     policy_icmpv6_incoming drop;
                     policy_icmpv6_outgoing drop;

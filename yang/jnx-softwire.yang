@@ -26,16 +26,6 @@ module jnx-softwire {
     leaf ipv4_address {
       type inet:ipv4-address;
     }
-    leaf ipv6_mtu {
-      type uint16 {
-        range 128..9600;
-      }
-    }
-    leaf ipv4_mtu {
-      type uint16 {
-        range 128..9600;
-      }
-    }
     leaf ipv6_vlan {
       type uint16 {
         range 0..4094;
