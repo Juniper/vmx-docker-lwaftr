@@ -239,7 +239,7 @@ EOF
     print LWA <<EOF;
 vlan_tagging = false,
 binding_table = $bdf.s,
-aftr_ipv6_ip = $instance->{"ipv6_address"},
+aftr_ipv6_ip = 2001:db8::1,
 aftr_ipv4_ip = $instance->{"ipv4_address"},
 aftr_mac_inet_side = $mac,
 inet_mac = 44:44:44:44:44:44,
