@@ -14,5 +14,5 @@ INTERFACES="tap/6 tap/7"
 
 docker rm $NAME 2>/dev/null
 docker create --name $NAME -ti --privileged --network bridge -v $PWD:/u:ro $CONTAINER -i $IDENTITY -l $LICENSE -c $CFG $VMX $INTERFACES
-#docker run --name $NAME -ti --privileged --network bridge,mgmt -v $PWD:/u:ro $CONTAINER -i $IDENTITY -l $LICENSE -c $CFG $VMX $INTERFACES
-#docker rm $NAME
+docker start -a -i $NAME
+docker rm $NAME

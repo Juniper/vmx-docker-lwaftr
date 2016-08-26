@@ -12,15 +12,24 @@ VFPCPU="3"        # default cpu count for vPFE/VFP
 #---------------------------------------------------------------------------
 function show_help {
   cat <<EOF
-  Usage:
 
-docker run --name <name> --rm -v \$PWD:/u:ro \\
-   --privileged -i -t marcelwiget/vmxlwaftr[:version] \\
-   -c <junos_config_file> -i identity [-l license_file] \\
-   [-V <# of cores>] [-W <# of cores>] [-P <cores>] [-R <cores>] \\
-   [-m <kbytes>] [-M <kBytes>] \\
-   <image> <pci-address/core> [<pci-address/core> ...] 
+Usage:
 
+docker run --name <name> --rm -v \$PWD:/u:ro
+  --privileged -i -t marcelwiget/vmxlwaftr[:version]
+  -c <junos_config_file> -I identity [-l license_file]
+  [-i interface_count ]
+  [-V <# of cores>] [-W <# of cores>] [-P <cores>] [-R <cores>]
+  [-m <kbytes>] [-M <kBytes>]
+  <image> 
+
+  -c:  Junos configuration file
+  -I:  SSH private key matching the public key for use snabbvmx in the Junos configuration
+  -l:  Optional Junos license key file to load
+  -i:  number of VhostUser interfaces to attach to the vMX.
+       If set to 0, VCP without VFP is launched. Defaults to 1
+
+  <image>  Juniper vMX Software image (e.g. vmx-bundle-16.1Rx.y.tgz)
 EOF
 }
 #---------------------------------------------------------------------------
@@ -232,7 +241,9 @@ echo "Juniper Networks vMX lwaftr Docker Container"
 cat /VERSION
 echo ""
 
-while getopts "h?c:m:l:i:V:W:M:P:R:d" opt; do
+echo "Launching with arguments: $@"
+
+while getopts "h?c:m:l:i:V:W:M:P:R:dn:" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -250,7 +261,7 @@ while getopts "h?c:m:l:i:V:W:M:P:R:d" opt; do
       ;;
     l)  LICENSE=$OPTARG
       ;;
-    i)  IDENTITY=$OPTARG
+    I)  IDENTITY=$OPTARG
       ;;
     P)  QEMUVFPCPUS=$OPTARG
       ;;
@@ -258,6 +269,7 @@ while getopts "h?c:m:l:i:V:W:M:P:R:d" opt; do
       ;;
     d)  DEBUG=1
       ;;
+    i)  IFCOUNT=$OPTARG
   esac
 done
 
