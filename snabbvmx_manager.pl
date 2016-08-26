@@ -272,7 +272,6 @@ EOF
       if ($psid) {
         print "sending TERM to snabb process for $id ($psid)\n"; 
         `kill -TERM $psid`;
-        `/usr/local/bin/snabb gc`;  # removing stale counters
       }
     }
   }

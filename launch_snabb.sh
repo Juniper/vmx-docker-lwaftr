@@ -30,6 +30,5 @@ do
   echo $CMD
   sleep $SLEEP
   $CMD
-  $SNABB gc # removing stale runtime files created by Snabb
   sleep 4
 done

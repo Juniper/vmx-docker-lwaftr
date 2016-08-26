@@ -30,7 +30,7 @@ RUN tar zxf /qemu-v*-snabb.tgz -C /usr/local/
 RUN mkdir /yang /jetapp /jetapp/op /jetapp/utils
 
 COPY yang/ietf-inet-types.yang yang/ietf-softwire.yang \
-  yang/jnx-softwire.yang \
+  yang/jnx-softwire.yang yang/snabb.yang \
   jetapp/yang/op/junos-extension-odl.yang \
   jetapp/yang/op/junos-extension.yang \
   jetapp/yang/op/rpc-get-lwaftr.yang \

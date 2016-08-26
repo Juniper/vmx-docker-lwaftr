@@ -2,9 +2,8 @@
 
 NAME="lwaftr1"
 CFG="lwaftr1.txt"
-#VMX="vmx-bundle-16.1-20160528_ib_16_1_jdi.2.tgz"
-#VMX="vmx-bundle-16.1-20160514_ib_16_1_jdi.1.tgz"
-VMX="vmx-bundle-16.1R1.8.tgz"
+#VMX="vmx-bundle-16.1R1.8.tgz"
+VMX="vmx-bundle-16.1-20160807.0.tgz"
 #CONTAINER="marcelwiget/vmxlwaftr:v0.8"
 CONTAINER="vmxlwaftr:v0.9"
 IDENTITY="snabbvmx.key"
@@ -14,5 +13,6 @@ LICENSE="license-eval.txt"
 INTERFACES="tap/6 tap/7"
 
 docker rm $NAME 2>/dev/null
-docker run --name $NAME -ti --privileged -v $PWD:/u:ro $CONTAINER -i $IDENTITY -l $LICENSE -c $CFG $VMX $INTERFACES
-docker rm $NAME
+docker create --name $NAME -ti --privileged --network bridge -v $PWD:/u:ro $CONTAINER -i $IDENTITY -l $LICENSE -c $CFG $VMX $INTERFACES
+#docker run --name $NAME -ti --privileged --network bridge,mgmt -v $PWD:/u:ro $CONTAINER -i $IDENTITY -l $LICENSE -c $CFG $VMX $INTERFACES
+#docker rm $NAME

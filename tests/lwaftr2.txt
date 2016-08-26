@@ -188,3 +188,21 @@ ietf-softwire:softwire-config {
     }
   }
 }
+snabb:packetblaster {
+        lwaftr {
+          interface xe0 {
+            source-mac 22:22:22:22:22:22;
+            destination-mac ff:ff:ff:ff:ff:ff;
+            b4 2a02:587:f710::40,10.10.0.0,1024;
+            aftr-ipv6-address 2a02:587:f700::100;
+            rate 0.5;
+          }
+          interface xe1 {
+            source-mac 22:22:22:22:22:22;
+            destination-mac ff:ff:ff:ff:ff:ff;
+            b4 2a02:587:f710::40,10.10.0.0,1024;
+            aftr-ipv6-address 2a02:587:f700::100;
+            rate 0.5;
+          }
+        }
+      }

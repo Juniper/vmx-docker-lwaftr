@@ -432,27 +432,7 @@ for DEV in $@; do # ============= loop thru interfaces start
     $(addif_to_bridge $VMXBRIDGE $TAPP)
     $(addif_to_bridge $VMXBRIDGE $TAP)
     echo "=====> BRIDGE %VMXBRIDGE ready"
-    SRCMAC="22:22:22:22:22:22"
-#    ip link set $TAPP address $SRCMAC
-    cat > /packetblaster-$TAP.sh <<EOF
-#!/bin/bash
-while true;
-do
- FILE=\$(grep binding /tmp/snabbvmx-lwaftr-$TAP.conf|cut -d' ' -f3|cut -d',' -f1)
- AFTR=\$(grep -A1 br_addresses /tmp/\$FILE|tail -1|cut -d, -f1|sed 's/ *//')
- IP4=\$(grep -A1 psid_map /tmp/\$FILE|tail -1|cut -d{ -f1|sed 's/ *//')
- IP6=\$(grep -A1 softwires /tmp/\$FILE|tail -1|cut -d= -f4|cut -d, -f1)
- COUNT=\$(grep psid /tmp/\$FILE|wc -l)
- echo "IP6=\$IP6 IP4=\$IP4 AFTR=\$AFTR COUNT=\$COUNT"
- if [ \$COUNT -gt 0 ]; then
-    snabb snabbvmx generator --tap $TAPP --mtu 9000 --mac $SRCMAC --ipv4 \$IP4 --ipv6 \$IP6 --lwaftr \$AFTR --count \$COUNT --size 500 --port 1024 --rate 1 \$@
- fi
- sleep 3
-done
-EOF
   fi
-  chmod a+rx /packetblaster-$TAP.sh
-  /packetblaster-$TAP.sh >/dev/null 2>&1 &
 
   NETDEVS="$NETDEVS -chardev socket,id=char$INTNR,path=./${INT}.socket,server \
         -netdev type=vhost-user,id=net$INTNR,chardev=char$INTNR \
