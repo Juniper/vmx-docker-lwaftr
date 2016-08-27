@@ -80,7 +80,7 @@ function create_mgmt_bridge {
 # Requires network isolation (without --net=host). 
 # Create local bridge br0 for MGMT and place eth0 in it
 bridge="br0"
-myip=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
+myip=$(ifconfig eth0|grep 'inet addr'|cut -d: -f2|awk '{print $1}')
 gateway=`ip -4 route list 0/0 |cut -d' ' -f3`
 ip addr flush dev eth0
 ip link add name $bridge type bridge

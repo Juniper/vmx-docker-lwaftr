@@ -12,7 +12,7 @@ LICENSE="license-eval.txt"
 INTERFACES=""
 
 docker rm $NAME 2>/dev/null
-docker create --name $NAME -ti --privileged --network bridge -v $PWD:/u:ro $CONTAINER -I $IDENTITY -l $LICENSE -c $CFG $1 $VMX $INTERFACES
+docker create --name $NAME -ti --privileged -v $PWD:/u:ro $CONTAINER -I $IDENTITY -l $LICENSE -c $CFG $1 $VMX $INTERFACES
 docker network create net1 2>/dev/null
 docker network create net2 2>/dev/null
 docker network connect net1 $NAME
