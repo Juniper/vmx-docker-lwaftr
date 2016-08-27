@@ -199,7 +199,6 @@ EOF
     cp $oskernelinv config_drive/var/db/vmm/
     cat >> config_drive/var/db/vmm/etc/rc.vmm <<EOF
     installed=\$(pkg info | grep os-kernel-inv)
-    echo $installed >/root/iwashere
     if [ -z "\$installed" ]; then
       echo "Enable INVARIANTS kernel"
       pkg add /var/db/vmm/$filebase
@@ -355,6 +354,7 @@ if [ ! -z "$VCPIMAGE" ]; then
    $(create_config_drive)
 fi
 
+echo "creating mgmt and internal bridge"
 BRMGMT=$(create_mgmt_bridge)
 BRINT=$(create_int_bridge)
 # Create unique 4 digit ID used for this vMX in interface names
@@ -364,20 +364,25 @@ VCPMGMT="vcpm$ID"
 VCPINT="vcpi$ID"
 VFPMGMT="vfpm$ID"
 VFPINT="vfpi$ID"
+echo "creating tap interface $VCPMGMT $VFPMGMT"
 $(create_tap_if $VCPMGMT)
 $(create_tap_if $VFPMGMT)
+echo "adding tap interface $VCPMGMT $VFPMGMT to mgmt bridge $BRMGMT"
 $(addif_to_bridge $BRMGMT $VCPMGMT)
 $(addif_to_bridge $BRMGMT $VFPMGMT)
+
+echo "creating tap interface $VCPINT $VFPINT"
 $(create_tap_if $VCPINT)
 $(create_tap_if $VFPINT)
+echo "adding tap interface $VCPINT $VFPINT to int bridge $BRINT"
 $(addif_to_bridge $BRINT $VCPINT)
 $(addif_to_bridge $BRINT $VFPINT)
+echo "done"
 
 cat <<EOF
 
   vRE/VCP=$VCPIMAGE with ${VCPMEM}kB and ${VCPCPU} cores
   vPFE/VFP=$VFPIMAGE with ${VFPMEM}kB and ${VFPCPU} cores
-  VMIMAGE=$VMIMAGE
   JETUSER=$JETUSER JETPASS=$JETPASS IDENTITY=$IDENTITY
   mgmt bridge $BRMGMT with interfaces $VCPMGMT and $VFPMGMT
   internal interface $VCPMGMT IP $MGMTIP BRMGMT $BRMGMT
@@ -396,7 +401,7 @@ INTID="xe"
 MACP=$(printf "02:%02X:%02X:%02X:%02X" $[RANDOM%256] $[RANDOM%256] $[RANDOM%256] $[RANDOM%256])
 
 CPULIST=""  # collect cores given to PCIDEVS
-ETHLIST=$(ifconfig|grep ^eth|grep -v eth0|cut -f1 -d' ')
+ETHLIST=$(ifconfig|grep ^eth|grep -v eth0|cut -f1 -d' '|tr '\n' ' ')
 echo "ETHLIST=$ETHLIST"
 for DEV in "$@ $ETHLIST"; do # ============= loop thru interfaces start
 
@@ -508,21 +513,7 @@ if [ ! -z "$VFPIMAGE" ]; then
   cd /tmp && $CMD
 fi
 
-if [ ! -z "$VMIMAGE" ]; then
-  CMD="$QEMUVFPNUMA $qemu -M pc -smp $VFPCPU,sockets=1,cores=$VFPCPU,threads=1 --enable-kvm -cpu host -m $VFPMEM \
-    $MEMBACKEND -realtime mlock=on \
-    -netdev tap,id=tf0,ifname=em0,script=no,downscript=no \
-    -device virtio-net-pci,netdev=tf0,mac=$macaddr \
-    -drive if=virtio,file=$VMIMAGE,cache=none \
-    -device isa-serial,chardev=charserial0,id=serial0 \
-    -chardev socket,id=charserial0,host=0.0.0.0,port=8700,telnet,server,nowait \
-    -drive file=/disk.config,if=virtio $NETDEVS -curses -vnc :1"
-  echo $CMD
-  cd /tmp && $CMD
-fi
-
 if [ ! -z "$VCPIMAGE" ]; then
-
   if [ -z "$JETUSER" ]; then
    cd /tmp && numactl --membind=$NUMANODE /launch_snabbvmx_manager.sh $MGMTIP $IDENTITY $BINDINGS &
   else
