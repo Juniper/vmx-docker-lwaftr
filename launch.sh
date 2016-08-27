@@ -4,10 +4,11 @@
 qemu=/usr/local/bin/qemu-system-x86_64
 snabb=/usr/local/bin/snabb
 
-VCPMEM="4000"     # default memory for vRE/VCP in kBytes
-VFPMEM="8000"     # default memory for vPFE/VFP in kBytes
-VCPCPU="1"        # default cpu count for vRE/VCP
-VFPCPU="3"        # default cpu count for vPFE/VFP
+VCPMEM=4000     # default memory for vRE/VCP in kBytes
+VFPMEM=8000     # default memory for vPFE/VFP in kBytes
+VCPCPU=1        # default cpu count for vRE/VCP
+VFPCPU=3        # default cpu count for vPFE/VFP
+NUMANODE=0
 
 #---------------------------------------------------------------------------
 function show_help {
@@ -18,18 +19,16 @@ Usage:
 docker run --name <name> --rm -v \$PWD:/u:ro
   --privileged -i -t marcelwiget/vmxlwaftr[:version]
   -c <junos_config_file> -I identity [-l license_file]
-  [-i interface_count ]
   [-V <# of cores>] [-W <# of cores>] [-P <cores>] [-R <cores>]
   [-m <kbytes>] [-M <kBytes>]
-  <image> 
+  <image> [<pci-address> <pci-address> ..]
 
   -c:  Junos configuration file
   -I:  SSH private key matching the public key for use snabbvmx in the Junos configuration
   -l:  Optional Junos license key file to load
-  -i:  number of VhostUser interfaces to attach to the vMX.
-       If set to 0, VCP without VFP is launched. Defaults to 1
 
-  <image>  Juniper vMX Software image (e.g. vmx-bundle-16.1Rx.y.tgz)
+  <image>       Juniper vMX Software image (e.g. vmx-bundle-16.1Rx.y.tgz)
+  <pci-address> Interface PCI addresses, e.g. 0000:05:00.0 0000:05:00.1
 EOF
 }
 #---------------------------------------------------------------------------
@@ -45,6 +44,9 @@ function cleanup {
   if [ ! -z "$DEBUG" ]; then
      echo "DEBUG shell before killing qemu. Exit shell to continue"
      bash
+     if [ $? -gt 0 ]; then
+       exit
+     fi
   fi
 
   pkill qemu
@@ -243,7 +245,7 @@ echo ""
 
 echo "Launching with arguments: $@"
 
-while getopts "h?c:m:l:i:V:W:M:P:R:dn:" opt; do
+while getopts "h?c:m:l:I:V:W:M:P:R:d" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -289,30 +291,21 @@ fi
 # It will simply use the numanode of the last PCI.
 # Using cards on different Nodes is not recommended 
 for DEV in $@; do # ============= loop thru interfaces start
-   PCI=${DEV%/*} 
-   if [ "tap" == "$PCI" ]; then
-      NUMANODE=0
-   else
-      CPU=$(cat /sys/class/pci_bus/${PCI%:*}/cpulistaffinity | cut -d'-' -f1 | cut -d',' -f1)
-      NODE=$(numactl -H | grep "cpus: $CPU" | cut -d " " -f 2)
-      if [ -z "$NUMANODE" ]; then
-         NUMANODE=$NODE
-      fi
-      if [ "$NODE" != "$NUMANODE" ]; then 
-         echo "WARNING: Interface $PCI is on numa node $NODE, but request is for node $NUMANODE"
-      else
-         echo "Interface $PCI is on node $NODE"
-      fi
-   fi
+  PCI=${DEV%/*} 
+  CPU=$(cat /sys/class/pci_bus/${PCI%:*}/cpulistaffinity | cut -d'-' -f1 | cut -d',' -f1)
+  NODE=$(numactl -H | grep "cpus: $CPU" | cut -d " " -f 2)
+  if [ -z "$NUMANODE" ]; then
+    NUMANODE=$NODE
+  fi
+  if [ "$NODE" != "$NUMANODE" ]; then 
+    echo "WARNING: Interface $PCI is on numa node $NODE, but request is for node $NUMANODE"
+  else
+    echo "Interface $PCI is on node $NODE"
+  fi
 done
 
 mkdir /var/run/snabb
 numactl --membind=$NUMANODE mount -t tmpfs -o rw,nosuid,nodev,noexec,relatime,size=4M tmpfs /var/run/snabb
-
-if [ ! -z "$DEBUG" ]; then
-   echo "Debug shell. Exit shell to continue"
-   bash
-fi
 
 if [ -d "/u/$image" ]; then
   cp /u/$image/images/junos-vmx-*.qcow2 /tmp/
@@ -403,7 +396,9 @@ INTID="xe"
 MACP=$(printf "02:%02X:%02X:%02X:%02X" $[RANDOM%256] $[RANDOM%256] $[RANDOM%256] $[RANDOM%256])
 
 CPULIST=""  # collect cores given to PCIDEVS
-for DEV in $@; do # ============= loop thru interfaces start
+ETHLIST=$(ifconfig|grep ^eth|grep -v eth0|cut -f1 -d' ')
+echo "ETHLIST=$ETHLIST"
+for DEV in "$@ $ETHLIST"; do # ============= loop thru interfaces start
 
   # 0000:05:00.0/7 -> PCI=0000:05:00.0, CORE=7
   CORE=${DEV#*/}
@@ -419,7 +414,7 @@ for DEV in $@; do # ============= loop thru interfaces start
   PCIDEVS="$PCIDEVS $PCI"
   # create persistent mac address based on host-name in junos config file
   h=$(grep host-name /u/$CONFIG |md5sum)
-  if [ "tap" == "$PCI" ]; then
+  if [ "eth" == "${PCI:0:3}" ]; then
      macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:00:0$INTNR"
   else
      macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:${PCI:5:2}:0${PCI:11:1}"
@@ -431,20 +426,6 @@ for DEV in $@; do # ============= loop thru interfaces start
 
   TAP="$INTID${INTNR}"    # -> tap/monitor interfaces xe0, xe1 etc
   $(create_tap_if $TAP)
-
-  if [ "tap" == "$PCI" ]; then
-     echo "Using tap interface instead of physical port for interface xe$INTNR"
-    VMXBRIDGE="brxe$INTNR"
-    TAPP="${TAP}p"
-    TAPD="${TAP}d"
-    $(create_tap_if $TAPP)
-    $(create_tap_if $TAPD)
-    $(create_bridge $VMXBRIDGE)
-    $(addif_to_bridge $VMXBRIDGE $TAPD)
-    $(addif_to_bridge $VMXBRIDGE $TAPP)
-    $(addif_to_bridge $VMXBRIDGE $TAP)
-    echo "=====> BRIDGE %VMXBRIDGE ready"
-  fi
 
   NETDEVS="$NETDEVS -chardev socket,id=char$INTNR,path=./${INT}.socket,server \
         -netdev type=vhost-user,id=net$INTNR,chardev=char$INTNR \
@@ -485,14 +466,13 @@ else
   echo "WARNING: Binding table file $BINDINGS not found"
 fi
 
-# Check config for softwire entries. If there are any
-# run its manager to create an intial set of configs for snabbvmx
-#sx="\$(grep 'lwaftr-instance' /u/$CONFIG)"
-#if [ ! -z "\$sx" ] && [ -f ./snabbvmx_manager.pl ]; then
-#  cd /tmp/
-#  /snabbvmx_manager.pl /u/$CONFIG
-#  ls -l /tmp/snabbvmx-lwaftr*
-#fi
+if [ ! -z "$DEBUG" ]; then
+   echo "Debug shell. Exit shell to continue"
+   bash
+   if [ $? -gt 0 ]; then
+     exit
+   fi
+fi
 
 # Launching snabb processes after we set excluded the cores
 # from the scheduler
@@ -548,7 +528,6 @@ if [ ! -z "$VCPIMAGE" ]; then
   else
    cd /tmp && numactl --membind=$NUMANODE /launch_jetapp.sh $MGMTIP $JETUSER $JETPASS &
   fi
-  /launch_jetapp.sh &
 
   CMD="$QEMUVCPNUMA $qemu -M pc --enable-kvm -cpu host -smp $VCPCPU -m $VCPMEM \
     -drive if=ide,file=$VCPIMAGE -drive if=ide,file=$HDDIMAGE \

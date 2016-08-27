@@ -5,14 +5,17 @@ CFG="lwaftr1.txt"
 #VMX="vmx-bundle-16.1R1.8.tgz"
 VMX="vmx-bundle-16.1-20160807.0.tgz"
 #CONTAINER="marcelwiget/vmxlwaftr:v0.8"
-CONTAINER="vmxlwaftr:v0.9"
+CONTAINER="vmxlwaftr:v0.10"
 IDENTITY="snabbvmx.key"
 chmod 400 $IDENTITY
-#INTERFACES="0000:05:00.0 0000:05:00.0"
 LICENSE="license-eval.txt"
-INTERFACES="tap/6 tap/7"
+INTERFACES=""
 
 docker rm $NAME 2>/dev/null
-docker create --name $NAME -ti --privileged --network bridge -v $PWD:/u:ro $CONTAINER -i $IDENTITY -l $LICENSE -c $CFG $VMX $INTERFACES
+docker create --name $NAME -ti --privileged --network bridge -v $PWD:/u:ro $CONTAINER -I $IDENTITY -l $LICENSE -c $CFG $1 $VMX $INTERFACES
+docker network create net1 2>/dev/null
+docker network create net2 2>/dev/null
+docker network connect net1 $NAME
+docker network connect net2 $NAME
 docker start -a -i $NAME
 docker rm $NAME

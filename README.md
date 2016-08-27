@@ -7,7 +7,7 @@ The vmxlwaftr Docker Container contains everything thats required to successfull
 
 The Container vmxlwaftr is based on the official Ubuntu Docker 14.04.4 base Container and includes the following elements:
 
-* Qemu 2.4.0 with reconnect patch downloaded and built from source in qemu/
+* Qemu 2.4.1 with reconnect patch downloaded and built from source in qemu/
 * Snabb, downloaded and built from source in snabb/
 
 The build process requires a Docker Engine, ideally on a Linux based host. It is however possible to build it entirely on Docker for OS/X.
@@ -20,7 +20,7 @@ The individual steps are:
 $ cd qemu
 $ make
 $ ls qemu-*tgz
-qemu-v2.4.0-snabb.tgz
+qemu-v2.4.1-snabb.tgz
 cd ..
 ```
 
