@@ -402,28 +402,32 @@ MACP=$(printf "02:%02X:%02X:%02X:%02X" $[RANDOM%256] $[RANDOM%256] $[RANDOM%256]
 
 CPULIST=""  # collect cores given to PCIDEVS
 ETHLIST=$(ifconfig|grep ^eth|grep -v eth0|cut -f1 -d' '|tr '\n' ' ')
-echo "ETHLIST=$ETHLIST"
-for DEV in "$@ $ETHLIST"; do # ============= loop thru interfaces start
+LIST="$@ $ETHLIST"
+echo "walking thru list of interfaces: $@ $ETHLIST ..."
+for DEV in $LIST; do # ============= loop thru interfaces start
 
   # 0000:05:00.0/7 -> PCI=0000:05:00.0, CORE=7
   CORE=${DEV#*/}
   PCI=${DEV%/*} 
-  if [ -z "$CPULIST" ]; then
-    CPULIST=$CORE
+
+  # create persistent mac address based on host-name in junos config file
+  h=$(grep host-name /u/$CONFIG |md5sum)
+  if [ "eth" == "${PCI:0:3}" ]; then
+    macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:00:0$INTNR"
+    CORE=""
   else
-    CPULIST="$CPULIST,$CORE"
+    macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:${PCI:5:2}:0${PCI:11:1}"
+    echo "CORE=($CORE) PCI=($PCI)"
+    if [ -z "$CPULIST" ]; then
+      CPULIST=$CORE
+    else
+      CPULIST="$CPULIST,$CORE"
+    fi
   fi
 
   echo "PCI=$PCI CORE=$CORE CPULIST=$CPULIST"
   # add PCI to list
   PCIDEVS="$PCIDEVS $PCI"
-  # create persistent mac address based on host-name in junos config file
-  h=$(grep host-name /u/$CONFIG |md5sum)
-  if [ "eth" == "${PCI:0:3}" ]; then
-     macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:00:0$INTNR"
-  else
-     macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:${PCI:5:2}:0${PCI:11:1}"
-  fi
   INT="${INTID}${INTNR}"
   INTLIST="$INTLIST $INT"
   echo "$PCI/$CORE" > /tmp/pci_$INT
@@ -431,6 +435,7 @@ for DEV in "$@ $ETHLIST"; do # ============= loop thru interfaces start
 
   TAP="$INTID${INTNR}"    # -> tap/monitor interfaces xe0, xe1 etc
   $(create_tap_if $TAP)
+  echo "created tap interface $TAP"
 
   NETDEVS="$NETDEVS -chardev socket,id=char$INTNR,path=./${INT}.socket,server \
         -netdev type=vhost-user,id=net$INTNR,chardev=char$INTNR \
@@ -438,6 +443,7 @@ for DEV in "$@ $ETHLIST"; do # ============= loop thru interfaces start
 
   INTNR=$(($INTNR + 1))
 done # ===================================== loop thru interfaces done
+echo "Done walking interface list"
 
 QEMUVFPNUMA="numactl --membind=$NUMANODE"
 if [ ! -z "$QEMUVFPCPUS" ]; then
@@ -455,13 +461,15 @@ AVAIL_CORES=$(taskset -p $$|cut -d: -f2|cut -d' ' -f2)
 
 echo "CPULIST=$CPULIST AVAIL_CORES=$AVAIL_CORES QEMUVFPCPUS=$QEMUVFPCPUS"
 
-SNABB_AFFINITY=$(taskset -c $CPULIST /usr/bin/env bash -c 'taskset -p $$'|cut -d: -f2|cut -d' ' -f2)
-let AFFINITY_MASK="0x$AVAIL_CORES ^ 0x$SNABB_AFFINITY"
-AFFINITY_MASK=$(printf '%x\n' $AFFINITY_MASK)
-# Note: doesn't work with numactl: it will refuse to use a cpu that is masked out
-#echo "set cpu affinity mask $AFFINITY_MASK for everything but snabb"
-#taskset -p $AFFINITY_MASK $$
-echo "taskset -p $AFFINITY_MASK \$\$" >> /root/.bashrc
+if [ ! -z "$CPULIST" ]; then 
+  SNABB_AFFINITY=$(taskset -c $CPULIST /usr/bin/env bash -c 'taskset -p $$'|cut -d: -f2|cut -d' ' -f2)
+  let AFFINITY_MASK="0x$AVAIL_CORES ^ 0x$SNABB_AFFINITY"
+  AFFINITY_MASK=$(printf '%x\n' $AFFINITY_MASK)
+  # Note: doesn't work with numactl: it will refuse to use a cpu that is masked out
+  #echo "set cpu affinity mask $AFFINITY_MASK for everything but snabb"
+  #taskset -p $AFFINITY_MASK $$
+  echo "taskset -p $AFFINITY_MASK \$\$" >> /root/.bashrc
+fi
 
 BINDINGS=$(grep binding-table-file /u/$CONFIG | awk '{print $2}'|cut -d';' -f1)
 if [ -f /u/$BINDINGS ]; then
@@ -482,6 +490,7 @@ fi
 # Launching snabb processes after we set excluded the cores
 # from the scheduler
 for INT in $INTLIST; do
+  echo "Launching snabb on $INT"
   cd /tmp && numactl --membind=$NUMANODE /launch_snabb.sh $INT &
 done
 

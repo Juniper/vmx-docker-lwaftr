@@ -6,7 +6,7 @@ CORE=${DEV#*/}
 PCI=${DEV%/*}
 SLEEP=${INT:2:1}
 
-if [ "tap" == "$PCI" ]; then
+if [ "eth" == "${PCI:0:3}" ]; then
    NODE=0
    NUMACTL=""
 else
