@@ -156,6 +156,11 @@ EOF
     >&2 echo "copying $LICENSE"
     cp /u/$LICENSE config_drive/config/license/
   fi
+  slaxopfiles=$(ls /slax/*slax)
+  if [ ! -z "$slaxopfiles" ]; then
+    echo "SLAX files: $slaxfiles"
+    cp $slaxopfiles config_drive/var/db/vmm/vmxlwaftr
+  fi
   yangfiles=$(ls /yang/*.yang)
   yangrpc=$(ls /yang/rpc*py)
   if [ ! -z "$yangfiles" ]; then
@@ -188,8 +193,9 @@ ls /var/db/vmm/vmxlwaftr
 echo "arg=$yangcmd"
 /bin/sh /usr/libexec/ui/yang-pkg add -X -i lwafr $yangcmd
 echo "YANG import completed"
-#cp /var/etc/mosquitto.conf /var/etc/mosquitto.conf.orig
-#cp /var/db/vmm/mosquitto.conf.new /var/etc/mosquitto.conf
+cp /var/etc/mosquitto.conf /var/etc/mosquitto.conf.orig
+cp /var/db/vmm/mosquitto.conf.new /var/etc/mosquitto.conf
+cp /var/db/vmm/vmxlwaftr/lwaftr.slax /var/db/scripts/op/
 EOF
     chmod a+rx config_drive/var/db/vmm/etc/rc.vmm
   fi
@@ -207,20 +213,20 @@ EOF
     fi
 EOF
   fi
-#  cat > config_drive/var/db/vmm/mosquitto.conf.new <<EOF
-#bind_address 128.0.0.1
-#port 1883
-#junos_iri 1
-#user nobody
-#log_dest syslog
-#listener 1883
-#max_connections 20
-#max_queued_messages 0
-#max_inflight_messages 20
-#retry_interval 20
-#listener 41883 0.0.0.0 1
-#pid_file /var/run/mosquitto_jet.pid
-#EOF
+  cat > config_drive/var/db/vmm/mosquitto.conf.new <<EOF
+bind_address 128.0.0.1
+port 1883
+junos_iri 1
+user nobody
+log_dest syslog
+listener 1883
+max_connections 20
+max_queued_messages 0
+max_inflight_messages 20
+retry_interval 20
+listener 41883 0.0.0.0 1
+pid_file /var/run/mosquitto_jet.pid
+EOF
   cp /u/$CONFIG config_drive/config/juniper.conf
   cd config_drive
   tar zcf vmm-config.tgz *
@@ -528,6 +534,7 @@ if [ ! -z "$VCPIMAGE" ]; then
   else
    cd /tmp && numactl --membind=$NUMANODE /launch_jetapp.sh $MGMTIP $JETUSER $JETPASS &
   fi
+  cd /tmp && numactl --membind=$NUMANODE /launch_snabb_query.sh $MGMTIP $IDENTITY &
 
   CMD="$QEMUVCPNUMA $qemu -M pc --enable-kvm -cpu host -smp $VCPCPU -m $VCPMEM \
     -drive if=ide,file=$VCPIMAGE -drive if=ide,file=$HDDIMAGE \

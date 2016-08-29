@@ -1,9 +1,14 @@
-## Last commit: 2016-07-24 10:55:21 UTC by mwiget
-version 16.1R1.8;
+## Last commit: 2016-08-28 16:55:14 UTC by mwiget
+version "16.1-20160807.0 [builder]";
 system {
     host-name lwaftr1;
     root-authentication {
         encrypted-password "$5$XZSErpYB$QPbnlFXutnXy4jrpwUrtor/FtmVq94dIcaenN6KH013"; ## SECRET-DATA
+    }
+    scripts {
+        op {
+            file lwaftr.slax;
+        }
     }
     login {
         user lab {
@@ -239,21 +244,3 @@ ietf-softwire:softwire-config {
         }
     }
 }
-snabb:packetblaster {
-        lwaftr {
-          interface xe0 {
-            source-mac 22:22:22:22:22:22;
-            destination-mac ff:ff:ff:ff:ff:ff;
-            b4 2a02:587:f710::40,10.10.0.0,1024;
-            aftr-ipv6-address 2a02:587:f700::100;
-            rate 0.5;
-          }
-          interface xe1 {
-            source-mac 22:22:22:22:22:22;
-            destination-mac ff:ff:ff:ff:ff:ff;
-            b4 2a02:587:f710::40,10.10.0.0,1024;
-            aftr-ipv6-address 2a02:587:f700::100;
-            rate 0.5;
-          }
-        }
-      }
