@@ -1,0 +1,120 @@
+module snabb {
+   namespace "htta://xml.juniper.net/xnm/1.1/xnm";
+   prefix "snabb";
+
+   import ietf-inet-types {prefix inet; }
+
+   organization "Snabb Community";
+   contact "https://github.com/snabbco/snabb";
+
+   typedef mac-address {
+     type string {
+       pattern '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}';
+     }
+     description
+       "The mac-address type represents an IEEE 802 MAC address.
+       The canonical representation uses lowercase characters.
+       In the value set and its semantics, this type is equivalent
+       to the MacAddress textual convention of the SMIv2.";
+     reference
+       "IEEE 802: IEEE Standard for Local and Metropolitan Area
+       Networks: Overview and Architecture
+       RFC 2579: Textual Conventions for SMIv2";
+   }
+
+   container packetblaster {
+      description
+         "snabb traffic generators";
+      container lwaftr {
+         description
+           "lwAFTR traffic generator";
+         list interface {
+           key "pci";
+           description
+             "list of interfaces indexed by their PCI addresses";
+           leaf pci {
+             type string;
+             description
+               "interface PCI address, e.g. 0000:05:00.0";
+           }
+           leaf source-mac {
+             type mac-address;
+             description "Source MAC-Address, default 00:00:00:00:00:00";
+           }
+           leaf destination-mac {
+             type mac-address;
+             description "Destination MAC-Address, default 00:00:00:00:00:00";
+           }
+           leaf vlan {
+             type uint16 {
+               range 0..4094;
+             }
+             description
+               "VLAN Id to generate and receive tagged packets";
+           }
+           leaf size {
+             type string;
+             description 
+               "A comma separated list of numbers. Send packets of
+               SIZES bytes. The size specifies the lenght of the IPv4
+               packet. The actual packet size on the wire is 14 Bytes
+               longer (Ethernet header). Smallest allowed IPv4 packet
+               size is 28 (20 Bytes for IPv4 header, 8 Bytes payload
+               for packet loss detection)
+               Default: 64,64,64,64,64,64,64,594,594,594,1500 (IMIX)";
+           }
+           leaf b4 {
+             type string;
+             description
+               "IPV6,IPV4,PORT
+               First B4 Client IPv6 mapped to IPv4 and UDP Port.
+               B4 IPv6,IPv4 and Port are incremented for every count,
+               then rolled over.  Port is incremented by the port number:
+               e.g. 1024 -> 1024, 2048, 3096 .. 64512 (63 in total)
+               Default: 2001:db8::,10.0.0.0,1024";
+           }
+           leaf aftr-ipv6-address {
+             type inet:ipv6-address;
+             description
+               "IPv6 address of lwaftr server (softwire tunnel endpoint)
+                Default: 2001:db8:ffff::100";
+           }
+           leaf static-ipv4-address {
+             type inet:ipv4-address;
+             description
+               "Public IPv4. Used as source for IPv4 traffic and
+                as destination in IPv6 packets from B4
+                Default: 8.8.8.8";
+           }
+           leaf count {
+             type uint64;
+             description
+               "Number of B4 clients to simulate.
+                Default: 1";
+           }
+           leaf rate {
+             type decimal64 {
+               fraction-digits 3;
+             }
+             description 
+               "Rate in MPPS for the generated traffic. Fractions are
+                allowed (e.g. 3.148 for IMIX line rate). If set too high,
+                the actual transmitted rate depends on the interfaces capacity.
+                Setting rate to 0 turns it to listening only mode while
+                reporting on incoming packets
+                Default: 1 MPPS";
+           }
+           leaf v4only {
+             type boolean;
+             description
+               "Generate only IPv4 packets from the Internet towards lwaftr";
+           }
+           leaf v6only {
+             type boolean;
+             description
+               "Generate only IPv6 packets from the Internet towards lwaftr";
+           }
+         }
+      }
+   }
+}
