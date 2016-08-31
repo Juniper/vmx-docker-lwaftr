@@ -22,7 +22,6 @@ match / {
       var $fmt = "%-4s%-6s%-18s%-18s%12s%12s";
       <output> jcs:printf($fmt, "Id", "Pid", "Nexthop v4", "Nexthop v6", "rxPackets",
                 "txPackets");
-      var $x = "nic_" _ $id;
      for-each ($lwaftr/snabb/instance) {
        
       var $rxpackets = .//rxpackets;
@@ -33,13 +32,18 @@ match / {
       for-each ( $lwaftr/snabb/instance) {
         if ( ./id[contains(.,$id)] ) {
           <output> id;
-          for-each ( ./*/* ) {
-            var $value = .;
-            <output> "  " _ name() _ "=" _ $value;
+          for-each ( ./* ) {
+            if ( ./* ) {
+              <output> "\n";
+              <output> "  " _ name() _ ":";
+              for-each ( ./* ) {
+                var $value = .;
+                <output> "    " _ name() _ "=" _ $value;
+              }
+            }
           }
         }
       }
     }
   }
 }
-
