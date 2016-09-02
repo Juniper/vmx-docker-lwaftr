@@ -93,49 +93,6 @@ module ietf-softwire {
       per-subscriber IPv4-IPv6 address binding.";
   }
 
-  feature lwb4 {
-
-    if-feature lw4over6;
-    description
-      "The B4s (CEs) for Lightweight 4over6, so-called lwB4. This
-      feature indicates that a instance functions as a lwB4. A lwB4 is
-      an IPv4-in-IPv6 tunnel initiator. It is dual-stack capable node,
-      either a directly connected end-host or a CE. It sources IPv4
-      conncections using the configured port-set and the public IPv4
-      address.";
-  }
-
-  feature map-e {
-    description
-      "MAP-E is an IPv6 transition mechanism for transporting IPv4
-      packets across an IPv6 network using IP encapsulation. MAP-E
-      allows for a reduction of the amount of centralized state using
-      rules to express IPv4/IPv6 address mappings. This introduces an
-      algorithmic relationship between the IPv6 subnet
-      and IPv4 address.
-      This relationship also allows the option of direct, meshed
-      connectivity between users. Alternatively, MAP-E can
-      be configured to support IPv4/IPv6 indepent binding.
-      This feature indicates the instance functions
-      as a MAP-E instance.";
-    reference
-      "I-D.ietf-softwire-map";
-  }
-
-  feature map-t {
-    description
-     "The Mapping of Address and Port - Translation (MAP-T)
-     architecture is a double stateless NAT64 based solution. It uses
-     the stateless algorithmic address & transport layer port mapping
-     scheme defined in MAP-E. The MAP-T solution differs from MAP-E in
-     the use of IPv4-IPv6 translation, rather than encapsulation, as
-     the form of IPv6 domain transport. This feature indicates the
-     instance functions as a MAP-T instance. ";
-
-   reference
-      "I-D.ietf-softwire-map-t";
-  }
-
 /*
  * Grouping
  */
@@ -336,56 +293,6 @@ module ietf-softwire {
                 description "id";
                 uses binding-entry;
               }
-            }
-          }
-        }
-      }
-      container lwb4 {
-        if-feature lwb4;
-        description
-          "Indicate this instance supports the lwB4 function. The
-          instances advertise the lwb4 feature through the
-          capability exchange mechanism when a NETCONF session is
-          established.";
-        leaf enable {
-          type boolean;
-          description
-            "Enable/disable the lwB4 function.";
-        }
-        container lwb4-instances {
-          description
-            "A set of lwB4s to be configured.";
-          list lwb4-instance {
-            key "binding-ipv6info";
-            description "id";
-            uses binding-entry;
-            leaf lwb4-name {
-              type string;
-              description "The lwb4 name.";
-            }
-            leaf tunnel-mtu {
-              type uint16;
-              mandatory true;
-              description
-                "The MTU for Lightweight 4over6 tunnel.";
-            }
-            leaf fragment-mru {
-              type uint16;
-              mandatory true;
-              description
-                "The fragment MRU for Lightweight 4over6 tunnel.";
-            }
-            leaf b4-ipv6-addr-format {
-
-              type boolean;
-              mandatory true;
-              description
-               "The format of lwB4 IPv6 address. If set to true, it
-               indicates that the IPv6 source address of the lwB4 is
-               constructed according to the description in
-               [RFC7596]; if set to false, the lwB4
-               can use any /128 address from the assigned IPv6
-               prefix.";
             }
           }
         }
