@@ -199,7 +199,7 @@ cp /var/db/vmm/vmxlwaftr/lwaftr.slax /var/db/scripts/op/
 EOF
     chmod a+rx config_drive/var/db/vmm/etc/rc.vmm
   fi
-  oskernelinv=$(ls /u/os-kernel-inv-x86-64*tgz)
+  oskernelinv=$(ls /u/os-kernel-inv-x86-64*tgz 2>/dev/null)
   if [ ! -z "$oskernelinv" ]; then
     filebase=$(basename $oskernelinv)
     cp $oskernelinv config_drive/var/db/vmm/
