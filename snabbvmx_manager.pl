@@ -275,7 +275,7 @@ EOF
 
       my $rv = &process_binding_table_file($bdf);
       my $psid = $snabbpid{$id};
-      $snabbpid{$id} = ""; # avoid getting killed during cleanup at the end of this function
+      delete $snabbpid{$id}; # avoid getting killed during cleanup at the end of this function
       print "psid of snabb process for $id is $psid\n";
 
       if ($rv or $reload) {
