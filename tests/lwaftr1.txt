@@ -215,10 +215,6 @@ ietf-softwire:softwire-config {
                     policy_icmpv6_outgoing drop;
                     policy_icmpv4_incoming drop;
                     policy_icmpv4_outgoing drop;
-                    ipv6_ingress_filter ip6;
-                    ipv6_egress_filter ip6;
-                    ipv4_ingress_filter ip;
-                    ipv4_egress_filter ip;
                 }
                 lwaftr-instance 1 {
                     softwire-num-threshold 4000000;
