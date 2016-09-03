@@ -145,60 +145,78 @@ sub process_new_config {
     close $fh;
   }
 
-  my $data = decode_json($json);
 
-  my $instances = $data->{"configuration"}{"softwire-config"}{"lw4over6"}{"lwaftr"}{"lwaftr-instances"}{"lwaftr-instance"};
-
-  my $globalbdfile = $data->{"configuration"}{"softwire-config"}{"lw4over6"}{"lwaftr"}{"binding-table-file"};
-  my $reload = 0;
-
-  if (-f $globalbdfile) {
-    print "global binding table file $globalbdfile\n";
-    $reload = &process_binding_table_file($globalbdfile);
+  my %snabbpid;
+  my @files = </run/snabb/*/nic/id>;
+  foreach my $file (@files) {
+    my $id;
+    $file =~ /(\d+)/;
+    my $pid = $1;
+    open(my $fh, '<', "$file") or die "cannot open file $file";
+    {
+      local $/;
+      $id = <$fh>;
+    }
+    close($fh);
+    # print "dir=$file pid=$pid id=$id\n";
+    $snabbpid{$id} = $pid;
   }
 
-  foreach my $instance (@$instances) {
+  if ($json) {
+    my $data = decode_json($json);
 
-    my $id = "xe" . $instance->{"id"};
-    print "--------> snabb $id:\n";
+    my $instances = $data->{"configuration"}{"softwire-config"}{"lw4over6"}{"lwaftr"}{"lwaftr-instances"}{"lwaftr-instance"};
 
-    my $bdf = $globalbdfile;
+    my $globalbdfile = $data->{"configuration"}{"softwire-config"}{"lw4over6"}{"lwaftr"}{"binding-table-file"};
+    my $reload = 0;
 
-    if ($instance->{"binding-table"}) {
-      $bdf = "binding_table_$id.txt";
-      print "creating binding table file $bdf\n";
-      open BDF,">$bdf" or die $@;
-      my $be = $instance->{"binding-table"}{"binding-entry"};
-      my %bindings;
-      my %array;
-      foreach my $xy (@$be) {
-        my $portset = $xy->{"port-set"};
-        my $lwaftripv6 = $xy->{"lwaftr-ipv6-addr"}; 
-        push @{$bindings{$lwaftripv6}}, $xy->{"binding-ipv6info"} . " " . join(",", $xy->{"binding-ipv4-addr"},$portset->{"psid"},$portset->{"psid-len"},$portset->{"offset"});
-      }
+    if (-f $globalbdfile) {
+      print "global binding table file $globalbdfile\n";
+      $reload = &process_binding_table_file($globalbdfile);
+    }
 
-      foreach my $lwaftripv6 (sort keys %bindings) {
-        print BDF "lwaftr-ipv6-addr $lwaftripv6\n";
-        foreach my $entry (@{$bindings{$lwaftripv6}}) {
-          print BDF $entry . "\n";
+    foreach my $instance (@$instances) {
+
+      my $id = "xe" . $instance->{"id"};
+      print "--------> snabb $id:\n";
+
+      my $bdf = $globalbdfile;
+
+      if ($instance->{"binding-table"}) {
+        $bdf = "binding_table_$id.txt";
+        print "creating binding table file $bdf\n";
+        open BDF,">$bdf" or die $@;
+        my $be = $instance->{"binding-table"}{"binding-entry"};
+        my %bindings;
+        my %array;
+        foreach my $xy (@$be) {
+          my $portset = $xy->{"port-set"};
+          my $lwaftripv6 = $xy->{"lwaftr-ipv6-addr"}; 
+          push @{$bindings{$lwaftripv6}}, $xy->{"binding-ipv6info"} . " " . join(",", $xy->{"binding-ipv4-addr"},$portset->{"psid"},$portset->{"psid-len"},$portset->{"offset"});
         }
+
+        foreach my $lwaftripv6 (sort keys %bindings) {
+          print BDF "lwaftr-ipv6-addr $lwaftripv6\n";
+          foreach my $entry (@{$bindings{$lwaftripv6}}) {
+            print BDF $entry . "\n";
+          }
+        }
+        close BDF;
       }
-      close BDF;
-    }
 
-    my $snabbvmx_config_file = "snabbvmx-lwaftr-$id.cfg";
-    my $snabbvmx_lwaftr_file = "snabbvmx-lwaftr-$id.conf";
+      my $snabbvmx_config_file = "snabbvmx-lwaftr-$id.cfg";
+      my $snabbvmx_lwaftr_file = "snabbvmx-lwaftr-$id.conf";
 
-    open CFG,">$snabbvmx_config_file.new" or die $@;
-    # WARN user if ipv6 and ipv4 vlan differ
-    my $vlan = "nil";
-    if ($instance->{"ipv6_vlan"}) {
-      $vlan = $instance->{"ipv6_vlan"};
-    }
-    if ($instance->{"ipv4_vlan"}) {
-      $vlan = $instance->{"ipv4_vlan"};
-    }
-    print CFG <<EOF;
+      open CFG,">$snabbvmx_config_file.new" or die $@;
+      # WARN user if ipv6 and ipv4 vlan differ
+      my $vlan = "nil";
+      if ($instance->{"ipv6_vlan"}) {
+        $vlan = $instance->{"ipv6_vlan"};
+      }
+      if ($instance->{"ipv4_vlan"}) {
+        $vlan = $instance->{"ipv4_vlan"};
+      }
+      print CFG <<EOF;
 return {
   lwaftr = \"$snabbvmx_lwaftr_file\",
   settings = {
@@ -208,35 +226,35 @@ return {
     ipv6_address = \"$instance->{"ipv6_address"}\",
     cache_refresh_interval = $instance->{"cache_refresh_interval"},
 EOF
-  print CFG "    ipv6_ingress_filter = \"$instance->{'ipv6_ingress_filter'}\"," if $instance->{'ipv6_ingress_filter'};
-  print CFG "    ipv6_egress_filter = \"$instance->{'ipv6_egress_filter'}\"," if $instance->{'ipv6_eress_filter'};
-  print CFG "    fragmentation = $instance->{'fragmentation'}," if $instance->{'fragmentation'};
-    print CFG <<EOF;
+      print CFG "    ipv6_ingress_filter = \"$instance->{'ipv6_ingress_filter'}\"," if $instance->{'ipv6_ingress_filter'};
+      print CFG "    ipv6_egress_filter = \"$instance->{'ipv6_egress_filter'}\"," if $instance->{'ipv6_eress_filter'};
+      print CFG "    fragmentation = $instance->{'fragmentation'}," if $instance->{'fragmentation'};
+      print CFG <<EOF;
   },
   ipv4_interface = {
     ipv4_address = \"$instance->{"ipv4_address"}\",
     cache_refresh_interval = $instance->{"cache_refresh_interval"},
 EOF
-  print CFG "    ipv4_ingress_filter = \"$instance->{'ipv4_ingress_filter'}\"," if $instance->{'ipv4_ingress_filter'};
-  print CFG "    ipv4_egress_filter = \"$instance->{'ipv4_egress_filter'}\"," if $instance->{'ipv4_eress_filter'};
-  print CFG "    fragmentation = $instance->{'fragmentation'}," if $instance->{'fragmentation'};
-    print CFG <<EOF;
+      print CFG "    ipv4_ingress_filter = \"$instance->{'ipv4_ingress_filter'}\"," if $instance->{'ipv4_ingress_filter'};
+      print CFG "    ipv4_egress_filter = \"$instance->{'ipv4_egress_filter'}\"," if $instance->{'ipv4_eress_filter'};
+      print CFG "    fragmentation = $instance->{'fragmentation'}," if $instance->{'fragmentation'};
+      print CFG <<EOF;
   },
 }
 EOF
-    close CFG;
+      close CFG;
 
-    my $mac = "00:00:00:00:00:00";
-    if (-f "mac_$id") {
-      $mac = do{local(@ARGV,$/)="mac_$id";<>};
-      chomp $mac;
-    }
+      my $mac = "00:00:00:00:00:00";
+      if (-f "mac_$id") {
+        $mac = do{local(@ARGV,$/)="mac_$id";<>};
+        chomp $mac;
+      }
 
-    my $ipv4_mtu = $instance->{"tunnel-payload-mtu"};
-    my $ipv6_mtu = $instance->{"tunnel-path-mru"};
+      my $ipv4_mtu = $instance->{"tunnel-payload-mtu"};
+      my $ipv6_mtu = $instance->{"tunnel-path-mru"};
 
-    open LWA,">$snabbvmx_lwaftr_file.new" or die $@;
-    print LWA <<EOF;
+      open LWA,">$snabbvmx_lwaftr_file.new" or die $@;
+      print LWA <<EOF;
 vlan_tagging = false,
 binding_table = $bdf.s,
 aftr_ipv6_ip = 2001:db8::1,
@@ -248,32 +266,41 @@ next_hop6_mac = 66:66:66:66:66:66,
 ipv4_mtu = $ipv4_mtu,
 ipv6_mtu = $ipv6_mtu,
 EOF
-    print LWA "hairpinning = $instance->{'hairpinning'}," if $instance->{'hairpinning'};
-    print LWA "policy_icmpv4_incoming = $instance->{'policy_icmpv4_incoming'}," if $instance->{'policy_icmpv4_incoming'};
-    print LWA "policy_icmpv4_outgoing = $instance->{'policy_icmpv4_outgoing'}," if $instance->{'policy_icmpv4_outgoing'};
-    print LWA "policy_icmpv6_incoming = $instance->{'policy_icmpv6_incoming'}," if $instance->{'policy_icmpv6_incoming'};
-    print LWA "policy_icmpv6_outgoing = $instance->{'policy_icmpv6_outgoing'}," if $instance->{'policy_icmpv6_outgoing'};
-    close LWA;
+      print LWA "hairpinning = $instance->{'hairpinning'}," if $instance->{'hairpinning'};
+      print LWA "policy_icmpv4_incoming = $instance->{'policy_icmpv4_incoming'}," if $instance->{'policy_icmpv4_incoming'};
+      print LWA "policy_icmpv4_outgoing = $instance->{'policy_icmpv4_outgoing'}," if $instance->{'policy_icmpv4_outgoing'};
+      print LWA "policy_icmpv6_incoming = $instance->{'policy_icmpv6_incoming'}," if $instance->{'policy_icmpv6_incoming'};
+      print LWA "policy_icmpv6_outgoing = $instance->{'policy_icmpv6_outgoing'}," if $instance->{'policy_icmpv6_outgoing'};
+      close LWA;
 
-    my $rv = &process_binding_table_file($bdf);
-    my $psid = `ps ax|grep snabbvmx|grep $mac|grep -v grep|awk {'print \$1'}`;
+      my $rv = &process_binding_table_file($bdf);
+      my $psid = $snabbpid{$id};
+      $snabbpid{$id} = ""; # avoid getting killed during cleanup at the end of this function
+      print "psid of snabb process for $id is $psid\n";
 
-    print "psid of snabb process for $id is $psid\n";
+      if ($rv or $reload) {
+        # reload binding table
+        if ($psid) {
+          print "forcing binding table reload for $id ($psid)\n";
+          `/usr/local/bin/snabb lwaftr control $psid reload`;
+        }
+      }
 
-    if ($rv or $reload) {
-      # reload binding table
-      if ($psid) {
-        print "forcing binding table reload for $id ($psid)\n";
-        `/usr/local/bin/snabb lwaftr control $psid reload`;
+      if (0 < &file_changed($snabbvmx_lwaftr_file) + &file_changed($snabbvmx_config_file)) {
+        if ($psid) {
+          print "sending TERM to snabb process for $id ($psid)\n"; 
+          `kill -TERM $psid`;
+        }
       }
     }
+  }
 
-    if (0 < &file_changed($snabbvmx_lwaftr_file) + &file_changed($snabbvmx_config_file)) {
-      if ($psid) {
-        print "sending TERM to snabb process for $id ($psid)\n"; 
-        `kill -TERM $psid`;
-      }
-    }
+  # cleanup of snabb processes no longer needed
+  foreach my $id (keys %snabbpid) {
+    unlink "/tmp/snabbvmx-lwaftr-$id.cfg";
+    unlink "/tmp/snabbvmx-lwaftr-$id.conf";
+    print "send TERM to snabb process for $id. Has no longer a lwaftr config\n";
+    `kill -TERM $snabbpid{$id}`;
   }
 }
 

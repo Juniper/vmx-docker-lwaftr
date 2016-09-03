@@ -84,32 +84,24 @@ interfaces {
     ge-0/0/0 {
         mtu 9000;
         unit 0 {
-            description port-0000:05:00.0;
+            description xe0;
             family inet {
-                address 172.20.0.16/24 {
-                    arp 172.20.0.1 mac 22:22:22:22:22:22;
-                }
+                address 172.20.0.101/24;
             }
             family inet6 {
-                address fd00:4600:0::16/64 {
-                    ndp fd00:4600:0::1 mac 22:22:22:22:22:22;
-                }
+                address fd00:4600:0::101/64;
             }
         }
     }
     ge-0/0/1 {
         mtu 9000;
         unit 0 {
-            description port-00.1:05:00.1;
+            description xe1;
             family inet {
-                address 172.20.1.16/24 {
-                    arp 172.20.1.1 mac 22:22:22:22:22:22;
-                }
+                address 172.20.1.101/24;
             }
             family inet6 {
-                address fd00:4600:1::16/64 {
-                    ndp fd00:4600:1::1 mac 22:22:22:22:22:22;
-                }
+                address fd00:4600:1::101/64;
             }
         }
     }
@@ -117,7 +109,7 @@ interfaces {
         unit 0 {
             description mgmt;
             family inet {
-                address 172.17.0.121/16;
+                address 172.17.0.101/16;
             }
         }
     }
@@ -132,11 +124,11 @@ interfaces {
 routing-options {
     rib inet6.0 {
         static {
-            route ::/0 next-hop fd00:4600:0::1;
+            route ::/0 next-hop fd00:4600:0::201;
         }
     }
     static {
-        route 0.0.0.0/0 next-hop 172.20.1.1;
+        route 0.0.0.0/0 next-hop 172.20.0.201;
     }
 }
 protocols {
@@ -151,11 +143,11 @@ routing-instances {
         routing-options {
             rib R1.inet6.0 {
                 static {
-                    route ::/0 next-hop fd00:4600:1::1;
+                    route ::/0 next-hop fd00:4600:1::201;
                 }
             }
             static {
-                route 0.0.0.0/0 next-hop 172.20.1.1;
+                route 0.0.0.0/0 next-hop 172.20.1.201;
             }
         }
     }
@@ -215,7 +207,7 @@ ietf-softwire:softwire-config {
                             lwaftr-ipv6-addr 2004:400::1;
                         }
                     }
-                    ipv4_address 172.16.1.35;
+                    ipv4_address 172.20.0.101;
                     cache_refresh_interval 1;
                     icmpv6_rate_limiter_n_packets 300000;
                     icmpv6_rate_limiter_n_seconds 4;
@@ -232,7 +224,7 @@ ietf-softwire:softwire-config {
                     softwire-num-threshold 4000000;
                     tunnel-payload-mtu 9000;
                     tunnel-path-mru 9000;
-                    ipv4_address 172.16.2.35;
+                    ipv4_address 172.20.1.101;
                     cache_refresh_interval 1;
                     policy_icmpv6_incoming drop;
                     policy_icmpv6_outgoing drop;
