@@ -104,20 +104,19 @@ sub check_config {
   open IP, "/tmp/config.new1" or die "can't open file /tmp/config.new1";
   my $file;
   while (<IP>) {
-    if ($_ =~ /binding-table-file\s+([\w.]+)/) {
+    print NEW $_;
+    if ($_ =~ /\"binding-table-file\"\s+:\s+\"([\w.]+)\"/) {
       $file=$1;
       print("getting file $file from $ip ...\n");
       my $f="/var/db/scripts/commit/$file";
       `/usr/bin/scp -o StrictHostKeyChecking=no -i $identity snabbvmx\@$ip:$f .`;
       print("reading file $file ...\n");
-      open R, "$file" or die "can't open file $file";
-      while (<R>) {
-        print NEW $_;
-      }
-      close R;
-    } else {
-      print NEW $_;
-    }
+#      open R, "$file" or die "can't open file $file";
+#      while (<R>) {
+#        print NEW $_;
+#      }
+#      close R;
+    } 
   }
   close IP;
   close NEW;
@@ -173,6 +172,7 @@ sub process_new_config {
     if (-f $globalbdfile) {
       print "global binding table file $globalbdfile\n";
       $reload = &process_binding_table_file($globalbdfile);
+      print "global binding table file $globalbdfile reload=$reload\n";
     }
 
     foreach my $instance (@$instances) {

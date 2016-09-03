@@ -160,6 +160,17 @@ ietf-softwire:softwire-config {
                     softwire-num-threshold 4000000;
                     tunnel-payload-mtu 9000;
                     tunnel-path-mru 9000;
+                    ipv4_address 172.20.0.101;
+                    cache_refresh_interval 1;
+                    policy_icmpv6_incoming drop;
+                    policy_icmpv6_outgoing drop;
+                    policy_icmpv4_incoming drop;
+                    policy_icmpv4_outgoing drop;
+                }
+                lwaftr-instance 1 {
+                    softwire-num-threshold 4000000;
+                    tunnel-payload-mtu 9000;
+                    tunnel-path-mru 9000;
                     binding-table {
                         binding-entry 2004:400:400::1 {
                             binding-ipv4-addr 4.4.4.1;
@@ -207,21 +218,10 @@ ietf-softwire:softwire-config {
                             lwaftr-ipv6-addr 2004:400::1;
                         }
                     }
-                    ipv4_address 172.20.0.101;
+                    ipv4_address 172.20.1.101;
                     cache_refresh_interval 1;
                     icmpv6_rate_limiter_n_packets 300000;
                     icmpv6_rate_limiter_n_seconds 4;
-                    policy_icmpv6_incoming drop;
-                    policy_icmpv6_outgoing drop;
-                    policy_icmpv4_incoming drop;
-                    policy_icmpv4_outgoing drop;
-                }
-                lwaftr-instance 1 {
-                    softwire-num-threshold 4000000;
-                    tunnel-payload-mtu 9000;
-                    tunnel-path-mru 9000;
-                    ipv4_address 172.20.1.101;
-                    cache_refresh_interval 1;
                     policy_icmpv6_incoming drop;
                     policy_icmpv6_outgoing drop;
                     policy_icmpv4_incoming drop;
