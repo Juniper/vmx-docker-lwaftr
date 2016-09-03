@@ -415,12 +415,19 @@ for DEV in $LIST; do # ============= loop thru interfaces start
   # 0000:05:00.0/7 -> PCI=0000:05:00.0, CORE=7
   CORE=${DEV#*/}
   PCI=${DEV%/*} 
+  INT="${INTID}${INTNR}"
 
   # create persistent mac address based on host-name in junos config file
   h=$(grep host-name /u/$CONFIG |md5sum)
   if [ "eth" == "${PCI:0:3}" ]; then
     macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:00:0$INTNR"
     CORE=""
+    # place the interface in its own namespace to avoid
+    # getting routed by linux
+    NS="ns${INT}"
+    ip netns add $NS
+    ip link set $PCI netns $NS
+    ip netns exec $NS ifconfig $PCI up
   else
     macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:${PCI:5:2}:0${PCI:11:1}"
     echo "CORE=($CORE) PCI=($PCI)"
@@ -434,7 +441,6 @@ for DEV in $LIST; do # ============= loop thru interfaces start
   echo "PCI=$PCI CORE=$CORE CPULIST=$CPULIST"
   # add PCI to list
   PCIDEVS="$PCIDEVS $PCI"
-  INT="${INTID}${INTNR}"
   INTLIST="$INTLIST $INT"
   echo "$PCI/$CORE" > /tmp/pci_$INT
   echo "$macaddr" > /tmp/mac_$INT
