@@ -86,10 +86,10 @@ interfaces {
         unit 0 {
             description xe0;
             family inet {
-                address 172.20.0.101/24;
+                address 172.20.0.2/24;
             }
             family inet6 {
-                address fd00:4600:0::101/64;
+                address fd00:4600:1110::2/64;
             }
         }
     }
@@ -98,10 +98,10 @@ interfaces {
         unit 0 {
             description xe1;
             family inet {
-                address 172.20.1.101/24;
+                address 172.20.2.2/24;
             }
             family inet6 {
-                address fd00:4600:1::101/64;
+                address fd00:4600:1111::2/64;
             }
         }
     }
@@ -118,17 +118,20 @@ interfaces {
             family inet {
                 address 127.0.0.1/24;
             }
+            family inet6 {
+              address fd00:4600:8888::1/128;
+            }
         }
     }
 }
 routing-options {
     rib inet6.0 {
         static {
-            route ::/0 next-hop fd00:4600:0::201;
+            route ::/0 next-hop fd00:4600:1110::1;
         }
     }
     static {
-        route 0.0.0.0/0 next-hop 172.20.0.201;
+        route 0.0.0.0/0 next-hop 172.20.0.1;
     }
 }
 protocols {
@@ -143,11 +146,11 @@ routing-instances {
         routing-options {
             rib R1.inet6.0 {
                 static {
-                    route ::/0 next-hop fd00:4600:1::201;
+                    route ::/0 next-hop fd00:4600:1111::1;
                 }
             }
             static {
-                route 0.0.0.0/0 next-hop 172.20.1.201;
+                route 0.0.0.0/0 next-hop 172.20.2.1;
             }
         }
     }
@@ -160,68 +163,64 @@ ietf-softwire:softwire-config {
                     softwire-num-threshold 4000000;
                     tunnel-payload-mtu 9000;
                     tunnel-path-mru 9000;
-                    ipv4_address 172.20.0.101;
-                    cache_refresh_interval 1;
-                    policy_icmpv6_incoming drop;
-                    policy_icmpv6_outgoing drop;
-                    policy_icmpv4_incoming drop;
-                    policy_icmpv4_outgoing drop;
-                }
-                lwaftr-instance 1 {
-                    softwire-num-threshold 4000000;
-                    tunnel-payload-mtu 9000;
-                    tunnel-path-mru 9000;
                     binding-table {
-                        binding-entry 2004:400:400::1 {
-                            binding-ipv4-addr 4.4.4.1;
+                        binding-entry fd00:4600::1001 {
+                            binding-ipv4-addr 193.5.1.3;
                             port-set {
                                 offset 0;
                                 psid 1;
                                 psid-len 6;
                             }
-                            lwaftr-ipv6-addr 2004:400::1;
+                            lwaftr-ipv6-addr fd00:4600:8888::1;
                         }
-                        binding-entry 2004:400:400::2 {
-                            binding-ipv4-addr 4.4.4.1;
+                        binding-entry fd00:4600::1002 {
+                            binding-ipv4-addr 193.5.1.3;
                             port-set {
                                 offset 0;
                                 psid 2;
                                 psid-len 6;
                             }
-                            lwaftr-ipv6-addr 2004:400::1;
+                            lwaftr-ipv6-addr fd00:4600:8888::1;
                         }
-                        binding-entry 2004:400:400::3 {
-                            binding-ipv4-addr 4.4.4.1;
+                        binding-entry fd00:4600::1003 {
+                            binding-ipv4-addr 193.5.1.3;
                             port-set {
                                 offset 0;
                                 psid 3;
                                 psid-len 6;
                             }
-                            lwaftr-ipv6-addr 2004:400::1;
+                            lwaftr-ipv6-addr fd00:4600:8888::1;
                         }
-                        binding-entry 2004:400:400::4 {
-                            binding-ipv4-addr 4.4.4.1;
+                        binding-entry fd00:4600::1004 {
+                            binding-ipv4-addr 193.5.1.3;
                             port-set {
                                 offset 0;
                                 psid 4;
                                 psid-len 6;
                             }
-                            lwaftr-ipv6-addr 2004:400::1;
+                            lwaftr-ipv6-addr fd00:4600:8888::1;
                         }
-                        binding-entry 2004:400:400::5 {
-                            binding-ipv4-addr 4.4.4.1;
+                        binding-entry fd00:4600::1005 {
+                            binding-ipv4-addr 193.5.1.3;
                             port-set {
                                 offset 0;
                                 psid 5;
                                 psid-len 6;
                             }
-                            lwaftr-ipv6-addr 2004:400::1;
+                            lwaftr-ipv6-addr fd00:4600:8888::1;
                         }
                     }
-                    ipv4_address 172.20.1.101;
+                    ipv4_address 172.20.0.2;
                     cache_refresh_interval 1;
                     icmpv6_rate_limiter_n_packets 300000;
                     icmpv6_rate_limiter_n_seconds 4;
+                }
+                lwaftr-instance 1 {
+                    softwire-num-threshold 4000000;
+                    tunnel-payload-mtu 9000;
+                    tunnel-path-mru 9000;
+                    ipv4_address 172.20.2.2;
+                    cache_refresh_interval 1;
                     policy_icmpv6_incoming drop;
                     policy_icmpv6_outgoing drop;
                     policy_icmpv4_incoming drop;

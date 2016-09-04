@@ -266,11 +266,11 @@ next_hop6_mac = 66:66:66:66:66:66,
 ipv4_mtu = $ipv4_mtu,
 ipv6_mtu = $ipv6_mtu,
 EOF
-      print LWA "hairpinning = $instance->{'hairpinning'}," if $instance->{'hairpinning'};
-      print LWA "policy_icmpv4_incoming = $instance->{'policy_icmpv4_incoming'}," if $instance->{'policy_icmpv4_incoming'};
-      print LWA "policy_icmpv4_outgoing = $instance->{'policy_icmpv4_outgoing'}," if $instance->{'policy_icmpv4_outgoing'};
-      print LWA "policy_icmpv6_incoming = $instance->{'policy_icmpv6_incoming'}," if $instance->{'policy_icmpv6_incoming'};
-      print LWA "policy_icmpv6_outgoing = $instance->{'policy_icmpv6_outgoing'}," if $instance->{'policy_icmpv6_outgoing'};
+      print LWA "hairpinning = $instance->{'hairpinning'},\n" if $instance->{'hairpinning'};
+      print LWA "policy_icmpv4_incoming = $instance->{'policy_icmpv4_incoming'},\n" if $instance->{'policy_icmpv4_incoming'};
+      print LWA "policy_icmpv4_outgoing = $instance->{'policy_icmpv4_outgoing'},\n" if $instance->{'policy_icmpv4_outgoing'};
+      print LWA "policy_icmpv6_incoming = $instance->{'policy_icmpv6_incoming'},\n" if $instance->{'policy_icmpv6_incoming'};
+      print LWA "policy_icmpv6_outgoing = $instance->{'policy_icmpv6_outgoing'},\n" if $instance->{'policy_icmpv6_outgoing'};
       close LWA;
 
       my $rv = &process_binding_table_file($bdf);

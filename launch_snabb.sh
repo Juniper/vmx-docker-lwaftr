@@ -8,7 +8,7 @@ SLEEP=${INT:2:1}
 
 if [ "eth" == "${PCI:0:3}" ]; then
    NODE=0
-   NUMACTL="ip netns exec ns${INT}"
+   NUMACTL=""
 else
    CPU=$(cat /sys/class/pci_bus/${PCI%:*}/cpulistaffinity | cut -d'-' -f1 | cut -d',' -f1)
    NODE=$(numactl -H | grep "cpus: $CPU" | cut -d " " -f 2)

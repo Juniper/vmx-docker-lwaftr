@@ -13,10 +13,6 @@ INTERFACES=""
 
 docker rm $NAME 2>/dev/null
 docker create --name $NAME -ti --privileged -v $PWD:/u:ro $CONTAINER -I $IDENTITY -l $LICENSE -c $CFG $1 $VMX $INTERFACES
-#docker network create --internal --subnet=172.20.0.0/24 --gateway=172.20.0.1 net1 2>/dev/null
-#docker network create --internal --subnet=172.20.1.0/24 --gateway=172.20.1.1 net2 2>/dev/null
-docker network create --internal --subnet=172.20.0.0/24 net1 
-docker network create --internal --subnet=172.20.1.0/24 net2 
 docker network connect net1 $NAME
 docker network connect net2 $NAME
 docker start -a -i $NAME

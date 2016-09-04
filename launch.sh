@@ -422,12 +422,6 @@ for DEV in $LIST; do # ============= loop thru interfaces start
   if [ "eth" == "${PCI:0:3}" ]; then
     macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:00:0$INTNR"
     CORE=""
-    # place the interface in its own namespace to avoid
-    # getting routed by linux
-    NS="ns${INT}"
-    ip netns add $NS
-    ip link set $PCI netns $NS
-    ip netns exec $NS ifconfig $PCI up
   else
     macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:${PCI:5:2}:0${PCI:11:1}"
     echo "CORE=($CORE) PCI=($PCI)"
