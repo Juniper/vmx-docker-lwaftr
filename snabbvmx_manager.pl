@@ -38,7 +38,7 @@ sub process_binding_table_file {
   my %addresses;
   my @softwires;
 
-  if (-f $btfcompiled and -M $btf > -M $btfcompiled) {
+  if (-f $btfcompiled and -M $btf < -M $btfcompiled) {
     print "$btf: file $btfcompiled is newer, no need to recompile\n";
     return 0;
   }
