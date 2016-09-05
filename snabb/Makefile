@@ -7,7 +7,7 @@ docker:	build/Makefile
 	docker build -t buildsnabb .
 
 build/Makefile:	
-	git clone https://github.com/mwiget/snabb.git build
+	git clone -b igalia https://github.com/mwiget/snabb.git build
 	#git clone -b lwaftr https://github.com/igalia/snabb.git build
 
 clean:
