@@ -119,7 +119,7 @@ interfaces {
                 address 127.0.0.1/24;
             }
             family inet6 {
-              address fd00:4600:8888::1/128;
+              address fd00:4600:8888::2/128;
             }
         }
     }
@@ -165,49 +165,49 @@ ietf-softwire:softwire-config {
                     tunnel-path-mru 9000;
                     binding-table {
                         binding-entry fd00:4600::1001 {
-                            binding-ipv4-addr 193.5.1.3;
+                            binding-ipv4-addr 193.5.1.2;
                             port-set {
                                 offset 0;
                                 psid 1;
                                 psid-len 6;
                             }
-                            lwaftr-ipv6-addr fd00:4600:8888::1;
+                            lwaftr-ipv6-addr fd00:4600:8888::2;
                         }
                         binding-entry fd00:4600::1002 {
-                            binding-ipv4-addr 193.5.1.3;
+                            binding-ipv4-addr 193.5.1.2;
                             port-set {
                                 offset 0;
                                 psid 2;
                                 psid-len 6;
                             }
-                            lwaftr-ipv6-addr fd00:4600:8888::1;
+                            lwaftr-ipv6-addr fd00:4600:8888::2;
                         }
                         binding-entry fd00:4600::1003 {
-                            binding-ipv4-addr 193.5.1.3;
+                            binding-ipv4-addr 193.5.1.2;
                             port-set {
                                 offset 0;
                                 psid 3;
                                 psid-len 6;
                             }
-                            lwaftr-ipv6-addr fd00:4600:8888::1;
+                            lwaftr-ipv6-addr fd00:4600:8888::2;
                         }
                         binding-entry fd00:4600::1004 {
-                            binding-ipv4-addr 193.5.1.3;
+                            binding-ipv4-addr 193.5.1.2;
                             port-set {
                                 offset 0;
                                 psid 4;
                                 psid-len 6;
                             }
-                            lwaftr-ipv6-addr fd00:4600:8888::1;
+                            lwaftr-ipv6-addr fd00:4600:8888::2;
                         }
                         binding-entry fd00:4600::1005 {
-                            binding-ipv4-addr 193.5.1.3;
+                            binding-ipv4-addr 193.5.1.2;
                             port-set {
                                 offset 0;
                                 psid 5;
                                 psid-len 6;
                             }
-                            lwaftr-ipv6-addr fd00:4600:8888::1;
+                            lwaftr-ipv6-addr fd00:4600:8888::2;
                         }
                     }
                     ipv4_address 172.20.0.2;
@@ -221,10 +221,6 @@ ietf-softwire:softwire-config {
                     tunnel-path-mru 9000;
                     ipv4_address 172.20.2.2;
                     cache_refresh_interval 1;
-                    policy_icmpv6_incoming drop;
-                    policy_icmpv6_outgoing drop;
-                    policy_icmpv4_incoming drop;
-                    policy_icmpv4_outgoing drop;
                 }
             }
             binding-table-file binding_table_60k.txt;

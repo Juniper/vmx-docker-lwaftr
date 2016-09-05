@@ -2,7 +2,7 @@
 
 NAME="lwaftr1"
 CFG="lwaftr1.txt"
-VMX="vmx-bundle-16.1R1.8.tgz"
+VMX="vmx-bundle-16.1R1.7.tgz"
 #VMX="vmx-bundle-16.1-20160807.0.tgz"
 #CONTAINER="marcelwiget/vmxlwaftr:v0.8"
 CONTAINER="vmxlwaftr:v0.10"
