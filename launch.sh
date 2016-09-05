@@ -4,8 +4,8 @@
 qemu=/usr/local/bin/qemu-system-x86_64
 snabb=/usr/local/bin/snabb
 
-VCPMEM=4000     # default memory for vRE/VCP in kBytes
-VFPMEM=8000     # default memory for vPFE/VFP in kBytes
+VCPMEM=2000     # default memory for vRE/VCP in kBytes
+VFPMEM=4000     # default memory for vPFE/VFP in kBytes
 VCPCPU=1        # default cpu count for vRE/VCP
 VFPCPU=3        # default cpu count for vPFE/VFP
 NUMANODE=0
