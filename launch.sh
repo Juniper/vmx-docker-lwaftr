@@ -353,6 +353,8 @@ if [ ! -z "$VCPIMAGE" ]; then
       echo "We have /u/$IDENTITY file"
       cp /u/$IDENTITY .
       IDENTITY="/$(basename $IDENTITY)"
+      chmod 400 $IDENTITY
+
    fi
    HDDIMAGE=$(create_vmxhdd)
    MGMTIP="128.0.0.1"
