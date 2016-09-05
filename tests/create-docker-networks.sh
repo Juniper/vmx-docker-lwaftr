@@ -6,6 +6,7 @@ docker network create --subnet=172.20.0.0/24 --gateway=172.20.0.1 \
 
 # add 2nd subnet to net1. Docker network doesn't support multiple IP networks yet on bridge
 # so we do it manually here.
+sleep 5
 BRIDGE="br-$(docker network inspect --format "{{ .Id }}" net1 | cut -b 1-12)"
 sudo ip -6 addr add fd00:4600:1110::1/64 dev $BRIDGE
 sudo route -6 add fd00:4600:8888::2/128 gw fd00:4600:1110::2
