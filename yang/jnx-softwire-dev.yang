@@ -1,0 +1,22 @@
+module jnx-softwire-dev {
+  namespace "http://yang.juniper.net/software/aug";
+  prefix "jnx-swire";
+
+  import ietf-softwire {prefix sw; }
+
+  organization "Juniper Networks, Inc.";
+
+  revision 2016-07-19 {
+    description
+      "Juniper software deviation (lwaftr) BR only functionality ";
+  }
+
+  deviation /sw:softwire-config/sw:binding/sw:ce {
+    deviate not-supported;
+  }
+
+  deviation /sw:softwire-config/sw:algorithm {
+    deviate not-supported;
+  }
+
+}

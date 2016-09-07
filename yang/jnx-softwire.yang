@@ -12,14 +12,14 @@ module jnx-softwire {
       "Juniper software augments. ";
   }
 
-  augment "/sw:softwire-config/sw:lw4over6/sw:lwaftr" {
+  augment "/sw:softwire-config/sw:binding/sw:br" {
     leaf binding-table-file {
       type string;
       description "Complete path of the binding table file";
     }
   }
 
-  augment "/sw:softwire-config/sw:lw4over6/sw:lwaftr/sw:lwaftr-instances/sw:lwaftr-instance" {
+  augment "/sw:softwire-config/sw:binding/sw:br/sw:br-instances/sw:br-instance" {
     leaf ipv6_address {
       type inet:ipv6-address;
     }

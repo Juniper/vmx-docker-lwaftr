@@ -24,8 +24,9 @@ RUN tar zxf /qemu-v*-snabb.tgz -C /usr/local/
 
 RUN mkdir /yang /slax
 
-COPY yang/ietf-inet-types.yang yang/ietf-softwire.yang \
-  yang/jnx-softwire.yang yang/
+COPY yang/ietf-inet-types.yang yang/ietf-yang-types.yang \
+  yang/ietf-softwire.yang \
+  yang/jnx-softwire.yang yang/jnx-softwire-dev.yang yang/
 
 COPY slax/lwaftr.slax slax/
 
