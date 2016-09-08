@@ -12,6 +12,8 @@ The Container vmxlwaftr is based on the official Ubuntu Docker 14.04.4 base Cont
 
 The build process requires a Docker Engine, ideally on a Linux based host. It is however possible to build it entirely on Docker for OS/X.
 
+Typically, a toplevel launch via 'make' is sufficient to build vmxlwaftr. 
+
 The individual steps are:
 
 ### 1. Build qemu
