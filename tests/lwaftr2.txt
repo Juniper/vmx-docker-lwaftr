@@ -84,15 +84,15 @@ interfaces {
     ge-0/0/0 {
         mtu 9000;
         unit 0 {
-            description port-0000:05:00.0;
+            description xe0;
             family inet {
-                address 172.20.0.16/24 {
-                    arp 172.20.0.1 mac 22:22:22:22:22:22;
+                address 172.20.1.16/24 {
+                    arp 172.20.1.1 mac 02:02:02:02:02:02;
                 }
             }
             family inet6 {
-                address fd00:4600:0::16/64 {
-                    ndp fd00:4600:0::1 mac 22:22:22:22:22:22;
+                address fd00:4601::16/64 {
+                    ndp fd00:4601::1 mac 02:02:02:02:02:02;
                 }
             }
         }
@@ -116,11 +116,11 @@ interfaces {
 routing-options {
     rib inet6.0 {
         static {
-            route ::/0 next-hop fd00:4600:0::1;
+            route ::/0 next-hop fd00:4601::1;
         }
     }
     static {
-        route 0.0.0.0/0 next-hop 172.20.0.1;
+        route 0.0.0.0/0 next-hop 172.20.1.1;
     }
 }
 protocols {
@@ -136,7 +136,7 @@ ietf-softwire:softwire-config {
           softwire-num-threshold 4000000;
           tunnel-payload-mtu 9000;
           tunnel-path-mru 9000;
-          ipv4_address 172.20.0.16;
+          ipv4_address 172.20.1.16;
           cache_refresh_interval 1;
           ingress_drop_action warn;
         }
