@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 
 use strict;
 
@@ -151,14 +151,14 @@ sub process_new_config {
     my $id;
     $file =~ /(\d+)/;
     my $pid = $1;
-    open(my $fh, '<', "$file") or die "cannot open file $file";
-    {
-      local $/;
-      $id = <$fh>;
-    }
+    open(my $fh, "$file") or die "cannot open file $file";
+    $id = <$fh>;
+    $id = substr($id,0,3);  # we actually get a string of 256 characters, mostly \0
     close($fh);
-    # print "dir=$file pid=$pid id=$id\n";
+    my $len=length($id);
     $snabbpid{$id} = $pid;
+    my $psid = $snabbpid{$id};
+    print "psid for $id is $psid\n";
   }
 
   if ($json) {
@@ -275,8 +275,8 @@ EOF
 
       my $rv = &process_binding_table_file($bdf);
       my $psid = $snabbpid{$id};
-      delete $snabbpid{$id}; # avoid getting killed during cleanup at the end of this function
       print "psid of snabb process for $id is $psid\n";
+      delete $snabbpid{$id}; # avoid getting killed during cleanup at the end of this function
 
       if ($rv or $reload) {
         # reload binding table
@@ -296,9 +296,11 @@ EOF
   }
 
   # cleanup of snabb processes no longer needed
+  print "cleanup\n";
   foreach my $id (keys %snabbpid) {
-    unlink "/tmp/snabbvmx-lwaftr-$id.cfg";
-    unlink "/tmp/snabbvmx-lwaftr-$id.conf";
+    my $f1 = sprintf("snabbvmx-lwaftr-%s.cfg", $id);
+    unlink "snabbvmx-lwaftr-$id.cfg";
+    unlink "snabbvmx-lwaftr-$id.conf";
     print "send TERM to snabb process for $id. Has no longer a lwaftr config\n";
     `kill -TERM $snabbpid{$id}`;
   }
