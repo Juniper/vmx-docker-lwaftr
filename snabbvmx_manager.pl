@@ -221,6 +221,10 @@ return {
   lwaftr = \"$snabbvmx_lwaftr_file\",
   settings = {
     vlan = $vlan,
+    ingress_drop_action = $instance->{"ingress_drop_action"},
+    ingress_drop_threshold = $instance->{"ingress_drop_threshold"},
+    ingress_drop_interval = $instance->{"ingress_drop_interval"},
+    ingress_drop_wait = $instance->{"ingress_drop_wait"},
   },
   ipv6_interface = {
     ipv6_address = \"$instance->{"ipv6_address"}\",
