@@ -1,4 +1,4 @@
-FROM ubuntu:14.04.4
+FROM ubuntu:14.04.5
 MAINTAINER Marcel Wiget
 
 # install tools required in the running container

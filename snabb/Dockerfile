@@ -1,4 +1,4 @@
-FROM ubuntu:14.04.4
+FROM ubuntu:14.04.5
 MAINTAINER Marcel Wiget
 
 COPY 99force-ipv4 /etc/apt/apt.conf.d/

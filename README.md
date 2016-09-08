@@ -44,28 +44,26 @@ c18e43a1bbc434860275618d446c1eef  snabb
 $ cd ..
 ```
 
-This will clone the branch 1to1_mapping from a private Snabb repository, build the Docker Container *buildsnabb* to compile snabb and place it in the current directory. Snabb is a single application that will be placed in /usr/local/bin/ in the vmxlwaftr Docker Container further below.
+This will clone the branch lwaftr from github.com/igalia, build the Docker Container *buildsnabb* to compile snabb and place it in the current directory. Snabb is a single application that will be placed in /usr/local/bin/ in the vmxlwaftr Docker Container further below.
 
-### 3. JET
+### 4. dumb-init
 
-Download the following files from the Internet. They will be installed into the Container by step 4.
+dumb-init is a simple process supervisor and init system designed to run as PID 1 inside minimal container environments (such as Docker). It is a deployed as a small, statically-linked binary written in C. It clones version 1.1.3 from https://github.com/Yelp/dumb-init and builds it via Docker container.
+
 
 ```
-wget https://pypi.python.org/packages/82/d9/7064d3a0a1d62756a1a809c85b99f864c641b66de84c15458f72193b7708/paho-mqtt-1.2.tar.gz
-wget https://pypi.python.org/packages/ae/58/35e3f0cd290039ff862c2c9d8ae8a76896665d70343d833bdc2f748b8e55/thrift-0.9.3.tar.gz
-wget https://bootstrap.pypa.io/ez_setup.py
+$ cd dumb-init
+$ make
+...
 ```
 
-Download jet-1.tar.gz from the juniper.net support download page for JET:
-http://www.juniper.net/support/downloads/?p=jet#sw
-
-### 4. Build the vmxlwaftr Container
+### 5. Build the vmxlwaftr Container
 
 Edit the name and version of the Container in the toplevel file VERSION:
 
 ```
 $ cat VERSION
-vmxlwaftr:v0.9
+vmxlwaftr:v0.10
 ```
 
 If the Container is to be pushed onto docker hub, then the name will probably be something like *juniper/vmxlwaftr:vx.y*
@@ -82,11 +80,14 @@ Removing intermediate container f98dc81620c9
 Successfully built aa7e281472e4
 
 $ mwiget@st:~/vmxlwaftr$ docker images
-REPOSITORY                       TAG                 IMAGE ID            CREATED             SIZE
-vmxlwaftr                        v0.9                aa7e281472e4        13 minutes ago      431.4 MB
-buildsnabb                       latest              d633187d8dfc        29 minutes ago      358.8 MB
-buildqemu                        latest              5c8eace386ab        35 minutes ago      447.2 MB
-. . .
+REPOSITORY              TAG                 IMAGE ID            CREATED              SIZE
+vmxlwaftr               v0.10               2779b5c29172        About a minute ago   253.2 MB
+buildqemu               latest              dfcbe71b7896        2 minutes ago        432.5 MB
+buildsnabb              latest              60f090d9d3e0        4 minutes ago        344.7 MB
+build-dumb-init         latest              866eb14689e5        6 minutes ago        347.8 MB
+b4cpe                   v0.1                fb4f557e6249        3 days ago           258.6 MB
+ubuntu                  14.04.4             38c759202e30        10 weeks ago         196.6 MB
+...
 ```
 
 The images buildsnabb and buildqemu can be removed via 'make clean' from the qemu, respectively snabb directory. Only the 'vmxlwaftr' Container is required.
@@ -96,9 +97,9 @@ The images buildsnabb and buildqemu can be removed via 'make clean' from the qem
 To save the vmxlwaftr Container into an image file use:
 
 ```
-$ docker save -o vmxlwaftr-v0.9.img vmxlwaftr:v0.9
-$ ls -l vmxlwaftr-v0.9.img
--rw------- 1 mwiget mwiget 447854592 Jun 26 18:54 vmxlwaftr-v0.9.img
+$ docker save -o vmxlwaftr-v0.10.img vmxlwaftr:v0.10
+$ ls -l vmxlwaftr-v0.10.img
+-rw------- 1 mwiget staff 262899712 Sep  8 15:29 vmxlwaftr-v0.10.img
 ```
 
 ## Running the vmxlwaftr Container
@@ -145,7 +146,7 @@ docker run --name <name> --rm -v \$PWD:/u:ro \\
 
 ```
 
-See tests/run1.sh and tests/run2.sh for examples on how to launch. The 
+See tests/run0.sh, tests/run1.sh and tests/run2.sh for examples on how to launch. The 
 vMX distribution tar file must be on the local directory from which the container
 is launched.
 
