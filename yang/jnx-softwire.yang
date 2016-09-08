@@ -100,5 +100,32 @@ module jnx-softwire {
       description
         "IPv4 egress filter in libpcap format";
     }
+    leaf ingress_drop_action {
+      type enumeration {
+        enum flush;
+        enum warn;
+      }
+      default flush;
+      description 
+        "jit.flush() gets triggered if set to flush, otherwise just a warning message is created";
+    }
+    leaf ingress_drop_threshold {
+      type uint32;
+      default 100000;
+      description
+        "Number of ingress discard packets per drop interval must be exceeded before trigger jit.flush()";
+    }
+    leaf ingress_drop_interval {
+      type uint32;
+      default 1000000;
+      description
+        "drop interval in msec";
+    }
+    leaf ingress_drop_wait {
+      type uint32;
+      default 20;
+      description
+        "grace period between jit.flush() in seconds";
+    }
   }
 }

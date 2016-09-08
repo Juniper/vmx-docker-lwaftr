@@ -5,6 +5,11 @@ system {
     root-authentication {
         encrypted-password "$5$XZSErpYB$QPbnlFXutnXy4jrpwUrtor/FtmVq94dIcaenN6KH013"; ## SECRET-DATA
     }
+    scripts {
+      op {
+        file lwaftr.slax;
+      }
+    }
     login {
         user lab {
             uid 2002;
@@ -92,22 +97,6 @@ interfaces {
             }
         }
     }
-    ge-0/0/1 {
-        mtu 9000;
-        unit 0 {
-            description port-00.1:05:00.1;
-            family inet {
-                address 172.20.1.16/24 {
-                    arp 172.20.1.1 mac 22:22:22:22:22:22;
-                }
-            }
-            family inet6 {
-                address fd00:4600:1::16/64 {
-                    ndp fd00:4600:1::1 mac 22:22:22:22:22:22;
-                }
-            }
-        }
-    }
     fxp0 {
         unit 0 {
             description mgmt;
@@ -139,22 +128,6 @@ protocols {
         interface all;
     }
 }
-routing-instances {
-    R1 {
-        instance-type virtual-router;
-        interface ge-0/0/1.0;
-        routing-options {
-            rib R1.inet6.0 {
-                static {
-                    route ::/0 next-hop fd00:4600:1::1;
-                }
-            }
-            static {
-                route 0.0.0.0/0 next-hop 172.20.1.1;
-            }
-        }
-    }
-}
 ietf-softwire:softwire-config {
   binding {
     br {
@@ -163,27 +136,9 @@ ietf-softwire:softwire-config {
           softwire-num-threshold 4000000;
           tunnel-payload-mtu 9000;
           tunnel-path-mru 9000;
-          ipv6_address 2a02:587:f700:1::35;
-          ipv4_address 172.16.1.35;
-          tunnel-payload-mtu 9000;
-          tunnel-path-mru 9000;
+          ipv4_address 172.20.1.16;
           cache_refresh_interval 1;
-          policy_icmpv6_incoming drop;
-          policy_icmpv6_outgoing drop;
-          policy_icmpv4_incoming drop;
-          policy_icmpv4_outgoing drop;
-        }
-        br-instance 1 {
-          softwire-num-threshold 4000000;
-          ipv6_address 2a02:587:f700:2::35;
-          ipv4_address 172.16.2.35;
-          tunnel-payload-mtu 9000;
-          tunnel-path-mru 9000;
-          cache_refresh_interval 1;
-          policy_icmpv6_incoming drop;
-          policy_icmpv6_outgoing drop;
-          policy_icmpv4_incoming drop;
-          policy_icmpv4_outgoing drop;
+          ingress_drop_action warn;
         }
       }
       binding-table-file binding_table_60k.txt;

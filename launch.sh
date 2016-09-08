@@ -158,7 +158,7 @@ EOF
   fi
   slaxopfiles=$(ls /slax/*slax)
   if [ ! -z "$slaxopfiles" ]; then
-    echo "SLAX files: $slaxfiles"
+    >&2 echo "SLAX files: $slaxopfiles"
     cp $slaxopfiles config_drive/var/db/vmm/vmxlwaftr
   fi
   yangfiles=$(ls /yang/*.yang)

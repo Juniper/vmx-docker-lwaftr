@@ -221,6 +221,7 @@ ietf-softwire:softwire-config {
                     tunnel-path-mru 9000;
                     ipv4_address 172.20.2.2;
                     cache_refresh_interval 1;
+                    ingress_drop_action warn;
                 }
             }
             binding-table-file binding_table_60k.txt;
