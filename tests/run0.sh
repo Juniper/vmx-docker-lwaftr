@@ -1,11 +1,11 @@
 #!/bin/bash
 
-NAME="lwaftr1"
-CFG="lwaftr1.txt"
+NAME="lwaftr0"
+CFG="lwaftr0.txt"
 VMX="vmx-bundle-16.1R1.7.tgz"
 #VMX="vmx-bundle-16.1-20160807.0.tgz"
 #CONTAINER="marcelwiget/vmxlwaftr:v0.8"
-CONTAINER="vmxlwaftr:v0.11"
+CONTAINER="vmxlwaftr:v0.10"
 IDENTITY="snabbvmx.key"
 chmod 400 $IDENTITY
 LICENSE="license-eval.txt"
