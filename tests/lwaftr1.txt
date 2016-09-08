@@ -156,10 +156,10 @@ routing-instances {
     }
 }
 ietf-softwire:softwire-config {
-    lw4over6 {
-        lwaftr {
-            lwaftr-instances {
-                lwaftr-instance 0 {
+    binding {
+        br {
+            br-instances {
+                br-instance 0 {
                     softwire-num-threshold 4000000;
                     tunnel-payload-mtu 9000;
                     tunnel-path-mru 9000;
@@ -167,47 +167,47 @@ ietf-softwire:softwire-config {
                         binding-entry fd00:4600::1001 {
                             binding-ipv4-addr 193.5.1.2;
                             port-set {
-                                offset 0;
-                                psid 1;
+                                psid-offset 0;
                                 psid-len 6;
+                                psid 1;
                             }
-                            lwaftr-ipv6-addr fd00:4600:8888::2;
+                            br-ipv6-addr fd00:4600:8888::2;
                         }
                         binding-entry fd00:4600::1002 {
                             binding-ipv4-addr 193.5.1.2;
                             port-set {
-                                offset 0;
-                                psid 2;
+                                psid-offset 0;
                                 psid-len 6;
+                                psid 2;
                             }
-                            lwaftr-ipv6-addr fd00:4600:8888::2;
+                            br-ipv6-addr fd00:4600:8888::2;
                         }
                         binding-entry fd00:4600::1003 {
                             binding-ipv4-addr 193.5.1.2;
                             port-set {
-                                offset 0;
-                                psid 3;
+                                psid-offset 0;
                                 psid-len 6;
+                                psid 3;
                             }
-                            lwaftr-ipv6-addr fd00:4600:8888::2;
+                            br-ipv6-addr fd00:4600:8888::2;
                         }
                         binding-entry fd00:4600::1004 {
                             binding-ipv4-addr 193.5.1.2;
                             port-set {
-                                offset 0;
-                                psid 4;
+                                psid-offset 0;
                                 psid-len 6;
+                                psid 4;
                             }
-                            lwaftr-ipv6-addr fd00:4600:8888::2;
+                            br-ipv6-addr fd00:4600:8888::2;
                         }
                         binding-entry fd00:4600::1005 {
                             binding-ipv4-addr 193.5.1.2;
                             port-set {
-                                offset 0;
-                                psid 5;
+                                psid-offset 0;
                                 psid-len 6;
+                                psid 5;
                             }
-                            lwaftr-ipv6-addr fd00:4600:8888::2;
+                            br-ipv6-addr fd00:4600:8888::2;
                         }
                     }
                     ipv4_address 172.20.0.2;
@@ -215,7 +215,7 @@ ietf-softwire:softwire-config {
                     icmpv6_rate_limiter_n_packets 300000;
                     icmpv6_rate_limiter_n_seconds 4;
                 }
-                lwaftr-instance 1 {
+                br-instance 1 {
                     softwire-num-threshold 4000000;
                     tunnel-payload-mtu 9000;
                     tunnel-path-mru 9000;

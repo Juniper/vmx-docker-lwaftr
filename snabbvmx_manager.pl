@@ -49,7 +49,7 @@ sub process_binding_table_file {
   open IN,"$btf" or die $@;
   while(<IN>) {
     chomp;
-    if (/lwaftr-ipv6-addr\s+([\w:]+)/ or /softwires_([\w:]+)/) {
+    if (/br-ipv6-addr\s+([\w:]+)/ or /softwires_([\w:]+)/) {
       $br_address_idx++;
       $br_address=$1;
       push @br_addresses,$br_address;
@@ -164,9 +164,9 @@ sub process_new_config {
   if ($json) {
     my $data = decode_json($json);
 
-    my $instances = $data->{"configuration"}{"softwire-config"}{"lw4over6"}{"lwaftr"}{"lwaftr-instances"}{"lwaftr-instance"};
+    my $instances = $data->{"configuration"}{"softwire-config"}{"binding"}{"br"}{"br-instances"}{"br-instance"};
 
-    my $globalbdfile = $data->{"configuration"}{"softwire-config"}{"lw4over6"}{"lwaftr"}{"binding-table-file"};
+    my $globalbdfile = $data->{"configuration"}{"softwire-config"}{"binding"}{"br"}{"binding-table-file"};
     my $reload = 0;
 
     if (-f $globalbdfile) {
@@ -191,12 +191,12 @@ sub process_new_config {
         my %array;
         foreach my $xy (@$be) {
           my $portset = $xy->{"port-set"};
-          my $lwaftripv6 = $xy->{"lwaftr-ipv6-addr"}; 
-          push @{$bindings{$lwaftripv6}}, $xy->{"binding-ipv6info"} . " " . join(",", $xy->{"binding-ipv4-addr"},$portset->{"psid"},$portset->{"psid-len"},$portset->{"offset"});
+          my $lwaftripv6 = $xy->{"br-ipv6-addr"}; 
+          push @{$bindings{$lwaftripv6}}, $xy->{"binding-ipv6info"} . " " . join(",", $xy->{"binding-ipv4-addr"},$portset->{"psid"},$portset->{"psid-len"},$portset->{"psid-offset"});
         }
 
         foreach my $lwaftripv6 (sort keys %bindings) {
-          print BDF "lwaftr-ipv6-addr $lwaftripv6\n";
+          print BDF "br-ipv6-addr $lwaftripv6\n";
           foreach my $entry (@{$bindings{$lwaftripv6}}) {
             print BDF $entry . "\n";
           }

@@ -156,11 +156,13 @@ routing-instances {
     }
 }
 ietf-softwire:softwire-config {
-  lw4over6 {
-    lwaftr {
-      lwaftr-instances {
-        lwaftr-instance 0 {
+  binding {
+    br {
+      br-instances {
+        br-instance 0 {
           softwire-num-threshold 4000000;
+          tunnel-payload-mtu 9000;
+          tunnel-path-mru 9000;
           ipv6_address 2a02:587:f700:1::35;
           ipv4_address 172.16.1.35;
           tunnel-payload-mtu 9000;
@@ -171,7 +173,7 @@ ietf-softwire:softwire-config {
           policy_icmpv4_incoming drop;
           policy_icmpv4_outgoing drop;
         }
-        lwaftr-instance 1 {
+        br-instance 1 {
           softwire-num-threshold 4000000;
           ipv6_address 2a02:587:f700:2::35;
           ipv4_address 172.16.2.35;
