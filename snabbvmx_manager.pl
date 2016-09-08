@@ -221,27 +221,29 @@ return {
   lwaftr = \"$snabbvmx_lwaftr_file\",
   settings = {
     vlan = $vlan,
-    ingress_drop_action = $instance->{"ingress_drop_action"},
-    ingress_drop_threshold = $instance->{"ingress_drop_threshold"},
-    ingress_drop_interval = $instance->{"ingress_drop_interval"},
-    ingress_drop_wait = $instance->{"ingress_drop_wait"},
+EOF
+    print CFG "    ingress_drop_action = \"$instance->{'ingress_drop_action'}\",\n" if $instance->{'ingress_drop_action'};
+    print CFG "    ingress_drop_threshold = $instance->{'ingress_drop_threshold'},\n" if $instance->{'ingress_drop_threshold'};
+    print CFG "    ingress_drop_interval = $instance->{'ingress_drop_interval'},\n" if $instance->{'ingress_drop_interval'};
+    print CFG "    ingress_drop_wait = $instance->{'ingress_drop_wait'},\n" if $instance->{'ingress_drop_wait'};
+      print CFG <<EOF;
   },
   ipv6_interface = {
     ipv6_address = \"$instance->{"ipv6_address"}\",
     cache_refresh_interval = $instance->{"cache_refresh_interval"},
 EOF
-      print CFG "    ipv6_ingress_filter = \"$instance->{'ipv6_ingress_filter'}\"," if $instance->{'ipv6_ingress_filter'};
-      print CFG "    ipv6_egress_filter = \"$instance->{'ipv6_egress_filter'}\"," if $instance->{'ipv6_eress_filter'};
-      print CFG "    fragmentation = $instance->{'fragmentation'}," if $instance->{'fragmentation'};
+      print CFG "    ipv6_ingress_filter = \"$instance->{'ipv6_ingress_filter'}\",\n" if $instance->{'ipv6_ingress_filter'};
+      print CFG "    ipv6_egress_filter = \"$instance->{'ipv6_egress_filter'}\",\n" if $instance->{'ipv6_eress_filter'};
+      print CFG "    fragmentation = $instance->{'fragmentation'},\n" if $instance->{'fragmentation'};
       print CFG <<EOF;
   },
   ipv4_interface = {
     ipv4_address = \"$instance->{"ipv4_address"}\",
     cache_refresh_interval = $instance->{"cache_refresh_interval"},
 EOF
-      print CFG "    ipv4_ingress_filter = \"$instance->{'ipv4_ingress_filter'}\"," if $instance->{'ipv4_ingress_filter'};
-      print CFG "    ipv4_egress_filter = \"$instance->{'ipv4_egress_filter'}\"," if $instance->{'ipv4_eress_filter'};
-      print CFG "    fragmentation = $instance->{'fragmentation'}," if $instance->{'fragmentation'};
+      print CFG "    ipv4_ingress_filter = \"$instance->{'ipv4_ingress_filter'}\",\n" if $instance->{'ipv4_ingress_filter'};
+      print CFG "    ipv4_egress_filter = \"$instance->{'ipv4_egress_filter'}\",\n" if $instance->{'ipv4_eress_filter'};
+      print CFG "    fragmentation = $instance->{'fragmentation'},\n" if $instance->{'fragmentation'};
       print CFG <<EOF;
   },
 }
