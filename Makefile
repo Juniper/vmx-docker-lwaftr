@@ -1,6 +1,8 @@
-vmxlwaftr: build/snabb build/qemu-v2.4.1-snabb.tgz build/dumb-init build/b4cpe
-	mkdir build || true
+vmxlwaftr: build build/snabb build/qemu-v2.4.1-snabb.tgz build/dumb-init build/b4cpe
 	docker build -t $$(cat VERSION) .
+
+build:
+	mkdir build
 
 build/snabb:
 	$(MAKE) -C snabb

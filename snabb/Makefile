@@ -1,7 +1,10 @@
-snabb: docker
+snabb: docker build
 	docker run -ti --rm -v $$PWD/build:/u buildsnabb
 	cp build/src/snabb .
 	md5sum snabb
+
+build:
+	mkdir build
 
 docker:	build/Makefile
 	docker build -t buildsnabb .

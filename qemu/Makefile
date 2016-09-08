@@ -1,6 +1,9 @@
-qemu: docker
+qemu: docker build
 	docker run -ti --rm -v $$PWD/build:/u buildqemu
 	cp build/qemu-*-snabb.tgz .
+
+build:
+	mkdir build
 
 docker:	build/Makefile
 	docker build -t buildqemu .
