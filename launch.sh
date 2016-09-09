@@ -136,6 +136,25 @@ function create_vmxhdd {
   echo "/tmp/vmxhdd.img"
 }
 
+#-----------------------------------------------------------
+function extract_licenses {
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    if [ ! -z "$line" ]; then
+      tmp="$(echo "$line" | cut -d' ' -f1)"
+      if [ ! -z "$tmp" ]; then
+        file=config_drive/config/license/${tmp}.lic
+        if [ $DEBUG -gt 0 ]; then
+          >&2 echo "  writing license file $file ..."
+        fi
+        echo "$line" > $file
+      else
+        echo "$line" >> $file
+      fi
+    fi
+  done < "$1"
+}
+
+#-----------------------------------------------------------
 function create_config_drive {
   >&2 echo "Creating config drive (metadata.img) ..."
   mkdir config_drive
@@ -154,7 +173,7 @@ vm_instance="0"
 EOF
   if [ -f "/u/$LICENSE" ]; then
     >&2 echo "copying $LICENSE"
-    cp /u/$LICENSE config_drive/config/license/
+    $(extract_licenses /u/$LICENSE)
   fi
   slaxopfiles=$(ls /slax/*slax)
   if [ ! -z "$slaxopfiles" ]; then
