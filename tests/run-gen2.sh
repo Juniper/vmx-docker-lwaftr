@@ -10,7 +10,7 @@ if [ -z "$RATE" ]; then
   echo "Please specify rate in MPPS"
   exit 1
 fi
-FLOWS=64000
+FLOWS=60000
 SMAC="02:02:02:02:02:02"
 DMAC="02:42:df:27:05:00"
 echo $INTERFACE at $PCIDEV has $MAC, running at $RATE gbps
