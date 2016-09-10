@@ -208,19 +208,12 @@ sub process_new_config {
       my $snabbvmx_lwaftr_file = "snabbvmx-lwaftr-$id.conf";
 
       open CFG,">$snabbvmx_config_file.new" or die $@;
-      # WARN user if ipv6 and ipv4 vlan differ
-      my $vlan = "nil";
-      if ($instance->{"ipv6_vlan"}) {
-        $vlan = $instance->{"ipv6_vlan"};
-      }
-      if ($instance->{"ipv4_vlan"}) {
-        $vlan = $instance->{"ipv4_vlan"};
-      }
       print CFG <<EOF;
 return {
   lwaftr = \"$snabbvmx_lwaftr_file\",
   settings = {
-    vlan = $vlan,
+    print CFG "    ipv4_vlan = $instance->{'ipv4_vlan'},\n" if $instance->{'ipv4_vlan'};
+    print CFG "    ipv6_vlan = $instance->{'ipv6_vlan'},\n" if $instance->{'ipv6_vlan'};
 EOF
     print CFG "    ingress_drop_action = \"$instance->{'ingress_drop_action'}\",\n" if $instance->{'ingress_drop_action'};
     print CFG "    ingress_drop_threshold = $instance->{'ingress_drop_threshold'},\n" if $instance->{'ingress_drop_threshold'};
