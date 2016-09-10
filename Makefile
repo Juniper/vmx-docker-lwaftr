@@ -1,4 +1,7 @@
 vmxlwaftr: build build/snabb build/qemu-v2.4.1-snabb.tgz build/dumb-init build/b4cpe
+	cp snabb/build/src/snabb build/
+	cp dumb-init/dumb-init build/
+	cp qemu/qemu-v2.4.1-snabb.tgz build/
 	docker build -t $$(cat VERSION) .
 
 build:
@@ -6,15 +9,12 @@ build:
 
 build/snabb:
 	$(MAKE) -C snabb
-	cp snabb/build/src/snabb build/
 
 build/dumb-init:
 	$(MAKE) -C dumb-init
-	cp dumb-init/dumb-init build/
 
 build/qemu-v2.4.1-snabb.tgz:
 	$(MAKE) -C qemu
-	cp qemu/qemu-v2.4.1-snabb.tgz build/
 
 build/b4cpe:
 	$(MAKE) -C b4cpe
