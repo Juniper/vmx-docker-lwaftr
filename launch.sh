@@ -187,7 +187,7 @@ EOF
      for file in $yangfiles; do 
         if [ -f "$file" ]; then
            filebase=$(basename $file)
-           grep "deviate " $file
+           grep "deviate " $file >/dev/null 2>&1
            if [ $? -eq 0 ]; then
             >&2 echo "YANG deviation file $file"
             yangcmd="$yangcmd -d /var/db/vmm/vmxlwaftr/$filebase"
@@ -447,7 +447,12 @@ for DEV in $LIST; do # ============= loop thru interfaces start
     ifconfig $PCI mtu 9500
   else
     macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:${PCI:5:2}:0${PCI:11:1}"
-    echo "CORE=($CORE) PCI=($PCI)"
+    if [ "$CORE" -ge "0" ]; then
+      echo "CORE=($CORE) PCI=($PCI)"
+    else
+      echo "FATAL configuration errror. Must specify core after PCI: $PCI/<core>"
+      exit 1
+    fi
     if [ -z "$CPULIST" ]; then
       CPULIST=$CORE
     else

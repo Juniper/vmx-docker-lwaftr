@@ -212,9 +212,9 @@ sub process_new_config {
 return {
   lwaftr = \"$snabbvmx_lwaftr_file\",
   settings = {
+EOF
     print CFG "    ipv4_vlan = $instance->{'ipv4_vlan'},\n" if $instance->{'ipv4_vlan'};
     print CFG "    ipv6_vlan = $instance->{'ipv6_vlan'},\n" if $instance->{'ipv6_vlan'};
-EOF
     print CFG "    ingress_drop_action = \"$instance->{'ingress_drop_action'}\",\n" if $instance->{'ingress_drop_action'};
     print CFG "    ingress_drop_threshold = $instance->{'ingress_drop_threshold'},\n" if $instance->{'ingress_drop_threshold'};
     print CFG "    ingress_drop_interval = $instance->{'ingress_drop_interval'},\n" if $instance->{'ingress_drop_interval'};
