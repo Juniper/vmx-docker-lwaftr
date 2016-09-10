@@ -4,7 +4,7 @@ SNABB=../build/snabb
 
 PCIDEV=0000:05:00.1
 INTERFACE=p1p2
-RATE=0.1
+RATE=3.1
 CPU=7
 if [ -z "$RATE" ]; then
   echo "Please specify rate in MPPS"

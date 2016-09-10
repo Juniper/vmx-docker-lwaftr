@@ -19,20 +19,47 @@ match / {
   <op-script-results> {
     var $lwaftr = document("/tmp/stats.xml");
     if ($id == "all") {
-      var $fmt = "%-4s%-6s%-18s%-18s%12s%12s";
+      var $fmt = "%-4s%-6s%-18s%-18s%12s%12s%10s%10s";
       <output> jcs:printf($fmt, "Id", "Pid", "Nexthop v4", "Nexthop v6", "rxPackets",
-                "txPackets");
+                "txPackets", "rxDrops", "txDrops");
      for-each ($lwaftr/snabb/instance) {
        
       var $rxpackets = .//rxpackets;
       var $txpackets = .//txpackets;
-      <output> jcs:printf($fmt, id, pid, next_hop_mac_v4, next_hop_mac_v6, $rxpackets, $txpackets);
+      var $rxdrops = .//rxdrop;
+      var $txdrops = .//txdrop;
+
+      <output> jcs:printf($fmt, id, pid, next_hop_mac_v4, next_hop_mac_v6, $rxpackets, $txpackets, $rxdrops, $txdrops);
      }
     } else {
       for-each ( $lwaftr/snabb/instance) {
         if ( ./id[contains(.,$id)] ) {
           <output> id;
-          for-each ( ./* ) {
+          for-each ( ./engine/* ) {
+            var $value = .;
+            <output> "    " _ name() _ "=" _ $value;
+          }
+          for-each ( ./pci/* ) {
+            if ( ./* ) {
+              <output> "\n";
+              <output> "  " _ name() _ ":";
+              for-each ( ./* ) {
+                var $value = .;
+                <output> "    " _ name() _ "=" _ $value;
+              }
+            }
+          }
+          for-each ( ./apps/* ) {
+            if ( ./* ) {
+              <output> "\n";
+              <output> "  " _ name() _ ":";
+              for-each ( ./* ) {
+                var $value = .;
+                <output> "    " _ name() _ "=" _ $value;
+              }
+            }
+          }
+          for-each ( ./links/* ) {
             if ( ./* ) {
               <output> "\n";
               <output> "  " _ name() _ ":";

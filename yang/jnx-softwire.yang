@@ -107,7 +107,8 @@ module jnx-softwire {
       }
       default flush;
       description 
-        "jit.flush() gets triggered if set to flush, otherwise just a warning message is created";
+        "jit.flush() gets triggered if set to flush, otherwise just a warning message is created.
+         default is flush";
     }
     leaf ingress_drop_threshold {
       type uint32;
