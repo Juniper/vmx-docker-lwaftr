@@ -36,7 +36,6 @@ sudo route add -net 193.5.1.40/29 gw 172.20.0.7
 sudo route add -net 193.5.1.48/29 gw 172.20.0.8
 sudo route add -net 193.5.1.56/29 gw 172.20.0.9
 
-# NOTE: Adjust eth0 with whatever interface is used as
-# default gateway
-
-sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+gwdev=$(ip -4 route list 0/0 |cut -d' ' -f5)
+echo "Adding SNAT masquerading via interface $gwdev"
+sudo iptables -t nat -A POSTROUTING -o $gwdev -j MASQUERADE
