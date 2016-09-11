@@ -10,9 +10,15 @@ The Container vmxlwaftr is based on the official Ubuntu Docker 14.04.4 base Cont
 * Qemu 2.4.1 with reconnect patch downloaded and built from source in qemu/
 * Snabb, downloaded and built from source in snabb/
 
-The build process requires a Docker Engine, ideally on a Linux based host. It is however possible to build it entirely on Docker for OS/X.
+The build process requires a Docker Engine and the make tool. Please follow the official 
+[Install Docker Engine on Linux](https://docs.docker.com/engine/installation/linux/) guide. Docker engine 1.12.1 
+or newer is required to run the lwaftr1 simulation in the tests directory. 
 
-Typically, a toplevel launch via 'make' is sufficient to build vmxlwaftr. 
+A single top level execution of make will build Snabb, Qemu and, dumb-init with temporary build containers and create the vmxlwaftr Docker container.
+
+```
+make
+```
 
 The individual steps are:
 
@@ -63,7 +69,7 @@ Edit the name and version of the Container in the toplevel file VERSION:
 
 ```
 $ cat VERSION
-vmxlwaftr:v0.10
+vmxlwaftr:v0.11
 ```
 
 If the Container is to be pushed onto docker hub, then the name will probably be something like *juniper/vmxlwaftr:vx.y*
@@ -81,7 +87,7 @@ Successfully built aa7e281472e4
 
 $ mwiget@st:~/vmxlwaftr$ docker images
 REPOSITORY              TAG                 IMAGE ID            CREATED              SIZE
-vmxlwaftr               v0.10               2779b5c29172        About a minute ago   253.2 MB
+vmxlwaftr               v0.11               2779b5c29172        About a minute ago   253.2 MB
 buildqemu               latest              dfcbe71b7896        2 minutes ago        432.5 MB
 buildsnabb              latest              60f090d9d3e0        4 minutes ago        344.7 MB
 build-dumb-init         latest              866eb14689e5        6 minutes ago        347.8 MB
@@ -97,9 +103,9 @@ The images buildsnabb and buildqemu can be removed via 'make clean' from the qem
 To save the vmxlwaftr Container into an image file use:
 
 ```
-$ docker save -o vmxlwaftr-v0.10.img vmxlwaftr:v0.10
-$ ls -l vmxlwaftr-v0.10.img
--rw------- 1 mwiget staff 262899712 Sep  8 15:29 vmxlwaftr-v0.10.img
+$ docker save -o vmxlwaftr-v0.11.img vmxlwaftr:v0.11
+$ ls -l vmxlwaftr-v0.11.img
+-rw------- 1 mwiget staff 262911488 Sep  11 21:40 vmxlwaftr-v0.11.img
 ```
 
 ## Running the vmxlwaftr Container
