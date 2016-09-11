@@ -14,7 +14,7 @@ The build process requires a Docker Engine and the make tool. Please follow the 
 [Install Docker Engine on Linux](https://docs.docker.com/engine/installation/linux/) guide. Docker engine 1.12.1 
 or newer is required to run the lwaftr1 simulation in the tests directory. 
 
-A single top level execution of make will build Snabb, Qemu and, dumb-init with temporary build containers and create the vmxlwaftr Docker container.
+A single top level execution of make will build Snabb, Qemu and, dumb-init with temporary build containers and create the vmxlwaftr Docker container plus the b4cpe client simulator container.
 
 ```
 make
