@@ -164,6 +164,8 @@ function create_config_drive {
   mkdir config_drive/var/db/vmm
   mkdir config_drive/var/db/vmm/etc
   mkdir config_drive/var/db/vmm/vmxlwaftr
+  mkdir config_drive/var/db/vmm/vmxlwaftr/op
+  mkdir config_drive/var/db/vmm/vmxlwaftr/snmp
   mkdir config_drive/config
   mkdir config_drive/config/license
   cat > config_drive/boot/loader.conf <<EOF
@@ -177,8 +179,13 @@ EOF
   fi
   slaxopfiles=$(ls /slax/*slax)
   if [ ! -z "$slaxopfiles" ]; then
-    >&2 echo "SLAX files: $slaxopfiles"
-    cp $slaxopfiles config_drive/var/db/vmm/vmxlwaftr
+    >&2 echo "SLAX op files: $slaxopfiles"
+    cp $slaxopfiles config_drive/var/db/vmm/vmxlwaftr/op/
+  fi
+  slaxsnmpfiles=$(ls /snmp/*slax)
+  if [ ! -z "$slaxsnmpfiles" ]; then
+    >&2 echo "SLAX snmp files: $slaxsnmpfiles"
+    cp $slaxsnmpfiles config_drive/var/db/vmm/vmxlwaftr/snmp/
   fi
   yangfiles=$(ls /yang/*.yang)
   yangrpc=$(ls /yang/rpc*py)
@@ -215,7 +222,8 @@ echo "arg=$yangcmd"
 echo "YANG import completed"
 cp /var/etc/mosquitto.conf /var/etc/mosquitto.conf.orig
 cp /var/db/vmm/mosquitto.conf.new /var/etc/mosquitto.conf
-cp /var/db/vmm/vmxlwaftr/lwaftr.slax /var/db/scripts/op/
+cp /var/db/vmm/vmxlwaftr/op/* /var/db/scripts/op/
+cp /var/db/vmm/vmxlwaftr/snmp/* /var/db/scripts/snmp/
 EOF
     chmod a+rx config_drive/var/db/vmm/etc/rc.vmm
   fi

@@ -22,13 +22,14 @@ COPY build/snabb /usr/local/bin/
 COPY build/qemu-v2.4.1-snabb.tgz /
 RUN tar zxf /qemu-v*-snabb.tgz -C /usr/local/
 
-RUN mkdir /yang /slax
+RUN mkdir /yang /slax /snmp
 
 COPY yang/ietf-inet-types.yang yang/ietf-yang-types.yang \
   yang/ietf-softwire.yang \
   yang/jnx-softwire.yang yang/jnx-softwire-dev.yang yang/
 
 COPY slax/lwaftr.slax slax/
+COPY snmp/snmp_lwaftr.slax snmp/
 
 COPY launch.sh launch_snabb.sh top.sh topl.sh README.md VERSION \
   launch_snabbvmx_manager.sh snabbvmx_manager.pl show_affinity.sh nexthop.sh \
