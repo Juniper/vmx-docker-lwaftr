@@ -2,7 +2,7 @@
 NAME="b4cpe1"
 CONTAINER="b4cpe:v0.1"
 
-NET="net1"
+NET="net-lwaftr1"
 IP="193.5.1.2"
 IP6="fd00:4600::1001"
 GW6="fd00:4600::1"
