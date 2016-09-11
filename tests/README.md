@@ -6,7 +6,9 @@ This directory contains a few test cases with and without physical 10GE interfac
 
 This test creates a Docker virtual network 'net-lwaftr1' that connects the vmxlwaftr Container 
 lwaftr1 with B4 client simulation Containers b4cpe1 and b4cpe2 according to the following
-diagram: [net-lwaftr1 diagram](net-lwaftr1.png):
+diagram: 
+
+![net-lwaftr1 diagram](net-lwaftr1.png):
 
 ### Preparation
 
