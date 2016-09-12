@@ -320,6 +320,16 @@ elif [ ! -f "/u/$image" ]; then
   echo "Error: Can't find image $image"
   exit 1
 fi 
+
+if [ -s "/u/$LICENSE" ] && [ -f "/u/$LICENSE" ]; then
+  echo "License file $LICENSE found."
+else
+  echo "License file $LICENSE missing or empty."
+  echo "Please get a valid vMX license or download an eval license"
+  echo "from https://www.juniper.net/us/en/dm/free-vmx-trial/"
+  exit 1
+fi
+
 # find numanode to use based on PCI list.
 # It will simply use the numanode of the last PCI.
 # Using cards on different Nodes is not recommended 
