@@ -10,8 +10,7 @@ docker:	build/Makefile
 	docker build -t buildsnabb .
 
 build/Makefile:	
-	git clone -b query-links https://github.com/mwiget/snabb.git build
-	#git clone -b lwaftr https://github.com/igalia/snabb.git build
+	git clone -b lwaftr https://github.com/igalia/snabb.git build
 
 clean:
 	docker rmi buildsnabb 2>/dev/null || true 
