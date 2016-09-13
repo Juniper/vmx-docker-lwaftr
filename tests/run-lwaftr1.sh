@@ -4,7 +4,7 @@ NAME="lwaftr1"
 NET="net-lwaftr1"
 CFG="lwaftr1.txt"
 VMX="vmx-bundle-16.1R1.7.tgz"
-CONTAINER="vmxlwaftr:v0.11"
+CONTAINER="$(cat ../VERSION)"
 IDENTITY="snabbvmx.key"
 chmod 400 $IDENTITY
 LICENSE="license-eval.txt"
