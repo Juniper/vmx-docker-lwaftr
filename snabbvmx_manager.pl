@@ -253,7 +253,9 @@ EOF
       my $ipv6_mtu = $instance->{"tunnel-path-mru"};
 
       open LWA,">$snabbvmx_lwaftr_file.new" or die $@;
+      my $hairpinning = $instance->{'hairpinning'} ? $instance->{'hairpinning'} : "false";
       print LWA <<EOF;
+hairpinning = $hairpinning,
 vlan_tagging = false,
 binding_table = $bdf.s,
 aftr_ipv6_ip = 2001:db8::1,
@@ -265,7 +267,6 @@ next_hop6_mac = 66:66:66:66:66:66,
 ipv4_mtu = $ipv4_mtu,
 ipv6_mtu = $ipv6_mtu,
 EOF
-      print LWA "hairpinning = $instance->{'hairpinning'},\n" if $instance->{'hairpinning'};
       print LWA "policy_icmpv4_incoming = $instance->{'policy_icmpv4_incoming'},\n" if $instance->{'policy_icmpv4_incoming'};
       print LWA "policy_icmpv4_outgoing = $instance->{'policy_icmpv4_outgoing'},\n" if $instance->{'policy_icmpv4_outgoing'};
       print LWA "policy_icmpv6_incoming = $instance->{'policy_icmpv6_incoming'},\n" if $instance->{'policy_icmpv6_incoming'};
