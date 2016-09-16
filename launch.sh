@@ -227,17 +227,15 @@ cp /var/db/vmm/vmxlwaftr/snmp/* /var/db/scripts/snmp/
 EOF
     chmod a+rx config_drive/var/db/vmm/etc/rc.vmm
   fi
-  oskernelinv=$(ls /u/os-kernel-inv-x86-64*tgz 2>/dev/null)
-  if [ ! -z "$oskernelinv" ]; then
-    filebase=$(basename $oskernelinv)
-    cp $oskernelinv config_drive/var/db/vmm/
+  junospkg=$(ls /u/junos-*-x86-*tgz 2>/dev/null)
+  if [ ! -z "$junospkg" ]; then
+    filebase=$(basename $junospkg)
+    cp $junospkg config_drive/var/db/vmm/
     cat >> config_drive/var/db/vmm/etc/rc.vmm <<EOF
-    installed=\$(pkg info | grep os-kernel-inv)
+    installed=\$(pkg info | grep $junospkg)
     if [ -z "\$installed" ]; then
-      echo "Enable INVARIANTS kernel"
+      echo "Adding package $junospkg"
       pkg add /var/db/vmm/$filebase
-      echo "Enable INVARIANTS kernel DONE. Rebooting now ..."
-      reboot
     fi
 EOF
   fi
