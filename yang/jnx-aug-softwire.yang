@@ -1,6 +1,6 @@
-module jnx-softwire {
-  namespace "http://yang.juniper.net/software/aug";
-  prefix "jnx-swire";
+module jnx-aug-softwire {
+  namespace "http://yang.juniper.net/software/augment";
+  prefix "jnx-sw";
 
   import ietf-inet-types {prefix inet; }
   import ietf-softwire {prefix sw; }
@@ -20,9 +20,6 @@ module jnx-softwire {
   }
 
   augment "/sw:softwire-config/sw:binding/sw:br/sw:br-instances/sw:br-instance" {
-    leaf ipv6_address {
-      type inet:ipv6-address;
-    }
     leaf ipv4_address {
       type inet:ipv4-address;
     }

@@ -18,6 +18,7 @@ system {
             flag all;
           }
         }
+        language python;
     }
     login {
         user lab {
@@ -214,10 +215,10 @@ ietf-softwire:softwire-config {
                             br-ipv6-addr fd00:4600:8888::2;
                         }
                     }
-                    ipv4_address 172.20.0.2;
-                    cache_refresh_interval 1;
-                    icmpv6_rate_limiter_n_packets 300000;
-                    icmpv6_rate_limiter_n_seconds 4;
+                    jnx-aug-softwire:ipv4_address 172.20.0.2;
+                    jnx-aug-softwire:cache_refresh_interval 1;
+                    jnx-aug-softwire:icmpv6_rate_limiter_n_packets 300000;
+                    jnx-aug-softwire:icmpv6_rate_limiter_n_seconds 4;
                 }
             }
         }

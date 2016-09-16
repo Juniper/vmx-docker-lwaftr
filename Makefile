@@ -2,6 +2,7 @@ vmxlwaftr: build build/snabb build/qemu-v2.4.1-snabb.tgz build/dumb-init build/b
 	cp -p snabb/build/src/snabb build/
 	cp -p dumb-init/dumb-init build/
 	cp -p qemu/qemu-v2.4.1-snabb.tgz build/
+	cp -p python-tools/python-tools.tgz build/
 	docker build -t $$(cat VERSION) .
 
 build:

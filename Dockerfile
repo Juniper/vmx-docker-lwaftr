@@ -6,7 +6,7 @@ RUN apt-get -o Acquire::ForceIPv4=true update \
   && apt-get -o Acquire::ForceIPv4=true install -y --no-install-recommends \
   net-tools iproute2 dosfstools tcpdump bridge-utils numactl genisoimage \
   libaio1 libspice-server1 libncurses5 openssh-client libjson-xs-perl \
-  mosquitto-clients
+  python-twisted mosquitto-clients python-setuptools
 
 # fix usr/sbin/tcpdump by moving it into /sbin: 
 #  error while loading shared libraries: libcrypto.so.1.0.0: 
@@ -16,19 +16,30 @@ RUN mv /usr/sbin/tcpdump /sbin/
 # dumb-init
 COPY dumb-init/dumb-init /usr/bin/
 
-# Snabb
-COPY build/snabb /usr/local/bin/
-
 COPY build/qemu-v2.4.1-snabb.tgz /
 RUN tar zxf /qemu-v*-snabb.tgz -C /usr/local/
 
-RUN mkdir /yang /slax /snmp
+# python-tools
+COPY python-tools/python-tools.tgz jet-1.tar.gz /
+RUN tar zxf python-tools.tgz && rm python-tools.tgz 
+
+# JET
+RUN mkdir jet-1 && cd jet-1 && tar zxf ../jet-1.tar.gz && python setup.py install && cd ..
+
+# Snabb
+COPY build/snabb /usr/local/bin/
+
+RUN mkdir /yang /jetapp /utils /op /snmp
 
 COPY yang/ietf-inet-types.yang yang/ietf-yang-types.yang \
   yang/ietf-softwire.yang \
-  yang/jnx-softwire.yang yang/jnx-softwire-dev.yang yang/
+  jetapp/yang/op/junos-extension.yang jetapp/yang/op/junos-extension-odl.yang \
+  jetapp/yang/op/rpc-get-lwaftr.yang \
+  yang/jnx-aug-softwire.yang yang/jnx-softwire-dev.yang yang/
 
-COPY slax/lwaftr.slax slax/
+COPY slax/lwaftr.slax \
+  jetapp/yang/op/rpc_get_lwaftr_state.py \
+  jetapp/yang/op/rpc_get_lwaftr_statistics.py op/
 COPY snmp/snmp_lwaftr.slax snmp/
 
 COPY launch.sh launch_snabb.sh top.sh topl.sh README.md VERSION \

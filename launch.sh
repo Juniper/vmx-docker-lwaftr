@@ -177,10 +177,10 @@ EOF
     >&2 echo "copying $LICENSE"
     $(extract_licenses /u/$LICENSE)
   fi
-  slaxopfiles=$(ls /slax/*slax)
-  if [ ! -z "$slaxopfiles" ]; then
-    >&2 echo "SLAX op files: $slaxopfiles"
-    cp $slaxopfiles config_drive/var/db/vmm/vmxlwaftr/op/
+  opfiles=$(ls /op/*slax)
+  if [ ! -z "$opfiles" ]; then
+    >&2 echo "SLAX/Python op files: $opfiles"
+    cp $opfiles config_drive/var/db/vmm/vmxlwaftr/op/
   fi
   slaxsnmpfiles=$(ls /snmp/*slax)
   if [ ! -z "$slaxsnmpfiles" ]; then
@@ -188,7 +188,6 @@ EOF
     cp $slaxsnmpfiles config_drive/var/db/vmm/vmxlwaftr/snmp/
   fi
   yangfiles=$(ls /yang/*.yang)
-  yangrpc=$(ls /yang/rpc*py)
   if [ ! -z "$yangfiles" ]; then
      yangcmd=""
      for file in $yangfiles; do 
@@ -205,6 +204,7 @@ EOF
            cp $file config_drive/var/db/vmm/vmxlwaftr
         fi
      done
+     yangrpc=$(ls /op/*py)
      if [ ! -z "$yangrpc" ]; then
        for file in $yangrpc; do
            filebase=$(basename $file)
