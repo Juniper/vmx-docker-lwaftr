@@ -235,13 +235,17 @@ EOF
   if [ ! -z "$junospkg" ]; then
     filebase=$(basename $junospkg)
     cp $junospkg config_drive/var/db/vmm/
-    cat >> config_drive/var/db/vmm/etc/rc.vmm <<EOF
-    installed=\$(pkg info | grep $junospkg)
-    if [ -z "\$installed" ]; then
-      echo "Adding package $junospkg"
-      pkg add /var/db/vmm/$filebase
-    fi
+    PKG=$(echo $filebase|cut -d'-' -f1,2)
+    if [ ! -z "$PKG" ]; then
+      cat >> config_drive/var/db/vmm/etc/rc.vmm <<EOF
+installed=\$(pkg info | grep $PKG)
+if [ -z "\$installed" ]; then
+  echo "Adding package $PKG (file $junospkg)"
+  pkg add /var/db/vmm/$filebase
+  reboot
+fi
 EOF
+    fi
   fi
   cat > config_drive/var/db/vmm/mosquitto.conf.new <<EOF
 bind_address 128.0.0.1
