@@ -177,17 +177,21 @@ EOF
     >&2 echo "copying $LICENSE"
     $(extract_licenses /u/$LICENSE)
   fi
-  opfiles=$(ls /op/*slax)
+  if [ -z "${JETUSER}${IDENTITY}" ]; then
+    >&2 echo "No identity. Not loading op/slax/yang files for lwaftr"
+  else
+    opfiles=$(ls /op/*slax)
+    slaxsnmpfiles=$(ls /snmp/*slax)
+    yangfiles=$(ls /yang/*.yang)
+  fi
   if [ ! -z "$opfiles" ]; then
     >&2 echo "SLAX/Python op files: $opfiles"
     cp $opfiles config_drive/var/db/vmm/vmxlwaftr/op/
   fi
-  slaxsnmpfiles=$(ls /snmp/*slax)
   if [ ! -z "$slaxsnmpfiles" ]; then
     >&2 echo "SLAX snmp files: $slaxsnmpfiles"
     cp $slaxsnmpfiles config_drive/var/db/vmm/vmxlwaftr/snmp/
   fi
-  yangfiles=$(ls /yang/*.yang)
   if [ ! -z "$yangfiles" ]; then
      yangcmd=""
      for file in $yangfiles; do 
@@ -380,10 +384,10 @@ if [ ! -z "$VCPIMAGE" ]; then
       JETPASS=$(echo $IDENTITY | cut -d ',' -f2)
       echo "JETUSER=$JETUSER JETPASS=$JETPASS"
       if [ -z "$JETPASS" ]; then
-         echo "Error: neither identify file $IDENTITY found, nor username:password ($JETUSER:$JETPASS)"
-         exit 1
+        echo "Warning: neither identify file $IDENTITY found, nor username:password ($JETUSER:$JETPASS)"
+      else
+        echo "Using JET app to drive Snabb"
       fi
-      echo "Using JET app to drive Snabb"
       IDENTITY=""
    else
       echo "We have /u/$IDENTITY file"
@@ -573,12 +577,15 @@ if [ ! -z "$VFPIMAGE" ]; then
 fi
 
 if [ ! -z "$VCPIMAGE" ]; then
-  if [ -z "$JETUSER" ]; then
-   cd /tmp && numactl --membind=$NUMANODE /launch_snabbvmx_manager.sh $MGMTIP $IDENTITY $BINDINGS &
-  else
-   cd /tmp && numactl --membind=$NUMANODE /launch_jetapp.sh $MGMTIP $JETUSER $JETPASS &
+
+  if [ ! -z "${JETUSER}${IDENTITY}" ]; then
+    if [ -z "$JETUSER" ]; then
+      cd /tmp && numactl --membind=$NUMANODE /launch_snabbvmx_manager.sh $MGMTIP $IDENTITY $BINDINGS &
+    else
+      cd /tmp && numactl --membind=$NUMANODE /launch_jetapp.sh $MGMTIP $JETUSER $JETPASS &
+    fi
+    cd /tmp && numactl --membind=$NUMANODE /launch_snabb_query.sh $MGMTIP $IDENTITY &
   fi
-  cd /tmp && numactl --membind=$NUMANODE /launch_snabb_query.sh $MGMTIP $IDENTITY &
 
   CMD="$QEMUVCPNUMA $qemu -M pc --enable-kvm -cpu host -smp $VCPCPU -m $VCPMEM \
     -drive if=ide,file=$VCPIMAGE -drive if=ide,file=$HDDIMAGE \

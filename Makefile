@@ -1,4 +1,4 @@
-vmxlwaftr: build build/snabb build/qemu-v2.4.1-snabb.tgz build/dumb-init build/b4cpe build/python-tools
+vmxlwaftr: build snabb/snabb qemu/qemu-v2.4.1-snabb.tgz dumb-init/dumb-init build/b4cpe python-tools/python-tools.tgz
 	cp -p snabb/build/src/snabb build/
 	cp -p dumb-init/dumb-init build/
 	cp -p qemu/qemu-v2.4.1-snabb.tgz build/
@@ -8,16 +8,16 @@ vmxlwaftr: build build/snabb build/qemu-v2.4.1-snabb.tgz build/dumb-init build/b
 build:
 	mkdir build
 
-build/python-tools:
+python-tools/python-tools.tgz:
 	$(MAKE) -C python-tools
 
-build/snabb:
+snabb/snabb:
 	$(MAKE) -C snabb
 
-build/dumb-init:
+dumb-init/dumb-init:
 	$(MAKE) -C dumb-init
 
-build/qemu-v2.4.1-snabb.tgz:
+qemu/qemu-v2.4.1-snabb.tgz:
 	$(MAKE) -C qemu
 
 build/b4cpe:
