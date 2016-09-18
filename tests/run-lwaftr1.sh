@@ -2,8 +2,10 @@
 
 NAME="lwaftr1"
 NET="net-lwaftr1"
-CFG="lwaftr1.txt"
+
+CFG="lwaftr1-16.1R1.txt"
 VMX="vmx-bundle-16.1R1.7.tgz"
+
 CONTAINER="$(cat ../VERSION)"
 IDENTITY="snabbvmx.key"
 chmod 400 $IDENTITY

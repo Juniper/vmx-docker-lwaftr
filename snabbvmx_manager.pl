@@ -4,9 +4,6 @@ use strict;
 
 use JSON::XS qw( decode_json );
 
-my $ip = shift;
-my $identity = shift;
-
 #------------------------------------------------------------------
 #------------------------------------------------------------------
 sub file_changed {
@@ -97,6 +94,7 @@ sub process_binding_table_file {
 #------------------------------------------------------------------
 #------------------------------------------------------------------
 sub check_config {
+  my ($ip, $identity) = @_;
   `/usr/bin/ssh -o StrictHostKeyChecking=no -i $identity snabbvmx\@$ip \"show conf ietf-softwire:softwire-config|display json\" > /tmp/config.new1`;
 
   my $newfile = "/tmp/config.new";
@@ -104,18 +102,17 @@ sub check_config {
   open IP, "/tmp/config.new1" or die "can't open file /tmp/config.new1";
   my $file;
   while (<IP>) {
+    # fix a JSON formatting bug 
+    $_ =~ s/\s+\"jnx-aug-softwire:/,\"/;
+    $_ =~ s/jnx-aug-softwire://;  # remove namespace prefix for our parsing
+    $_ =~ s/ietf-softwire://;  # remove namespace prefix for our parsing
     print NEW $_;
     if ($_ =~ /\"binding-table-file\"\s+:\s+\"([\w.]+)\"/) {
       $file=$1;
       print("getting file $file from $ip ...\n");
       my $f="/var/db/scripts/commit/$file";
       `/usr/bin/scp -o StrictHostKeyChecking=no -i $identity snabbvmx\@$ip:$f .`;
-      print("reading file $file ...\n");
-#      open R, "$file" or die "can't open file $file";
-#      while (<R>) {
-#        print NEW $_;
-#      }
-#      close R;
+      print("done\n");
     } 
   }
   close IP;
@@ -165,6 +162,9 @@ sub process_new_config {
     my $data = decode_json($json);
 
     my $instances = $data->{"configuration"}{"softwire-config"}{"binding"}{"br"}{"br-instances"}{"br-instance"};
+    unless ($instances) {
+      $instances = $data->{"softwire-config"}{"binding"}{"br"}{"br-instances"}{"br-instance"};
+    }
 
     my $globalbdfile = $data->{"configuration"}{"softwire-config"}{"binding"}{"br"}{"binding-table-file"};
     my $reload = 0;
@@ -261,9 +261,9 @@ binding_table = $bdf.s,
 aftr_ipv6_ip = 2001:db8::1,
 aftr_ipv4_ip = $instance->{"ipv4_address"},
 aftr_mac_inet_side = $mac,
-inet_mac = 44:44:44:44:44:44,
+inet_mac = 02:02:02:02:02:02,
 aftr_mac_b4_side = $mac,
-next_hop6_mac = 66:66:66:66:66:66,
+next_hop6_mac = 02:02:02:02:02:02,
 ipv4_mtu = $ipv4_mtu,
 ipv6_mtu = $ipv6_mtu,
 EOF
@@ -310,6 +310,20 @@ EOF
 # main()
 #===============================================================
 
+my $ip = shift;
+
+unless ($ip) {
+  print <<EOF;
+
+Usage: $0 <ip-address> <ssh-private-identity-file>
+       $0 <junos-ietf-softwire-config-file-in-json-format>
+
+EOF
+  exit(1);
+}
+
+my $identity = shift;
+
 if ("" eq $identity && -f $ip) {
   my $file = $ip;
   &process_new_config($file);
@@ -322,11 +336,8 @@ while (defined($line=<CMD>)) {
   chomp $line;
   if ($line =~ /<syslog-events>/ or $line =~ /UI_COMMIT_COMPLETED/) {
     print("check for config change...\n");
-    &check_config();
-
+    &check_config($ip, $identity);
   }
 }
 close CMD;
-
 exit;
-

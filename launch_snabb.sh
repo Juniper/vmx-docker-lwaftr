@@ -29,6 +29,7 @@ do
   CMD="$NUMACTL $SNABB snabbvmx lwaftr --conf snabbvmx-lwaftr-${INT}.cfg --id $INT --pci $PCI --mac `cat mac_$INT` --sock %s.socket"
   echo $CMD
   sleep $SLEEP
+  touch /tmp/snabb_${INT}.log
   $CMD | tee /tmp/snabb_${INT}.log
   mosquitto_pub -h 128.0.0.1 -f /tmp/snabb_${INT}.log -t snabb/$INT
   sleep 4
