@@ -339,19 +339,25 @@ fi
 # find numanode to use based on PCI list.
 # It will simply use the numanode of the last PCI.
 # Using cards on different Nodes is not recommended 
+
 for DEV in $@; do # ============= loop thru interfaces start
   PCI=${DEV%/*} 
-  CPU=$(cat /sys/class/pci_bus/${PCI%:*}/cpulistaffinity | cut -d'-' -f1 | cut -d',' -f1)
-  NODE=$(numactl -H | grep "cpus: $CPU" | cut -d " " -f 2)
-  if [ -z "$NUMANODE" ]; then
-    NUMANODE=$NODE
-  fi
-  if [ "$NODE" != "$NUMANODE" ]; then 
-    echo "WARNING: Interface $PCI is on numa node $NODE, but request is for node $NUMANODE"
-  else
-    echo "Interface $PCI is on node $NODE"
+  if [ "eth" != "${PCI:0:3}" ]; then
+    CPU=$(cat /sys/class/pci_bus/${PCI%:*}/cpulistaffinity | cut -d'-' -f1 | cut -d',' -f1)
+    NODE=$(numactl -H | grep "cpus: $CPU" | cut -d " " -f 2)
+    if [ -z "$NUMAPREV" ]; then
+      NUMAFIRST=$NODE
+    fi
+    if [ "$NODE" != "$NUMAFIRST" ]; then 
+      echo "WARNING: Interface $PCI is on numa node $NODE, but first PCI interface is on node $NUMAFIRST"
+    else
+      echo "Interface $PCI is on node $NODE"
+    fi
   fi
 done
+if [ ! -z "$NUMAFIRST" ]; then
+  NUMANODE=$NUMAFIRST
+fi
 
 mkdir /var/run/snabb
 numactl --membind=$NUMANODE mount -t tmpfs -o rw,nosuid,nodev,noexec,relatime,size=4M tmpfs /var/run/snabb
