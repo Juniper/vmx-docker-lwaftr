@@ -9,10 +9,13 @@ The Container vmxlwaftr is based on the official Ubuntu Docker 14.04.4 base Cont
 
 * Qemu 2.4.1 with reconnect patch downloaded and built from source in qemu/
 * Snabb, downloaded and built from source in snabb/
+* JET Python Client Library
 
 The build process requires a Docker Engine and the make tool. Please follow the official 
 [Install Docker Engine on Linux](https://docs.docker.com/engine/installation/linux/) guide. Docker engine 1.12.1 
 or newer is required to run the lwaftr1 simulation in the tests directory. 
+
+Download the JET Python Client Library from [http://www.juniper.net/support/downloads/?p=jet#sw]()
 
 A single top level execution of make will build Snabb, Qemu and, dumb-init with temporary build containers and create the vmxlwaftr Docker container plus the b4cpe client simulator container.
 

@@ -107,7 +107,7 @@ sub check_config {
     $_ =~ s/jnx-aug-softwire://;  # remove namespace prefix for our parsing
     $_ =~ s/ietf-softwire://;  # remove namespace prefix for our parsing
     print NEW $_;
-    if ($_ =~ /\"binding-table-file\"\s+:\s+\"([\w.]+)\"/) {
+    if ($_ =~ /binding-table-file\"\s+:\s+\"([\w.]+)\"/) {
       $file=$1;
       print("getting file $file from $ip ...\n");
       my $f="/var/db/scripts/commit/$file";
@@ -167,6 +167,9 @@ sub process_new_config {
     }
 
     my $globalbdfile = $data->{"configuration"}{"softwire-config"}{"binding"}{"br"}{"binding-table-file"};
+    unless ($globalbdfile) {
+      $globalbdfile = $data->{"softwire-config"}{"binding"}{"br"}{"binding-table-file"};
+    }
     my $reload = 0;
 
     if (-f $globalbdfile) {
