@@ -10,7 +10,8 @@ docker:	build/Makefile
 	docker build -t buildsnabb .
 
 build/Makefile:	
-	git clone -b lwaftr-snabbvmx-v1.0 https://github.com/igalia/snabb.git build
+	git clone -b lwaftr https://github.com/igalia/snabb.git build
+	#git clone -b lwaftr-snabbvmx-v1.0 https://github.com/igalia/snabb.git build
 
 clean:
 	docker rmi buildsnabb 2>/dev/null || true 
