@@ -143,7 +143,7 @@ function extract_licenses {
       tmp="$(echo "$line" | cut -d' ' -f1)"
       if [ ! -z "$tmp" ]; then
         file=config_drive/config/license/${tmp}.lic
-        if [ "$DEBUG" -gt 0 ]; then
+        if [ ! -z "$DEBUG" ]; then
           >&2 echo "  writing license file $file ..."
         fi
         echo "$line" > $file
