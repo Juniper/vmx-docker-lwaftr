@@ -566,7 +566,6 @@ if [ ! -z "$VFPIMAGE" ]; then
     -no-user-config -nodefaults \
     -device piix3-usb-uhci,id=usb,bus=pci.0,addr=0x1.0x2 \
     -device cirrus-vga,id=video0,bus=pci.0,addr=0x2 \
-    -device AC97,id=sound0,bus=pci.0,addr=0x5 \
     -drive if=ide,file=$VFPIMAGE,format=raw \
     -netdev tap,id=tf0,ifname=$VFPMGMT,script=no,downscript=no \
     -device virtio-net-pci,netdev=tf0,mac=$MACP:A1 \
