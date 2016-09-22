@@ -22,81 +22,177 @@ module jnx-aug-softwire {
   augment "/sw:softwire-config/sw:binding/sw:br/sw:br-instances/sw:br-instance" {
     leaf ipv4_address {
       type inet:ipv4-address;
-      mandatory true;
+      description 
+        "
+        The IPv4 address must much the configured IPv4 address of the corresponding
+        interface and is used to bypass the IPV4 in IPv6 encapsulation function and
+        pass the packet to the vMX. The configuration and match of the interface IPv6 
+        isn't required, because only incoming IPv4 in IPv6 packets are processed as
+        tunnelled packets, everything else is passed on to the 0/0/x interface.
+        The br instance id x matches the vMX interface 0/0/x. 
+        This is a mandatory field
+        ";
     }
     leaf ipv6_vlan {
       type uint16 {
         range 0..4094;
       }
+      description 
+        "
+        The VLAN id with a range of 0..4094 can be configured for IPv6 traffic.
+        Optional.
+        ";
     }
     leaf ipv4_vlan {
       type uint16 {
         range 0..4094;
       }
+      description 
+        "
+        The VLAN id with a range of 0..4094 can be configured for IPv4 traffic.
+        Optional.
+        ";
     }
     leaf hairpinning {
       type boolean;
       default false;
+      description 
+        "
+        Configurable hairpinning is a requirement of RFC 7596; it can be true or false.
+        If set to true, packets between two lwB4s are decapsulated and re-encapsulated 
+        within the lwAFTR instance. 
+        If set to false, packets are forwarded to the next hop router after decapsulation.
+        Default set to false
+        ";
     }
     leaf fragmentation {
       type boolean;
       default false;
+      description 
+        "
+        Allows processing IPv4 and IPv6 fragmentation and reassembly.
+        Default set to false.
+        ";
     }
     leaf cache_refresh_interval {
       type uint32;
       units seconds;
       default 1;
+      description 
+        "
+        Defines the interval in seconds, when copies of IPv4 and IPv6 packets are sent to the vMX
+        forwarding plane for next hop (mac address) resolution. Default is 1 second.
+        If set to 0, all packets are sent to the forwarding plane of the vMX, in effect disabling
+        local caching of next hop mac addresses.
+        ";
     }
     leaf icmpv6_rate_limiter_n_packets {
       type uint32;
+      description 
+        "
+        Rate-limiting of ICMPv6 error messages and specifies how many ICMP error messages can
+        be generated at most per icmpv6_rate_limiter_n_seconds seconds.
+        Only applicable when policy_icmpv6_incoming or policy_icmpv6_outgoing are set to allow.
+        Default set to 600000
+        ";
     }
     leaf icmpv6_rate_limiter_n_seconds {
       type uint32;
       default 1;
+      description 
+        "
+        Rate-limiting of ICMPv6 error messages and specifies how many ICMP error messages can
+        be generated at most per given interval. Works in combination with icmpv6_rate_limiter_n_packets 
+        and is only applicable when policy_icmpv6_incoming or policy_icmpv6_outgoing are set to allow.
+        Default set to 1
+        ";
     }
     leaf policy_icmpv6_incoming {
       type enumeration {
         enum allow;
         enum drop;
       }
+      description 
+        "
+        Enables (allow) or disables (drop) incoming ICMPv6 messages.
+        Defaults to allow
+        ";
     }
     leaf policy_icmpv6_outgoing {
       type enumeration {
         enum allow;
         enum drop;
       }
+      description 
+        "
+        Enables (allow) or disables (drop) the generation of  ICMPv6 messages for binding table 
+        mismatches.
+        Defaults to allow
+        ";
     }
     leaf policy_icmpv4_incoming {
       type enumeration {
         enum allow;
         enum drop;
       }
+      description 
+        "
+        Enables (allow) or disables (drop) incoming ICMPv4 messages.
+        Defaults to allow
+        ";
     }
     leaf policy_icmpv4_outgoing {
       type enumeration {
         enum allow;
         enum drop;
       }
+      description 
+        "
+        Enables (allow) or disables (drop) the generation of  ICMPv4 messages for binding table 
+        mismatches.
+        Defaults to allow
+        ";
     }
     leaf ipv6_ingress_filter {
       type string;
       description
-        "IPv6 ingress filter in libpcap format";
+        "
+        IPv6 ingress filter in libpcap format.
+        If specified, only incoming packets which match that filter will be allowed.
+        It might help to think of the filter as being 'whitelists' -- they pass only what matches and 
+        reject other things. To make a 'blacklist' filter, use the not pflang operator
+        ";
     }
     leaf ipv6_egress_filter {
       type string;
       description
-        "IPv6 egress filter in libpcap format";
+        "
+        IPv6 egress filter in libpcap format.
+        If specified, only outgoing packets which match that filter will be allowed.
+        It might help to think of the filter as being 'whitelists' -- they pass only what matches and 
+        reject other things. To make a 'blacklist' filter, use the not pflang operator
+        ";
+
     }
     leaf ipv4_ingress_filter {
-        type string;
-        description
-          "IPv4 ingress filter in libpcap format";
+      type string;
+      description
+        "
+        IPv4 ingress filter in libpcap format.
+        If specified, only outgoing packets which match that filter will be allowed.
+        It might help to think of the filter as being 'whitelists' -- they pass only what matches and 
+        reject other things. To make a 'blacklist' filter, use the not pflang operator
+        ";
     }
     leaf ipv4_egress_filter {
       type string;
       description
-        "IPv4 egress filter in libpcap format";
+        "
+        IPv4 egress filter in libpcap format.
+        If specified, only outgoing packets which match that filter will be allowed.
+        It might help to think of the filter as being 'whitelists' -- they pass only what matches and 
+        reject other things. To make a 'blacklist' filter, use the not pflang operator
+        ";
     }
     leaf ingress_drop_action {
       type enumeration {
@@ -105,26 +201,34 @@ module jnx-aug-softwire {
       }
       default flush;
       description 
-        "jit.flush() gets triggered if set to flush, otherwise just a warning message is created.
-         default is flush";
+        "
+        jit.flush() gets triggered if set to flush, otherwise just a warning message is created.
+        default is flush
+        ";
     }
     leaf ingress_drop_threshold {
       type uint32;
       default 100000;
       description
-        "Number of ingress discard packets per drop interval must be exceeded before trigger jit.flush()";
+        "
+        Number of ingress discard packets per drop interval must be exceeded before trigger jit.flush()
+        ";
     }
     leaf ingress_drop_interval {
       type uint32;
       default 1000000;
       description
-        "drop interval in msec";
+        "
+        drop interval in msec
+        ";
     }
     leaf ingress_drop_wait {
       type uint32;
       default 20;
       description
-        "grace period between jit.flush() in seconds";
+        "
+        grace period between jit.flush() in seconds
+        ";
     }
   }
 }
