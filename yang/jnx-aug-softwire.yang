@@ -22,6 +22,7 @@ module jnx-aug-softwire {
   augment "/sw:softwire-config/sw:binding/sw:br/sw:br-instances/sw:br-instance" {
     leaf ipv4_address {
       type inet:ipv4-address;
+      mandatory true;
     }
     leaf ipv6_vlan {
       type uint16 {

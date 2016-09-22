@@ -141,9 +141,19 @@ sub process_new_config {
     close $fh;
   }
 
-
   my %snabbpid;
-  my @files = </run/snabb/*/nic/id>;
+  print ("process_new_config\n");
+  # get list of nics, required for cleanup
+  my @files = </tmp/mac_*>;
+  foreach my $file (@files) {
+    my $id;
+    $file =~ /_(\w+)/;
+    if ($1) {
+      $snabbpid{$1} = -1;
+    }
+  }
+  # get list of running snabb instances 
+  @files = </run/snabb/*/nic/id>;
   foreach my $file (@files) {
     my $id;
     $file =~ /(\d+)/;
@@ -305,11 +315,14 @@ EOF
   # cleanup of snabb processes no longer needed
   print "cleanup\n";
   foreach my $id (keys %snabbpid) {
+    print "cleanup for $id\n";
     my $f1 = sprintf("snabbvmx-lwaftr-%s.cfg", $id);
     unlink "snabbvmx-lwaftr-$id.cfg";
     unlink "snabbvmx-lwaftr-$id.conf";
-    print "send TERM to snabb process for $id. Has no longer a lwaftr config\n";
-    `kill -TERM $snabbpid{$id}`;
+    if ($snabbpid{$id} > 0) {
+      print "send TERM to snabb process for $id. Has no longer a lwaftr config\n";
+      `kill -TERM $snabbpid{$id}`;
+    }
   }
 }
 
