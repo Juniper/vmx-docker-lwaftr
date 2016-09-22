@@ -176,6 +176,10 @@ sub process_new_config {
       print "global binding table file $globalbdfile\n";
       $reload = &process_binding_table_file($globalbdfile);
       print "global binding table file $globalbdfile reload=$reload\n";
+    } else {
+      $globalbdfile="binding_table_empty.txt";
+      open (OUT, ">$globalbdfile") || die "Can't write to $globalbdfile";
+      close OUT;
     }
 
     foreach my $instance (@$instances) {
