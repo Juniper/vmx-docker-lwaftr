@@ -112,6 +112,9 @@ sub check_config {
       print("getting file $file from $ip ...\n");
       my $f="/var/db/scripts/commit/$file";
       `/usr/bin/scp -o StrictHostKeyChecking=no -i $identity snabbvmx\@$ip:$f .`;
+      my $md5sum=`md5sum $file`;
+      chomp $md5sum;
+      print NEW ",\"md5sum\" : \"$md5sum\"\n";
       print("done\n");
     } 
   }
