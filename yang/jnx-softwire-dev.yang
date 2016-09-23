@@ -3,6 +3,7 @@ module jnx-softwire-dev {
   prefix "jnx-swire";
 
   import ietf-softwire {prefix sw; }
+  import jnx-aug-softwire {prefix jnx-sw; }
 
   organization "Juniper Networks, Inc.";
 
@@ -17,6 +18,12 @@ module jnx-softwire-dev {
 
   deviation /sw:softwire-config/sw:algorithm {
     deviate not-supported;
+  }
+
+  deviation /sw:softwire-config/sw:binding/sw:br/sw:br-instances/sw:br-instance/jnx-sw:ipv4_address {
+    deviate add {
+      mandatory true;
+    }
   }
 
 }
