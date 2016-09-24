@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use strict;
+use File::Copy qw(copy);
 
 use JSON::XS qw( decode_json );
 
@@ -28,6 +29,7 @@ sub file_changed {
 sub process_binding_table_file {
   my ($btf) = @_;
   my $btfsource = "$btf.s";
+  my $btfsourcenew = "$btf.s.new";
   my $btfcompiled = "$btf.s.o";
   my @br_addresses;
   my $br_address;
@@ -35,13 +37,6 @@ sub process_binding_table_file {
   my %addresses;
   my @softwires;
 
-  if (-f $btfcompiled and -M $btf < -M $btfcompiled) {
-    print "$btf: file $btfcompiled is newer, no need to recompile\n";
-    return 0;
-  }
-
-  # binding table file has changed. Process it.
- 
   print "reading binding file $btf\n";
   open IN,"$btf" or die $@;
   while(<IN>) {
@@ -67,7 +62,7 @@ sub process_binding_table_file {
   }
   close(IN);
   # create the snabb source binding table file
-  open BDG,">$btfsource" or die $@;
+  open BDG,">$btfsourcenew" or die $@;
   print BDG "psid_map {\n";
   foreach my $key (sort keys %addresses) {
     print BDG "  $key $addresses{$key}\n";
@@ -84,6 +79,15 @@ sub process_binding_table_file {
   print BDG "}\n";
   close BDG;
 
+  if (-f $btfsource) {
+    print "compare files $btfsourcenew $btfsource\n";
+    my $delta = `/usr/bin/cmp $btfsourcenew $btfsource`;
+    unless ($delta) {
+      print "no change detected between $btfsourcenew $btfsource\n";
+      return 0;
+    }
+  }
+  copy $btfsourcenew, $btfsource;
   # trigger binding table compilation
   print "Binding table $btfsource changed. Recompiling ...";
   `/usr/local/bin/snabb lwaftr compile-binding-table $btfsource`;
