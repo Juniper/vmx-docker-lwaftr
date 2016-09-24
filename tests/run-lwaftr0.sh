@@ -2,7 +2,7 @@
 
 NAME="lwaftr0"
 CFG="lwaftr0.txt"
-VMX="vmx-bundle-16.1R1.7.tgz"
+VMX="vmx-bundle-16.1R2.11.tgz"
 CONTAINER="$(cat ../VERSION)"
 IDENTITY="snabbvmx.key"
 chmod 400 $IDENTITY

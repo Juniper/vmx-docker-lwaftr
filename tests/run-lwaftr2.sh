@@ -1,8 +1,8 @@
 #!/bin/bash
 
 NAME="lwaftr2"
-CFG="lwaftr2-16.1R1.txt"
-VMX="vmx-bundle-16.1R1.7.tgz"
+CFG="lwaftr2.txt"
+VMX="vmx-bundle-16.1R2.11.tgz"
 CONTAINER="$(cat ../VERSION)"
 IDENTITY="snabbvmx.key"
 chmod 400 $IDENTITY
