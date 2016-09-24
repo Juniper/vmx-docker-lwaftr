@@ -1,3 +1,11 @@
+## v1.0.2:
+
+- collect snabb binary with collect-support-infos.sh
+- update SUPPORT-INFO.md with adding snabb binary to tgz file
+- make jnx-aug-softwire:ipv4_address mandatory
+- fix detecting binding table file changes in snabbvmx_manager.pl
+- upgraded configs to 16.1R2
+
 ## v1.0.1:
 
 - fix numanode warning when launched with 82599 NICs on socket > 0
