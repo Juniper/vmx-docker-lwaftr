@@ -14,7 +14,8 @@ if [ ! -e binding_table.txt ]; then
 fi
 
 CFG="lwaftr4.txt"
-VMX="vmx-bundle-16.1R2.11.tgz"
+#VMX="vmx-bundle-16.1R2.11.tgz"
+VMX="vmx-bundle-16.1-20160915.0.tgz"
 
 CONTAINER="$(cat ../VERSION)"
 IDENTITY="snabbvmx.key"

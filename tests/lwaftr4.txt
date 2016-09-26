@@ -198,7 +198,7 @@ ietf-softwire:softwire-config {
           jnx-aug-softwire:cache_refresh_interval 1;
           jnx-aug-softwire:ingress_drop_action flush;
         }
-        br-instance 0 {
+        br-instance 1 {
           softwire-num-threshold 4000000;
           tunnel-payload-mtu 9000;
           tunnel-path-mru 9000;
@@ -206,7 +206,7 @@ ietf-softwire:softwire-config {
           jnx-aug-softwire:cache_refresh_interval 1;
           jnx-aug-softwire:ingress_drop_action flush;
         }
-        br-instance 0 {
+        br-instance 2 {
           softwire-num-threshold 4000000;
           tunnel-payload-mtu 9000;
           tunnel-path-mru 9000;
@@ -214,7 +214,7 @@ ietf-softwire:softwire-config {
           jnx-aug-softwire:cache_refresh_interval 1;
           jnx-aug-softwire:ingress_drop_action flush;
         }
-        br-instance 0 {
+        br-instance 3 {
           softwire-num-threshold 4000000;
           tunnel-payload-mtu 9000;
           tunnel-path-mru 9000;
