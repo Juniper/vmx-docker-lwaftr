@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (c) 2016, Juniper Networks, Inc.
+# All rights reserved.
 #
 
 qemu=/usr/local/bin/qemu-system-x86_64

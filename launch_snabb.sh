@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2016, Juniper Networks, Inc.
+# All rights reserved.
+#
 INT=$1
 
 DEV=$(cat pci_$INT)

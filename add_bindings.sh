@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright (c) 2016, Juniper Networks, Inc.
+# All rights reserved.
 
 MGMTIP=$1
 IDENTITY=$2

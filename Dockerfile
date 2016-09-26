@@ -1,3 +1,6 @@
+# Copyright (c) 2016, Juniper Networks, Inc.
+# All rights reserved.
+
 FROM ubuntu:14.04.5
 MAINTAINER Marcel Wiget
 
@@ -34,7 +37,7 @@ RUN mkdir /yang /jetapp /utils /op /snmp
 COPY yang/ietf-inet-types.yang yang/ietf-yang-types.yang \
   yang/ietf-softwire.yang \
   jetapp/yang/op/junos-extension.yang jetapp/yang/op/junos-extension-odl.yang \
-  jetapp/yang/op/rpc-get-lwaftr.yang \
+  jetapp/yang/op/rpc-get-lwaftr.yang jetapp/yang/op/rpc-get-lwaftr-statistics.yang \
   yang/jnx-aug-softwire.yang yang/jnx-softwire-dev.yang yang/
 
 COPY slax/lwaftr.slax \

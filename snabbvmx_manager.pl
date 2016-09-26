@@ -1,4 +1,6 @@
 #!/usr/bin/perl
+# Copyright (c) 2016, Juniper Networks, Inc.
+# All rights reserved.
 
 use strict;
 use File::Copy qw(copy);

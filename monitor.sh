@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright (c) 2016, Juniper Networks, Inc.
+# All rights reserved.
 
 a=0
 b=0
