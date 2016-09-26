@@ -596,6 +596,7 @@ if [ ! -z "$VCPIMAGE" ]; then
       cd /tmp && numactl --membind=$NUMANODE /launch_jetapp.sh $MGMTIP $JETUSER $JETPASS &
     fi
     cd /tmp && numactl --membind=$NUMANODE /launch_snabb_query.sh $MGMTIP $IDENTITY &
+    cd /tmp && /launch_opserver.sh &
   fi
 
   CMD="$QEMUVCPNUMA $qemu -M pc --enable-kvm -cpu host -smp $VCPCPU -m $VCPMEM \

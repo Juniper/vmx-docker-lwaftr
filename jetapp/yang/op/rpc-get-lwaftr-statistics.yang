@@ -1,0 +1,668 @@
+/*
+* Copyright (c) 2014 Juniper Networks, Inc.
+* All rights reserved.
+*/
+
+module rpc-get-lwaftr-statistics {
+  namespace "http://yang.juniper.net/yang/1.1/jrpc";
+  prefix jrpc;
+
+  import junos-extension-odl{
+    prefix junos-odl;
+  }
+
+  import junos-extension{
+    prefix junos;
+  }
+
+  organization
+    "Juniper Networks, Inc.";
+
+  description
+    "Junos YANG module for fetching Snabb Lwaftr statistics";
+
+rpc get-lwaftr-statistics {
+    description "Fetch statistics of the Snabb instances";
+    input {
+        leaf id {
+            description "ID of the snabb instance";
+            type string;
+        }
+    }
+    junos:command "show lwaftr statistics";
+    junos:action-execute {
+    junos:script "rpc_get_lwaftr_statistics.py";
+    }
+    output {
+       container statistics {
+           leaf id {
+             junos-odl:template "Instance id: %s";
+             type string;
+             description "ID of instance";
+           }
+       	   leaf drop-all-ipv4-iface-bytes {
+             junos-odl:template "\tIPv4 interface drop bytes:                        %4.4s";
+       	     type string;
+       	     description "IPv4 interface drop bytes";
+       	   }
+       	   leaf drop-all-ipv4-iface-packets {
+       	     junos-odl:template "\tIPv4 interface drop packets:                      %4.4s";
+
+       	     type string;
+       	     description "IPv4 interface drop packets";
+       	   }
+       	   leaf drop-all-ipv6-iface-bytes {
+             junos-odl:template "\tIPv6 interface drop bytes:                        %4.4s";
+       	     type string;
+       	     description "IPv6 interface drop bytes";
+       	   }
+       	   leaf drop-all-ipv6-iface-packets {
+       	     junos-odl:template "\tIPv6 interface drop packets:                      %4.4s";
+       	     type string;
+       	     description "IPv6 interface drop packets";
+       	   }
+           leaf drop-bad-checksum-icmpv4-bytes {
+             junos-odl:template "\tICMPv4 bad checksum bytes:                        %4.4s";
+             type string;
+             description "ICMPv4 interface bad checksum bytes";
+           }
+           leaf drop-bad-checksum-icmpv4-packets {
+             junos-odl:template "\tICMPv4 bad checksum packets:                      %4.4s";
+             type string;
+             description "ICMPv4 interface bad checksum packets";
+           }
+       	   leaf drop-in-by-policy-icmpv4-bytes{
+             junos-odl:template "\tICMPv4 drop due to policy bytes:                  %4.4s";
+         type string;
+       	        description "ICMPv4 drop due by policy bytes ";
+           }
+       	   leaf drop-in-by-policy-icmpv4-packets{
+             junos-odl:template "\tICMPv4 drop due to policy packets:                %4.4s";
+         type string;
+       	        description "ICMPv4 drop due by policy packets ";
+           }
+       	   leaf drop-in-by-policy-icmpv6-bytes{
+             junos-odl:template "\tICMPv6 interface bad checksum bytes:              %4.4s";
+         type string;
+       	        description "ICMPv6 interface bad checksum bytes";
+           }
+       	   leaf drop-in-by-policy-icmpv6-packets{
+             junos-odl:template "\tICMPv6 interface bad checksum packets:            %4.4s";
+         type string;
+       	        description "ICMPv6 interface bad checksum packets";
+           }
+       	   leaf drop-in-by-rfc7596-icmpv4-bytes{
+             junos-odl:template "\tICMPv4 rfc7596 drop bytes:                        %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-in-by-rfc7596-icmpv4-packets{
+             junos-odl:template "\tICMPv4 rfc7596 drop packets:                      %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-ipv4-frag-invalid-reassembly{
+             junos-odl:template "\tInvalid reassembly frag drops:                    %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-ipv4-frag-random-evicted{
+             junos-odl:template "\tIPv4 fragment random assembly:                    %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-ipv6-frag-invalid-reassembly{
+             junos-odl:template "\tIPv6 invalid reassembly:                          %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-ipv6-frag-random-evicted{
+             junos-odl:template "\tIPv6 fragment random assembly:                    %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-misplaced-not-ipv4-bytes{
+             junos-odl:template "\tIPv4 not misplaced drop bytes:                    %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-misplaced-not-ipv4-packets{
+             junos-odl:template "\tIPv4 not misplaced drop packets:                  %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-misplaced-not-ipv6-bytes{
+             junos-odl:template "\tIPv6 not misplaced drop bytes:                    %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-misplaced-not-ipv6-packets{
+             junos-odl:template "\tIPv6 not misplaced drop packets:                  %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-no-dest-softwire-ipv4-bytes{
+             junos-odl:template "\tIPv4 no destination drop bytes:                   %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-no-dest-softwire-ipv4-packets{
+             junos-odl:template "\tIPv4 no destination drop packets:                 %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-no-source-softwire-ipv6-bytes{
+             junos-odl:template "\tIPv6 no source drop bytes:                        %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-no-source-softwire-ipv6-packets{
+             junos-odl:template "\tIPv6 no source drop packets:                      %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-out-by-policy-icmpv4-packets{
+            junos-odl:template "\tICMPv4 packet drop out by policy:                 %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-out-by-policy-icmpv6-packets{
+            junos-odl:template "\tICMPv6 packet drop out by policy:                 %4.4s";
+
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-over-mtu-but-dont-fragment-ipv4-bytes{
+             junos-odl:template "\tIPv4 over MTU but dont-fragment drop bytes:       %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-over-mtu-but-dont-fragment-ipv4-packets{
+             junos-odl:template "\tIPv4 over MTU but dont-fragment drop packets:     %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-over-rate-limit-icmpv6-bytes{
+             junos-odl:template "\tICMPv6 over rate limit drop bytes:                %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-over-rate-limit-icmpv6-packets{
+             junos-odl:template "\tICMPv6 over rate limit drop packets:              %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-over-time-but-not-hop-limit-icmpv6-bytes{
+             junos-odl:template "\tICMPv6 overtime not hop limit drop bytes:         %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-over-time-but-not-hop-limit-icmpv6-packets{
+             junos-odl:template "\tICMPv6 overtime not hop limit drop packets:       %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-too-big-type-but-not-code-icmpv6-bytes{
+             junos-odl:template "\tICMPv6 too big but not code drop bytes:           %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-too-big-type-but-not-code-icmpv6-packets{
+             junos-odl:template "\tICMPv6 too big but not code drop packets:         %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-ttl-zero-ipv4-bytes{
+             junos-odl:template "\tIPv4 ttl zero drop bytes:                         %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-ttl-zero-ipv4-packets{
+             junos-odl:template "\tIPv4 ttl zero drop packets:                       %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-unknown-protocol-icmpv6-bytes{
+             junos-odl:template "\tICMPv6 unknown protocol drop bytes:               %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-unknown-protocol-icmpv6-packets{
+             junos-odl:template "\tICMPv6 unknown protocol drop packets:             %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-unknown-protocol-ipv6-bytes{
+             junos-odl:template "\tIPv6 unknown protocol  drop bytes:                %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf drop-unknown-protocol-ipv6-packets{
+             junos-odl:template "\tIPv6 unknown protocol  drop packets:              %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf hairpin-ipv4-bytes{
+             junos-odl:template "\tIPv4 hairpin bytes:                               %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf hairpin-ipv4-packets{
+             junos-odl:template "\tIPv4 hairpin packets:                             %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf in-ipv4-bytes{
+             junos-odl:template "\tIPv4 total IN bytes:                              %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf in-ipv4-packets{
+             junos-odl:template "\tIPv4 total IN packets:                            %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf in-ipv4-frag-needs-reassembly{
+             junos-odl:template "\tIPv4 IN fragments needs reassembly:               %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf in-ipv4-frag-reassembled{
+             junos-odl:template "\tIPv4 IN Reassembled fragments:                    %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf in-ipv4-frag-reassembly-unneeded{
+             junos-odl:template "\tIPv4 IN fragments not needed reassembly:          %4.4s";
+         type string;
+       	        description " ";
+           }
+
+       	   leaf in-ipv6-bytes{
+             junos-odl:template "\tIPv6 total IN bytes:                              %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf in-ipv6-packets{
+             junos-odl:template "\tIPv6 total IN packets:                            %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf in-ipv6-frag-needs-reassembly{
+             junos-odl:template "\tIPv6 IN fragments needs reassembly:               %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf in-ipv6-frag-reassembled{
+             junos-odl:template "\tIPv6 IN Reassembled fragments:                    %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf in-ipv6-frag-reassembly-unneeded{
+             junos-odl:template "\tIPv6 IN fragments not needed reassembly:          %4.4s";
+         type string;
+       	        description " ";
+           }
+
+       	   leaf ingress-packet-drops{
+             junos-odl:template "\tIngress packet drops:                             %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf memuse-ipv4-frag-reassembly-buffer{
+             junos-odl:template "\tIPv4 frag reassembly buffer memory use:           %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf memuse-ipv6-frag-reassembly-buffer{
+             junos-odl:template "\tIPv6 frag reassembly buffer memory use:           %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf out-icmpv4-bytes{
+             junos-odl:template "\tICMPv4 OUT bytes:                                 %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf out-icmpv4-packets{
+             junos-odl:template "\tICMPv4 OUT packets:                               %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf out-icmpv6-bytes{
+             junos-odl:template "\tICMPv6 OUT bytes:                                 %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf out-icmpv6-packets{
+             junos-odl:template "\tICMPv6 OUT packets:                               %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf out-ipv4-bytes{
+             junos-odl:template "\tIPv4 OUT bytes:                                   %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf out-ipv4-packets{
+             junos-odl:template "\tIPv4 OUT packets:                                 %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf out-ipv4-frag{
+             junos-odl:template "\tIPv4 OUT fragments:                               %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf out-ipv4-frag-not{
+             junos-odl:template "\tIPv4 OUT not fragmented:                          %4.4s";
+         type string;
+       	        description " ";
+           }
+
+       	   leaf out-ipv6-bytes{
+             junos-odl:template "\tIPv6 OUT bytes:                                   %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf out-ipv6-packets{
+             junos-odl:template "\tIPv6 OUT packets:                                 %4.4s\n";
+         type string;
+       	        description " ";
+           }
+
+       	   leaf out-ipv6-frag{
+             junos-odl:template "\tIPv6 OUT Fragments:                               %4.4s";
+         type string;
+       	        description " ";
+           }
+       	   leaf out-ipv6-frag-not{
+             junos-odl:template "\tIPv6 OUT not fragmented:                          %4.4s";
+         type string;
+       	        description " ";
+           }
+
+
+       container statistics-format {
+         junos-odl:cli-format;
+       	 junos-odl:header "Snabb Statisitics \n";
+       	junos-odl:picture "
+@\\n
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+";
+       junos-odl:line {
+           junos-odl:field "id";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-all-ipv4-iface-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-all-ipv4-iface-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-all-ipv6-iface-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-all-ipv6-iface-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-bad-checksum-icmpv4-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-bad-checksum-icmpv4-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-in-by-policy-icmpv4-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-in-by-policy-icmpv4-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-in-by-policy-icmpv6-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-in-by-policy-icmpv6-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-in-by-rfc7596-icmpv4-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-in-by-rfc7596-icmpv4-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-ipv4-frag-invalid-reassembly";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-ipv4-frag-random-evicted";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-ipv6-frag-invalid-reassembly";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-ipv6-frag-random-evicted";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-misplaced-not-ipv4-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-misplaced-not-ipv4-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-misplaced-not-ipv6-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-misplaced-not-ipv6-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-no-dest-softwire-ipv4-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-no-dest-softwire-ipv4-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-no-source-softwire-ipv6-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-no-source-softwire-ipv6-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-out-by-policy-icmpv4-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-out-by-policy-icmpv6-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-over-mtu-but-dont-fragment-ipv4-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-over-mtu-but-dont-fragment-ipv4-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-over-rate-limit-icmpv6-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-over-rate-limit-icmpv6-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-over-time-but-not-hop-limit-icmpv6-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-over-time-but-not-hop-limit-icmpv6-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-too-big-type-but-not-code-icmpv6-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-too-big-type-but-not-code-icmpv6-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-ttl-zero-ipv4-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-ttl-zero-ipv4-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-unknown-protocol-icmpv6-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-unknown-protocol-icmpv6-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-unknown-protocol-ipv6-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "drop-unknown-protocol-ipv6-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "hairpin-ipv4-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "hairpin-ipv4-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "in-ipv4-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "in-ipv4-frag-needs-reassembly";
+       }
+       junos-odl:line {
+           junos-odl:field "in-ipv4-frag-reassembled";
+       }
+       junos-odl:line {
+           junos-odl:field "in-ipv4-frag-reassembly-unneeded";
+       }
+       junos-odl:line {
+           junos-odl:field "in-ipv4-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "in-ipv6-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "in-ipv6-frag-needs-reassembly";
+       }
+       junos-odl:line {
+           junos-odl:field "in-ipv6-frag-reassembled";
+       }
+       junos-odl:line {
+           junos-odl:field "in-ipv6-frag-reassembly-unneeded";
+       }
+       junos-odl:line {
+           junos-odl:field "in-ipv6-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "ingress-packet-drops";
+       }
+       junos-odl:line {
+           junos-odl:field "memuse-ipv4-frag-reassembly-buffer";
+       }
+       junos-odl:line {
+           junos-odl:field "memuse-ipv6-frag-reassembly-buffer";
+       }
+       junos-odl:line {
+           junos-odl:field "out-icmpv4-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "out-icmpv4-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "out-icmpv6-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "out-icmpv6-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "out-ipv4-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "out-ipv4-frag";
+       }
+       junos-odl:line {
+           junos-odl:field "out-ipv4-frag-not";
+       }
+       junos-odl:line {
+           junos-odl:field "out-ipv4-packets";
+       }
+       junos-odl:line {
+           junos-odl:field "out-ipv6-bytes";
+       }
+       junos-odl:line {
+           junos-odl:field "out-ipv6-frag";
+       }
+       junos-odl:line {
+           junos-odl:field "out-ipv6-frag-not";
+       }
+       junos-odl:line {
+           junos-odl:field "out-ipv6-packets";
+       }
+     }
+    }
+    }
+    }
+}

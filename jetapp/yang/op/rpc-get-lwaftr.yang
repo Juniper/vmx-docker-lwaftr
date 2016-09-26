@@ -25,21 +25,60 @@ rpc get-lwaftr-state {
     description "Fetch state information of all the Snabb instances";
     junos:command "show lwaftr state";
     junos:action-execute {
-    junos:script "rpc_get_lwaftr_state.py";
-    }
+        junos:script "rpc_get_lwaftr_state.py";
+     }
+     output {
+       container instance {
+           leaf id {
+             type string;
+             description "ID of instance";
+           }
+           leaf pid {
+             type string;
+             description "pid of instance";
+           }
+           leaf next_hop_mac_v4 {
+             type string;
+             description "IPv4 nexthop mac";
+           }
+           leaf next_hop_mac_v6 {
+             type string;
+             description "IPv6 nexthop mac";
+           }
+	   leaf rxpackets {
+	      type string;
+              description "Recieved packets";
+	   }
+	   leaf txpackets {
+	      type string;
+              description "Sent packets";
+	   }
+	   leaf rxdrop {
+	      type string;
+              description "Recieved packet drops";
+	   }
+	   leaf txdrop {
+	      type string;
+              description "Sent packet drops";
+	   }
+           container instance-format {
+             junos-odl:cli-format;
+             junos-odl:header  "ID    PID   v4Nexthop         v6Nexthop         rxPackets      txPackets    rxDrops    txDrops\n";
+	     junos-odl:picture "@<<<<<@<<<<<@<<<<<<<<<<<<<<<<<@<<<<<<<<<<<<<<<<<@<<<<<<<<<<<<<<@<<<<<<<<<<<<@<<<<<<<<<<@\\n";
+             junos-odl:line {
+               junos-odl:field "id";
+               junos-odl:field "pid";
+               junos-odl:field "next_hop_mac_v4";
+               junos-odl:field "next_hop_mac_v6";
+	       junos-odl:field "rxpackets";
+	       junos-odl:field "txpackets";
+	       junos-odl:field "rxdrop";
+	       junos-odl:field "txdrop";
+             }
+           }
+       }
+     }
 }
 
-rpc get-lwaftr-statistics {
-    description "Fetch statistics of the Snabb instances";
-    input {
-        leaf id {
-            description "ID of the snabb instance";
-            type string;
-        }
-    }
-    junos:command "show lwaftr statistics";
-    junos:action-execute {
-    junos:script "rpc_get_lwaftr_statistics.py";
-    }
 }
-}
+
