@@ -5,7 +5,7 @@ NET="net-lwaftr1"
 #CFG="lwaftr1.txt"
 CFG="lwaftr1-daily.txt"
 #VMX="vmx-bundle-16.1R2.11.tgz"
-VMX="vmx-bundle-16.1-20160915.0.tgz"
+VMX="vmx-bundle-16.1-20160926.0.tgz"
 CONTAINER="$(cat ../VERSION)"
 IDENTITY="snabbvmx.key"
 chmod 400 $IDENTITY
