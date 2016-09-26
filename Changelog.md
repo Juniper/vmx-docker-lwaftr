@@ -1,3 +1,10 @@
+## v1.1.0:
+
+- fix lwaftr4 config and use of daily build for testing
+- add copyright notice
+- add JET opserver and show scripts
+- upgrade snabb to snabbvmx-v1.1, tag as v1.1.0
+
 ## v1.0.2:
 
 - collect snabb binary with collect-support-infos.sh
