@@ -1,0 +1,3 @@
+[submodule "snabb"]
+	path = snabb
+	url = https://github.com/igalia/snabb.git
