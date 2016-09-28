@@ -49,7 +49,7 @@ COPY snmp/snmp_lwaftr.slax snmp/
 
 COPY launch.sh launch_snabb.sh top.sh topl.sh README.md VERSION \
   launch_jetapp.sh launch_opserver.sh \
-  launch_snabbvmx_manager.sh snabbvmx_manager.pl show_affinity.sh nexthop.sh \
+  launch_snabbvmx_manager.sh snabbvmx_manager.pl show_affinity.sh \
   monitor.sh add_bindings.sh launch_snabb_query.sh /
 
 RUN date >> /VERSION
