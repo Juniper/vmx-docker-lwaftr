@@ -19,18 +19,18 @@ RUN mv /usr/sbin/tcpdump /sbin/
 # dumb-init
 COPY dumb-init/dumb-init /usr/bin/
 
-COPY build/qemu-v2.4.1-snabb.tgz /
+COPY qemu-v2.4.1-snabb.tgz /
 RUN tar zxf /qemu-v*-snabb.tgz -C /usr/local/
 
 # python-tools
-COPY python-tools/python-tools.tgz jet-1.tar.gz /
+COPY python-tools.tgz jet-1.tar.gz /
 RUN tar zxf python-tools.tgz && rm python-tools.tgz 
 
 # JET
 RUN mkdir jet-1 && cd jet-1 && tar zxf ../jet-1.tar.gz && python setup.py install && cd ..
 
 # Snabb
-COPY build/snabb /usr/local/bin/
+COPY snabb/src/snabb /usr/local/bin/
 
 RUN mkdir /yang /jetapp /jetapp/op /utils /op /snmp
 

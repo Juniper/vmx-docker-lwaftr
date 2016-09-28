@@ -1,5 +1,11 @@
 .git
+*.orig
 *.img
+snabb/lib
+snabb/src/lib
+snabb/src/apps
+snabb/src/obj
+snabb/src/program
 jet-1.tar.gz.*
 vmx-bundle*tgz
 mirror.sh
@@ -7,6 +13,5 @@ license-*txt
 tests
 orig
 qemu
-snabb
 snabb-*
 b4cpe
