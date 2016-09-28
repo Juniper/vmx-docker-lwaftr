@@ -30,14 +30,7 @@ $ cat VERSION
 vmx-docker-lwaftr:v1.2.0
 ```
 
-$ make
-. . .
-Step 15 : CMD -h
- ---> Running in f98dc81620c9
- ---> aa7e281472e4
-Removing intermediate container f98dc81620c9
-Successfully built aa7e281472e4
-
+```
 $ mwiget@st:~/vmx-docker-lwaftr$ docker images
 REPOSITORY              TAG                 IMAGE ID            CREATED              SIZE
 vmx-docker-lwaftr       v1.2.0               2779b5c29172        About a minute ago   253.2 MB
