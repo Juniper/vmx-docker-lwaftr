@@ -5,8 +5,9 @@ vmxlwaftr: build snabb/snabb qemu/qemu-v2.4.1-snabb.tgz dumb-init/dumb-init buil
 	cp -p python-tools/python-tools.tgz build/
 	docker build -t $$(cat VERSION) .
 
-build:
-	mkdir build
+build:	Dockerfile.build
+	docker build -f Dockerfile.build -t build .
+	docker run -ti --rm -v $$PWD:/u build
 
 python-tools/python-tools.tgz:
 	$(MAKE) -C python-tools
