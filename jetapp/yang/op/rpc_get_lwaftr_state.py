@@ -63,7 +63,7 @@ def PRINT_TAG(node, tag):
 
 def snabb_state(query_output):
     root = ET.fromstring(query_output)
-    #root = tree.getroot()
+    print ("<snabb>")
     for instance in root:
         # In each instance, we need to query the id, pci, pid.
         print ("<instance>")
@@ -82,6 +82,7 @@ def snabb_state(query_output):
                         	PRINT_TAG(pci_child,"rxdrop")
                         	PRINT_TAG(pci_child,"txdrop")
         print "</instance>"
+    print ("</snabb>")
     return
 def main(argv):
     """
@@ -96,13 +97,12 @@ def main(argv):
         output = rpcclient.lwaftr()
     except Exception as e:
         output = "Failed to connect to jetapp " + e.message
-	print output
+	print "<snabb><instance><rpc_error>Could not connect to Snabb application</rpc_error></instance></snabb>"
         return
     if (output != None):
         snabb_state(output)
-        print output
     else:
-        print "No instances found"
+	print "<snabb><instance><rpc_error>Could not connect to Snabb application</rpc_error></instance></snabb>"
 
 if __name__ == '__main__':
     main(sys.argv)

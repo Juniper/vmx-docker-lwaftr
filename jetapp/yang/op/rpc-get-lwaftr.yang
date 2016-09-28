@@ -29,52 +29,102 @@ rpc get-lwaftr-state {
      }
      output {
        container instance {
-           leaf id {
+           leaf id_error {
+             junos-odl:template "No instance Found";
              type string;
-             description "ID of instance";
+             description "No such instance";
+           }
+           leaf rpc_error {
+             junos-odl:template "Error connecting to snabb";
+             type string;
+             description "Error connecting to snabb";
+           }
+           leaf id {
+              junos-odl:template "Instance id: %s";
+              type string;
+              description "ID of instance";
            }
            leaf pid {
-             type string;
-             description "pid of instance";
+              junos-odl:template "\tProcess ID of this instance:                      %17s";
+              type string;
+              description "pid of instance";
            }
            leaf next_hop_mac_v4 {
-             type string;
-             description "IPv4 nexthop mac";
+              junos-odl:template "\tNexthop v4 mac address:                           %17s";
+              type string;
+              description "IPv4 nexthop mac";
            }
            leaf next_hop_mac_v6 {
-             type string;
-             description "IPv6 nexthop mac";
+              junos-odl:template "\tNexthop v6 mac address:                           %17s";
+              type string;
+              description "IPv6 nexthop mac";
            }
 	   leaf rxpackets {
+	      junos-odl:template "\tReceived packets:                                 %17s";
 	      type string;
               description "Recieved packets";
 	   }
 	   leaf txpackets {
+	      junos-odl:template "\tTransmitted packets:                              %17s";
 	      type string;
               description "Sent packets";
 	   }
 	   leaf rxdrop {
+	      junos-odl:template "\tReceived packets that were dropped:               %17s";
 	      type string;
               description "Recieved packet drops";
 	   }
 	   leaf txdrop {
+	      junos-odl:template "\tSent packets that were dropped:                   %17s";
 	      type string;
               description "Sent packet drops";
 	   }
            container instance-format {
              junos-odl:cli-format;
-             junos-odl:header  "ID    PID   v4Nexthop         v6Nexthop         rxPackets      txPackets    rxDrops    txDrops\n";
-	     junos-odl:picture "@<<<<<@<<<<<@<<<<<<<<<<<<<<<<<@<<<<<<<<<<<<<<<<<@<<<<<<<<<<<<<<@<<<<<<<<<<<<@<<<<<<<<<<@\\n";
-             junos-odl:line {
-               junos-odl:field "id";
-               junos-odl:field "pid";
-               junos-odl:field "next_hop_mac_v4";
-               junos-odl:field "next_hop_mac_v6";
-	       junos-odl:field "rxpackets";
-	       junos-odl:field "txpackets";
-	       junos-odl:field "rxdrop";
-	       junos-odl:field "txdrop";
-             }
+       	     junos-odl:header "Snabb State \n";
+
+       	junos-odl:picture "
+@\\n
+@\\n
+@\\n
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+@<<<<<<<<<<<<<<<<<<<<<<<<
+";
+       junos-odl:line {
+           junos-odl:field "id_error";
+       }
+       junos-odl:line {
+           junos-odl:field "rpc_error";
+       }
+       junos-odl:line {
+           junos-odl:field "id";
+       }
+       junos-odl:line {
+           junos-odl:field "pid";
+       }
+       junos-odl:line {
+           junos-odl:field "next_hop_mac_v4";
+       }
+       junos-odl:line {
+           junos-odl:field "next_hop_mac_v6";
+       }
+       junos-odl:line {
+           junos-odl:field "rxpackets";
+       }
+       junos-odl:line {
+           junos-odl:field "txpackets";
+       }
+       junos-odl:line {
+           junos-odl:field "rxdrop";
+       }
+       junos-odl:line {
+           junos-odl:field "txdrop";
+       }
            }
        }
      }

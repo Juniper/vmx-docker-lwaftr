@@ -35,6 +35,16 @@ rpc get-lwaftr-statistics {
     }
     output {
        container statistics {
+	   leaf id_error {
+	     junos-odl:template "No instance Found";
+	     type string;
+	     description "No such instance";
+	   }
+	   leaf rpc_error {
+	     junos-odl:template "Error connecting to snabb";
+	     type string;
+	     description "Error connecting to snabb";
+	   }
            leaf id {
              junos-odl:template "Instance id: %s";
              type string;
@@ -388,6 +398,8 @@ rpc get-lwaftr-statistics {
        	 junos-odl:header "Snabb Statisitics \n";
        	junos-odl:picture "
 @\\n
+@\\n
+@\\n
 @<<<<<<<<<<<<<<<<<<<<<<<<
 @<<<<<<<<<<<<<<<<<<<<<<<<
 @<<<<<<<<<<<<<<<<<<<<<<<<
@@ -457,6 +469,12 @@ rpc get-lwaftr-statistics {
 @<<<<<<<<<<<<<<<<<<<<<<<<
 @<<<<<<<<<<<<<<<<<<<<<<<<
 ";
+       junos-odl:line {
+           junos-odl:field "id_error";
+       }
+       junos-odl:line {
+           junos-odl:field "rpc_error";
+       }
        junos-odl:line {
            junos-odl:field "id";
        }

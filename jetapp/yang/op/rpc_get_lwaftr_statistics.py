@@ -62,9 +62,7 @@ def PRINT_TAG(node, tag):
         print '</'+tag+'>'
     return
 
-def snabb_statistics(query_output):
-    root = ET.fromstring(query_output)
-    for instance in root:
+def stats_per_instance(instance):
         print ("<statistics>")
         for child_instance in instance:
             PRINT_TAG(child_instance,"id")
@@ -73,6 +71,7 @@ def snabb_statistics(query_output):
                     if app_child.tag == "lwaftr":
                         for lwaftr_child in app_child:
                             # Parse all the attributes and print it
+                            #print "PRINT_TAG(lwaftr_child,'"+lwaftr_child.tag+"')"
                             PRINT_TAG(lwaftr_child,'drop-all-ipv4-iface-bytes')
                             PRINT_TAG(lwaftr_child,'drop-all-ipv4-iface-packets')
                             PRINT_TAG(lwaftr_child,'drop-all-ipv6-iface-bytes')
@@ -140,7 +139,27 @@ def snabb_statistics(query_output):
                             PRINT_TAG(lwaftr_child,'out-ipv6-frag')
                             PRINT_TAG(lwaftr_child,'out-ipv6-frag-not')
                             PRINT_TAG(lwaftr_child,'out-ipv6-packets')
-        print ("</statistics>")
+        print "</statistics>"
+
+def snabb_statistics(output,argv):
+    print "Displaying the snabb state counters"
+    root = ET.fromstring(output)
+    print "<snabb>"
+    found = 0
+    for instance in root:
+        if len(argv) != 1 :
+                if instance.findall("./id")[0].text == argv[-1]:
+                    stats_per_instance(instance)
+		    print "</snabb>"
+                    return
+        else:
+	    found += 1
+            stats_per_instance(instance)
+
+    if found == 0:
+        print "<statistics><id_error>no instance found</id_error></statistics>"
+    print "</snabb>"
+    return
 
 
 def main(argv):
@@ -156,11 +175,11 @@ def main(argv):
         output = rpcclient.lwaftr()
     except Exception as e:
         output = "Failed to connect to jetapp " + e.message
+	print "<snabb><statistics><rpc_error>Failed to connect to Snabb app</rpc_error></statistics></snabb>"
         return
     if (output != None):
-        snabb_statistics(output)
-        print output
+        snabb_statistics(output,argv)
     else:
-        print "No instances found"
+	print "<snabb><statistics><rpc_error>Failed to connect to Snabb app</rpc_error></statistics></snabb>"
 if __name__ == '__main__':
     main(sys.argv)

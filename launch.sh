@@ -184,6 +184,7 @@ EOF
   else
     opfiles=$(ls /op/*slax)
     slaxsnmpfiles=$(ls /snmp/*slax)
+    pysnmpfiles=$(ls /snmp/*py)
     yangfiles=$(ls /yang/*.yang)
   fi
   if [ ! -z "$opfiles" ]; then
@@ -193,6 +194,10 @@ EOF
   if [ ! -z "$slaxsnmpfiles" ]; then
     >&2 echo "SLAX snmp files: $slaxsnmpfiles"
     cp $slaxsnmpfiles config_drive/var/db/vmm/vmxlwaftr/snmp/
+  fi
+  if [ ! -z "$pysnmpfiles" ]; then
+    >&2 echo "Python snmp files: $pysnmpfiles"
+    cp $pysnmpfiles config_drive/var/db/vmm/vmxlwaftr/snmp/
   fi
   if [ ! -z "$yangfiles" ]; then
      yangcmd=""
