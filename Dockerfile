@@ -45,7 +45,7 @@ COPY jetapp/src/op/__init__.py jetapp/src/op/opglobals.py jetapp/src/op/opserver
 COPY slax/lwaftr.slax \
   jetapp/yang/op/rpc_get_lwaftr_state.py \
   jetapp/yang/op/rpc_get_lwaftr_statistics.py op/
-COPY snmp/snmp_lwaftr.slax snmp/snmp_lw4over6.py snmp/
+COPY snmp/snmp_lwaftr.slax snmp/lw4over6.py snmp/
 
 COPY launch.sh launch_snabb.sh top.sh topl.sh README.md VERSION \
   launch_jetapp.sh launch_opserver.sh \

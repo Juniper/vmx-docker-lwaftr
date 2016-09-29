@@ -2,8 +2,7 @@
 
 NAME="lwaftr1"
 NET="net-lwaftr1"
-#CFG="lwaftr1.txt"
-CFG="lwaftr1-daily.txt"
+CFG="lwaftr1.txt"
 #VMX="vmx-bundle-16.1R2.11.tgz"
 VMX="vmx-bundle-16.1-20160926.0.tgz"
 CONTAINER="$(cat ../VERSION)"
