@@ -1,0 +1,162 @@
+
+SOFTWIRE-LW4OVER6-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE,
+    Unsigned32, Counter64
+        FROM SNMPv2-SMI
+    CounterBasedGauge64                  
+        FROM HCNUM-TC 		
+    jnxSDKApplicationsRoot
+        FROM JUNIPER-SMI;
+
+softwireMIB MODULE-IDENTITY
+    LAST-UPDATED "201606080000Z" 							-- June 8, 2016
+    ORGANIZATION "Juniper Networks, Inc."     				-- TBD
+    CONTACT-INFO
+            "Juniper Technical Assistance Center
+                      Juniper Networks, Inc.
+                      1194 N. Mathilda Avenue
+                      Sunnyvale, CA 94089
+                      E-mail: support@juniper.net"          -- TBD
+            
+    DESCRIPTION
+            "This document defines a MIB data model for the statistics of
+            IPv4-in-IPv6 Softwire Border Routers and Customer
+            Premises Equipment."
+    
+
+    
+    ::= { jnxSDKApplicationsRoot 151 }              		-- TBD
+    
+
+-- ***************************************************************
+--  lw4over6 stats table per instance and family type (v4/v6)
+-- ***************************************************************
+
+    lw4over6StatTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF Lw4over6StatEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+            "This table presents lw4over6 instance of 
+			v4 or v6 statistics."
+        ::= { softwireMIB 1 }
+		
+    lw4over6StatEntry OBJECT-TYPE
+        SYNTAX      Lw4over6StatEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+            "This table presents lw4over6 instance of v4 or v6 statistics."
+            
+        INDEX       { lw4over6InstanceId, lw4over6Protocol }
+        ::= { lw4over6StatTable 1 }
+        
+
+    Lw4over6StatEntry ::=
+        SEQUENCE {
+        -- Table indexed with instance id, and v4/v6 protocol
+		
+        lw4over6InstanceId              Unsigned32,
+        lw4over6Protocol                INTEGER,
+
+        -- instance name
+        lw4over6Name					DisplayString,
+        
+        -- packet/byte stats for ingress traffic
+        lw4over6HCInOctets              Counter64,
+        lw4over6HCInPkts                Counter64,
+
+        -- packet/byte stats for egress traffic
+        lw4over6HCOutOctets             Counter64,
+        lw4over6HCOutPkts               Counter64,
+
+        -- byte/packet drops
+        lw4over6HCOctetDrops            Counter64,
+        lw4over6HCPktDrops              Counter64
+    }
+    
+    --input packet/byte stats for unicast traffic
+    lw4over6InstanceId OBJECT-TYPE 
+        SYNTAX      Unsigned32 
+        MAX-ACCESS  not-accessible 
+        STATUS      current
+        DESCRIPTION
+            "The instance id of lw4over6." 
+        ::= { lw4over6StatEntry 1 }
+
+    lw4over6Protocol OBJECT-TYPE 
+        SYNTAX      INTEGER {
+                        ipv4 (1),
+                        ipv6 (2)
+        }
+        MAX-ACCESS  not-accessible 
+        STATUS      current
+        DESCRIPTION
+            "The protocol type of lw4over6" 
+        ::= { lw4over6StatEntry 2 }
+        
+    lw4over6Name OBJECT-TYPE 
+        SYNTAX      DisplayString
+        MAX-ACCESS  not-accessible 
+        STATUS      current
+        DESCRIPTION
+            "The protocol type of lw4over6" 
+        ::= { lw4over6StatEntry 3 }
+		
+    --input packet/byte stats for unicast traffic
+    lw4over6HCInOctets OBJECT-TYPE
+        SYNTAX      Counter64
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+            "The total number of bytes ingressed."
+        ::= { lw4over6StatEntry 4 }
+
+    --input packet/byte stats for unicast traffic
+    lw4over6HCInPkts OBJECT-TYPE
+        SYNTAX      Counter64
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+            "The total number of packets ingressed."
+        ::= { lw4over6StatEntry 5 }
+        
+    --input packet/byte stats for unicast traffic
+    lw4over6HCOutOctets OBJECT-TYPE
+        SYNTAX      Counter64
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+            "The total number of bytes egressed."
+        ::= { lw4over6StatEntry 6 }
+
+    --input packet/byte stats for unicast traffic
+    lw4over6HCOutPkts OBJECT-TYPE
+        SYNTAX      Counter64
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+            "The total number of packets egressed."
+        ::= { lw4over6StatEntry 7 }
+
+    --input packet/byte stats for unicast traffic
+    lw4over6HCOctetDrops OBJECT-TYPE
+        SYNTAX      Counter64
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+            "The total number of bytes dropped."
+        ::= { lw4over6StatEntry 8 }
+        
+    --input packet/byte stats for unicast traffic
+    lw4over6HCPktDrops OBJECT-TYPE
+        SYNTAX      Counter64
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+            "The total number of packets dropped."
+        ::= { lw4over6StatEntry 9 }
+        
+END
