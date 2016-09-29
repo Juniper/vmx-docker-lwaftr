@@ -82,6 +82,16 @@ system {
             interactive-commands any;
         }
     }
+    extensions {
+      extension-service {
+        application {
+          file rpc-jet.py {
+            daemonize;
+            username root;
+          }
+        }
+      }
+    }
     commit {
         notification;
     }

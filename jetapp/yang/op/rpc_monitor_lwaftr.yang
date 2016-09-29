@@ -1,0 +1,32 @@
+/*
+* Copyright (c) 2014 Juniper Networks, Inc.
+* All rights reserved.
+*/
+
+module rpc-monitor-lwaftr {
+  namespace "http://yang.juniper.net/yang/1.1/jrpc";
+  prefix jrpc;
+
+  import junos-extension-odl{
+    prefix junos-odl;
+  }
+
+  import junos-extension{
+    prefix junos;
+  }
+
+  organization
+    "Juniper Networks, Inc.";
+
+  description
+    "Junos YANG module for fetching Snabb Lwaftr statistics";
+
+rpc monitor-lwaftr {
+    description "Top output of the Snabb instances";
+    junos:command "monitor lwaftr";
+    junos:action-execute {
+    junos:script "rpc_monitor_lwaftr.py";
+    }
+}
+
+}

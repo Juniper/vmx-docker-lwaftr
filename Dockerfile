@@ -32,19 +32,24 @@ RUN mkdir jet-1 && cd jet-1 && tar zxf ../jet-1.tar.gz && python setup.py instal
 # Snabb
 COPY snabb/src/snabb /usr/local/bin/
 
-RUN mkdir /yang /jetapp /jetapp/op /utils /op /snmp
+RUN mkdir /yang /jetapp /jetapp/op /utils /op /snmp /jet
 
 COPY yang/ietf-inet-types.yang yang/ietf-yang-types.yang \
   yang/ietf-softwire.yang \
   jetapp/yang/op/junos-extension.yang jetapp/yang/op/junos-extension-odl.yang \
   jetapp/yang/op/rpc-get-lwaftr.yang jetapp/yang/op/rpc-get-lwaftr-statistics.yang \
+  jetapp/yang/op/rpc_monitor_lwaftr.yang \
   yang/jnx-aug-softwire.yang yang/jnx-softwire-dev.yang yang/
 
 COPY jetapp/src/op/__init__.py jetapp/src/op/opglobals.py jetapp/src/op/opserver.py /jetapp/op/
 
 COPY slax/lwaftr.slax \
   jetapp/yang/op/rpc_get_lwaftr_state.py \
+  jetapp/yang/op/rpc_monitor_lwaftr.py \
   jetapp/yang/op/rpc_get_lwaftr_statistics.py op/
+
+COPY jetapp/yang/op/rpc-jet.py jet/
+
 COPY snmp/snmp_lwaftr.slax snmp/lw4over6.py snmp/
 
 COPY launch.sh launch_snabb.sh top.sh topl.sh README.md VERSION \

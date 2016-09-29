@@ -168,6 +168,7 @@ function create_config_drive {
   mkdir config_drive/var/db/vmm/vmxlwaftr
   mkdir config_drive/var/db/vmm/vmxlwaftr/op
   mkdir config_drive/var/db/vmm/vmxlwaftr/snmp
+  mkdir config_drive/var/db/vmm/vmxlwaftr/jet
   mkdir config_drive/config
   mkdir config_drive/config/license
   cat > config_drive/boot/loader.conf <<EOF
@@ -184,6 +185,7 @@ EOF
   else
     opfiles=$(ls /op/*slax)
     slaxsnmpfiles=$(ls /snmp/*slax)
+    jetfiles=$(ls /jet/*py)
     pysnmpfiles=$(ls /snmp/*py)
     yangfiles=$(ls /yang/*.yang)
   fi
@@ -198,6 +200,10 @@ EOF
   if [ ! -z "$pysnmpfiles" ]; then
     >&2 echo "Python snmp files: $pysnmpfiles"
     cp $pysnmpfiles config_drive/var/db/vmm/vmxlwaftr/snmp/
+  fi
+  if [ ! -z "$jetfiles" ]; then
+    >&2 echo "Python JET files: $jetfiles"
+    cp $jetfiles config_drive/var/db/vmm/vmxlwaftr/jet/
   fi
   if [ ! -z "$yangfiles" ]; then
      yangcmd=""
@@ -235,6 +241,7 @@ cp /var/etc/mosquitto.conf /var/etc/mosquitto.conf.orig
 cp /var/db/vmm/mosquitto.conf.new /var/etc/mosquitto.conf
 cp /var/db/vmm/vmxlwaftr/op/* /var/db/scripts/op/
 cp /var/db/vmm/vmxlwaftr/snmp/* /var/db/scripts/snmp/
+cp /var/db/vmm/vmxlwaftr/jet/* /var/db/scripts/jet/
 EOF
     chmod a+rx config_drive/var/db/vmm/etc/rc.vmm
   fi
