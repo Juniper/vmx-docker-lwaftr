@@ -30,9 +30,9 @@ def snabb_state(query_output):
             PRINT_TAG(child,"pid")
 	    PRINT_TAG(child,"next_hop_mac_v4")
 	    PRINT_TAG(child,"next_hop_mac_v6")
-	    child = None
-	    for child in instance:
-	        if child.tag == "pci":
+	    #child = None
+	    #for child in instance:
+	    if child.tag == "pci":
 		        for pcis in child:
 		            for pci_child in pcis:
                         	PRINT_TAG(pci_child,"rxpackets")

@@ -13,10 +13,14 @@ import subprocess
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from xmlrpclib import Binary
 import datetime
+import time
+from threading import Thread, Lock
 
 server = SimpleXMLRPCServer(('127.0.0.1', 9191), logRequests=True, allow_none=True)
 server.register_introspection_functions()
 server.register_multicall_functions()
+mutex = Lock()
+SNABB_FILENAME = "/tmp/snabb_stats.xml"
 
 class OpServer():
     """
@@ -41,6 +45,38 @@ class OpServer():
 	except Exception as e:
 	    output = "Failed to connect to jetapp " + e.message
 	return output
+
+    def lwaftr_snmp(self):
+	mutex.acquire()
+	try:
+	    with open(SNABB_FILENAME, "r") as f:
+		output = f.read()
+	except Exception as e:
+	    print "lwaftr_snmp hit exception: ", e.message
+	    output = self.lwaftr()
+	mutex.release()
+	return output
+	
+
+def poll_snabb():
+    """
+    Poll for snabb counters every 5 seconds
+    """
+    while True:
+        try:
+            rpcclient = TimeoutServerProxy('http://128.0.0.100:9191', timeout=5)
+            output = ''
+            output = rpcclient.lwaftr()
+        except Exception as e:
+            output = "Failed to connect to jetapp " + e.message
+	    exit(1)
+	mutex.acquire()
+	# Write the file now
+	with open(SNABB_FILENAME, "w") as f:
+	    f.write(output)
+	mutex.release()
+	time.sleep(5)
+
 
 class MyHTTPConnect(httplib.HTTPConnection):
     def __init__(self, host, port=None, strict=None,
@@ -95,6 +131,10 @@ def main(argv):
     try:
         # log device initialized successfully
         print "Device initialized for the configuration updates"
+        #Start a thread to do the polling
+        t = Thread(target=poll_snabb)
+        t.daemon = True
+        t.start()
         opw = OpServer()
         server.register_instance(opw)
         print ("Starting the reactor")
@@ -102,7 +142,7 @@ def main(argv):
 
     except Exception as e:
         # log device initialization failed
-        LOG.critical("JET app exiting due to exception: %s" %str(e.message))
+        print("JET app exiting due to exception: %s" %str(e.message))
         os._exit(0)
     return
 

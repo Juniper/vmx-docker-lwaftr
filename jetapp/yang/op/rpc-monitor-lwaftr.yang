@@ -23,6 +23,13 @@ module rpc-monitor-lwaftr {
 
 rpc monitor-lwaftr {
     description "Top output of the Snabb instances";
+    input {
+        leaf id {
+            description "ID of the snabb instance";
+            type string;
+        }
+    }
+
     junos:command "monitor lwaftr";
     junos:action-execute {
     junos:script "rpc_monitor_lwaftr.py";

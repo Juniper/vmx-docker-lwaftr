@@ -1,3 +1,13 @@
+#
+#  2016-09-28
+# snmp script handler for lw4over6 application
+#
+# rnaren
+#
+# Copyright (c) 2004-2016, Juniper Networks, Inc.
+# All rights reserved.
+#
+
 from __future__ import print_function
 import jcs
 import sys
@@ -26,7 +36,7 @@ SNMP_V4_STATISTICS = 1
 SNMP_V6_STATISTICS = 2
 
 # 60 sec caching
-STATS_CACHE_TIME = 0
+STATS_CACHE_TIME = 5
 
 # Leaf/members
 LWAFTR_INSTANCENAME = 3
@@ -89,7 +99,7 @@ def populate_node_value(elem, tag):
     if (elem.tag == tag):
         value = elem.text.strip()
         message = tag + ": " + value
-        jcs.syslog("external.info", message)
+        #jcs.syslog("external.info", message)
         value = long(value)
         return value
     return -1
@@ -100,11 +110,11 @@ def populate_node_value(elem, tag):
 # show lwaftr statistics id <>
 def populate_stats():
     try:
-        jcs.syslog("external.info", "populate statistics")
+        #jcs.syslog("external.info", "populate statistics")
         
         """     
         #hard coding for testing            
-        jcs.syslog("external.info", "Filling dummy values for test")
+        #jcs.syslog("external.info", "Filling dummy values for test")
 
         lwaftr1 = lwaftr_statistics("lwaftr1", 11,12,13,14,15,16, 21,22,23,24,25,26)
         lwaftr_statistics_dict[548] = lwaftr1
@@ -115,14 +125,37 @@ def populate_stats():
         lwaftr3 = lwaftr_statistics("lwaftr3", 51,52,53,54,55,56, 61,62,63,64,65,66)
         lwaftr_statistics_dict[550] = lwaftr3
         """
+        current_time = time()
+        file_time = 0
+        try:
+            stat = os.stat(snmp_state_file)
+            file_time = stat.st_mtime
+        except OSError, e:
+            refresh_file = 1
 
-        jcs.syslog("external.info", "Opening Device connection")
-        server =  xmlrpclib.ServerProxy('http://127.0.0.1:9191', verbose=False)
-        state_rsp = server.lwaftr()
-        jcs.syslog("external.info", state_rsp)
-        state_rsp = ET.fromstring(state_rsp)
+        message = "Timing " + str(file_time) + " " + str(current_time)
+        #jcs.syslog("external.info", message)
 
-        jcs.syslog("external.info", "RPC Invoke complete")
+        refresh_file = 1
+        if (current_time > file_time and ((current_time - file_time) < STATS_CACHE_TIME)):
+            refresh_file = 0
+
+        if (refresh_file == 1):
+            #jcs.syslog("external.info", "Opening Device connection")
+            server =  xmlrpclib.ServerProxy('http://127.0.0.1:9191', verbose=False)
+            state_rsp = server.lwaftr_snmp()
+            #jcs.syslog("external.info", state_rsp)
+            state_fp = open(snmp_state_file, "w")
+            state_fp.write(state_rsp)
+            state_rsp = ET.fromstring(state_rsp)
+            #jcs.syslog("external.info", "RPC Invoke complete")
+        else:
+            file = open(snmp_state_file, 'r')
+            #state_rsp = ET.parse(snmp_state_file)
+            state_rsp = ET.fromstring(file.read())
+
+            #statistics_rsp = ET.parse(snmp_statistics_file)
+            #jcs.syslog("external.info", "Using file caching")
 
         root = state_rsp
        
@@ -130,28 +163,29 @@ def populate_stats():
           instance_name = None
           instance_id = None
           for instance in state_rsp:
-            jcs.syslog("external.info", instance.tag)
-            if (instance.tag == 'id'):
+            #jcs.syslog("external.info", instance.tag)
+            if (instance.tag == 'name'):
                 instance_name = instance.text.strip()
-            if (instance.tag == 'pid'):
+                continue
+            if (instance.tag == 'id'):
                 instance_id = instance.text.strip()
+                continue
             if (instance_name and instance_id):
                 instance_id = long(instance_id)
                 lwaftr_instance_dict[instance_name] = instance_id
                 message = "Adding instance: " + instance_name
-                jcs.syslog("external.info", message)
+                #jcs.syslog("external.info", message)
                 lwaftr_entry = lwaftr_statistics(instance_name)
-                instance_id = None
             if (instance.tag == 'apps'):
                 for child in instance:
                     if (child.tag == 'lwaftr'):
-                        message = "Instance name: " + instance_name
-                        jcs.syslog("external.info", message)
+                        #message = "Instance name: " + instance_name
+                        #jcs.syslog("external.info", message)
                         for elem in child:
                             #jcs.syslog("external.info", elem.tag)
                             value = populate_node_value(elem, 'in-ipv4-bytes')
                             if (value >= 0):
-                                jcs.syslog("external.info", "Inside filling")
+                                #jcs.syslog("external.info", "Inside filling")
                                 lwaftr_entry.set_v4stat_value(LWAFTR_HCINOCTETS, value)
                                 continue
                             value = populate_node_value(elem, 'in-ipv4-packets')
@@ -161,7 +195,7 @@ def populate_stats():
                             value = populate_node_value(elem, 'out-ipv4-bytes')
                             if (value >= 0):
                                 lwaftr_entry.set_v4stat_value(LWAFTR_HCOUTOCTETS, value)                                
-                                jcs.syslog("external.info", "Inside filling")
+                                #jcs.syslog("external.info", "Inside filling")
                                 continue
                             value = populate_node_value(elem, 'out-ipv4-packets')
                             if (value >= 0):
@@ -204,7 +238,7 @@ def populate_stats():
                         lwaftr_statistics_dict[instance] = lwaftr_entry
      
                         message = "Added an entry: " + instance_name 
-                        jcs.syslog("external.info", message)
+                        #jcs.syslog("external.info", message)
         
          
     except Exception as err:
@@ -213,7 +247,7 @@ def populate_stats():
         
 def snmp_get_value(leaf, instance, protocol):
     message = "Inside snmp_get_value " + "instance: " + str(instance) + " protocol: " + str(protocol)
-    jcs.syslog("external.info", message)
+    #jcs.syslog("external.info", message)
     lwaftr = lwaftr_statistics_dict[instance]
     #jcs.syslog("external.info", lwaftr)
     if lwaftr is None:
@@ -224,7 +258,7 @@ def snmp_get_value(leaf, instance, protocol):
        
     if (protocol == SNMP_V4_STATISTICS):
         if (leaf == LWAFTR_HCINOCTETS):
-            jcs.syslog("external.info", "leaf=4")
+            #jcs.syslog("external.info", "leaf=4")
             value = lwaftr.lwaftrV4HCInOctets
         elif (leaf == LWAFTR_HCINPACKETS):
             value = lwaftr.lwaftrV4HCInPkts
@@ -258,28 +292,24 @@ def snmp_get_value(leaf, instance, protocol):
     return None
     
 def get_next_instance(instance):
+    """ 
     if (instance is None):
         jcs.syslog("external.info", "Inside get_next_instance input null")
     else:
         jcs.syslog("external.info", "Inside get_next_instance input not null")
+    """ 
     found = 0
     for key in sorted(lwaftr_statistics_dict):      
         if (instance is None): 
             message = "Returning instance: " + str(key)
-            jcs.syslog("external.info", message)
+            #jcs.syslog("external.info", message)
             return key
         if (key > instance):
             return key 
-    if (key):
-        message = "Returning instance: " + str(key)
-        jcs.syslog("external.info", message)
-    return None
-
-    jcs.syslog("external.info", "Returning null")
     return None
     
 def snmp_getnext_value(leaf, instance, protocol):
-    jcs.syslog("external.info", "Inside snmp_getnext_value ")
+    #jcs.syslog("external.info", "Inside snmp_getnext_value ")
     #entry = lwaftr_statistics_dict[instance]
     if (instance is None):
         instance = get_next_instance(instance)
@@ -290,7 +320,7 @@ def snmp_getnext_value(leaf, instance, protocol):
         if (leaf is None):
             leaf = LWAFTR_INSTANCENAME  
     elif (instance not in lwaftr_statistics_dict):
-        jcs.syslog("external.info", "entry is null ")
+        #jcs.syslog("external.info", "entry is null ")
         instance = get_next_instance(instance)
         if (instance is None):
             return None
@@ -315,9 +345,9 @@ def snmp_getnext_value(leaf, instance, protocol):
     if (value is None):
         return (None, None, None, None)
     message = "Inside snmp_getnext_value " + value
-    jcs.syslog("external.info", message)
+    #jcs.syslog("external.info", message)
     message = "(" + str(leaf) + " " + str(instance) + " " + str(protocol) + " " + str(value) + ")"
-    jcs.syslog("external.info", message)
+    #jcs.syslog("external.info", message)
     return (leaf, instance, protocol, value)
     
 def main():
@@ -333,7 +363,7 @@ def main():
     message += snmp_action
     message += ", oid: "
     message += snmp_oid
-    jcs.syslog("external.info", message)
+    #jcs.syslog("external.info", message)
 
 
     """
@@ -358,7 +388,7 @@ def main():
         leaf = int(leaf)
 
     message = "Leaf value " + str(leaf)
-    jcs.syslog("external.info", message)
+    #jcs.syslog("external.info", message)
 
     if (oid_list_len > 14):
         instance_id = oid_list[14]
@@ -375,10 +405,10 @@ def main():
         message += " instance_id: " + str(instance_id)
     if (protocol):
         message += " protocol: " + str(protocol)
-    jcs.syslog("external.info", message)
+    #jcs.syslog("external.info", message)
     
     if (operation == SNMP_GET):
-        jcs.syslog("external.info", "get request")
+        #jcs.syslog("external.info", "get request")
         value = snmp_get_value(leaf, instance_id, protocol)
         if (value is None):
             jcs.syslog("external.info", "No entry available") 
@@ -386,8 +416,8 @@ def main():
         value = str(value)
         message = "value: " + value
         if (leaf == LWAFTR_INSTANCENAME):
-            message = message + " " + snmp_oid
-            jcs.syslog("external.info", message) 
+            #message = message + " " + snmp_oid
+            #jcs.syslog("external.info", message) 
             return jcs.emit_snmp_attributes(snmp_oid, "string", value)
         else:
             return jcs.emit_snmp_attributes(snmp_oid, "Counter64", value)
@@ -397,19 +427,19 @@ def main():
             jcs.syslog("external.info", "No entry available") 
             return None;
         else:
-            jcs.syslog("external.info", value) 
-        message = "Returning OID name: "
+            #jcs.syslog("external.info", value) 
+            pass
+        #message = "Returning OID name: "
         oid_name = lw4overmib_table_oid + "." + str(recv_leaf) + "." + str(recv_instance) + "." + str(recv_protocol)
-        message += oid_name
-        jcs.syslog("external.info", message) 
+        #message += oid_name
+        #jcs.syslog("external.info", message) 
         if (recv_leaf == LWAFTR_INSTANCENAME):            
             return jcs.emit_snmp_attributes(oid_name, "string", value)
         else:
-            return jcs.emit_snmp_attributes(oid_name, "Integer64", value)
-            
+            return jcs.emit_snmp_attributes(oid_name, "Counter64", value)
+    else:            
+        jcs.syslog("external.info", "Unexpected SNMP operation") 
     return 
 if __name__ == '__main__':
     main()
-
-
 
