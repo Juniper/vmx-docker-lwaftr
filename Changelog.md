@@ -1,4 +1,4 @@
-## v1.1.1:
+## v1.1.2:
 
 - add submodules and combine bulid in one container 
 - remove nexthop.sh. Use snabbvmx query instead
@@ -6,10 +6,10 @@
 - updated JET op and snmp script
 - remove obsolete directory python-tools
 - update Dockerfile with correct snmp python script
-- point to snabb lwaftr branch via submodule: latest commit
 - Merge pull request #459 from Igalia/refactor-lwutils
 - updated jet scripts
-- update Changelog with v1.2.0
+- snabb: latest commit to include Merge pull request #471 from mwiget/snabbvmx-query-id-name
+- update Changelog with v1.1.2
 
 ## v1.1.0:
 
