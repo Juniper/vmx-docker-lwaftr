@@ -2,6 +2,7 @@ all: build b4cpe
 	docker build -t $$(cat VERSION) .
 
 build:	Dockerfile.build
+	git submodule update
 	docker build -f Dockerfile.build -t build .
 	docker run -ti --rm -v $$PWD:/u build
 
