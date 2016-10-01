@@ -15,32 +15,32 @@ read_list = [sys.stdin]
 SNABB_V6_TEMPLATE = r"""
 Current Time: %s
 Instance ID: %s
-                                                                    Total               per second
- lwaftr_v6 in-ipv6-packets                                %15s                   %.2f
- lwaftr_v6 in-ipv6-bytes                                  %15s                   %.2f
- lwaftr_v6 out-ipv6-packets                               %15s                   %.2f
- lwaftr_v6 out-ipv6-bytes                                 %15s                   %.2f
- lwaftr_v6 drop-all-ipv6-iface-packets                    %15s                   %.2f
- lwaftr_v6 in-ipv6-frag-reassembled                       %15s                   %.2f
- lwaftr_v6 drop-ipv6-frag-invalid-reassembly              %15s                   %.2f
- lwaftr_v6 out-ipv6-frag                                  %15s                   %.2f
- lwaftr_v6 out-ipv6-frag-not                              %15s                   %.2f
+                                                           Total      per second
+ lwaftr_v6 in-ipv6-packets                       %15s    %12.2f
+ lwaftr_v6 in-ipv6-bytes                         %15s    %12.2f
+ lwaftr_v6 out-ipv6-packets                      %15s    %12.2f
+ lwaftr_v6 out-ipv6-bytes                        %15s    %12.2f
+ lwaftr_v6 drop-all-ipv6-iface-packets           %15s    %12.2f
+ lwaftr_v6 in-ipv6-frag-reassembled              %15s    %12.2f
+ lwaftr_v6 drop-ipv6-frag-invalid-reassembly     %15s    %12.2f
+ lwaftr_v6 out-ipv6-frag                         %15s    %12.2f
+ lwaftr_v6 out-ipv6-frag-not                     %15s    %12.2f
 
 """
 SNABB_V4_TEMPLATE = r"""
-                                                                    Total               per second
- nic ifInDiscards                                         %15s                   %.2f
+                                                           Total      per second
+ nic ifInDiscards                                %15s    %12.2f
 
-                                                                    Total               per second
- lwaftr_v4 in-ipv4-packets                                %15s                   %.2f
- lwaftr_v4 in-ipv4-bytes                                  %15s                   %.2f
- lwaftr_v4 out-ipv4-packets                               %15s                   %.2f
- lwaftr_v4 out-ipv4-bytes                                 %15s                   %.2f
- lwaftr_v4 drop-all-ipv4-iface-packets                    %15s                   %.2f
- lwaftr_v4 in-ipv4-frag-reassembled                       %15s                   %.2f
- lwaftr_v4 drop-ipv4-frag-invalid-reassembly              %15s                   %.2f
- lwaftr_v4 out-ipv4-frag                                  %15s                   %.2f
- lwaftr_v4 out-ipv4-frag-not                              %15s                   %.2f
+                                                           Total      per second
+ lwaftr_v4 in-ipv4-packets                       %15s    %12.2f
+ lwaftr_v4 in-ipv4-bytes                         %15s    %12.2f
+ lwaftr_v4 out-ipv4-packets                      %15s    %12.2f
+ lwaftr_v4 out-ipv4-bytes                        %15s    %12.2f
+ lwaftr_v4 drop-all-ipv4-iface-packets           %15s    %12.2f
+ lwaftr_v4 in-ipv4-frag-reassembled              %15s    %12.2f
+ lwaftr_v4 drop-ipv4-frag-invalid-reassembly     %15s    %12.2f
+ lwaftr_v4 out-ipv4-frag                         %15s    %12.2f
+ lwaftr_v4 out-ipv4-frag-not                     %15s    %12.2f
  """
 
 class lwaftr_stats:
