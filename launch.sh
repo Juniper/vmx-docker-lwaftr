@@ -607,7 +607,8 @@ if [ ! -z "$VCPIMAGE" ]; then
     else
       cd /tmp && numactl --membind=$NUMANODE /launch_jetapp.sh $MGMTIP $JETUSER $JETPASS &
     fi
-    cd /tmp && numactl --membind=$NUMANODE /launch_snabb_query.sh $MGMTIP $IDENTITY &
+    # no longer required. JET daemon on Junos does the job now
+    # cd /tmp && numactl --membind=$NUMANODE /launch_snabb_query.sh $MGMTIP $IDENTITY &
     cd /tmp && /launch_opserver.sh &
   fi
 
