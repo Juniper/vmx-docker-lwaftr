@@ -33,14 +33,14 @@ do
   cat > test_snabb_lwaftr_${INT}.sh <<EOF
 #!/bin/bash
 echo "launching snabb lwaftr on-a-stick on PCI $PCI"
-usr/local/bin/snabb lwaftr run --conf snabbvmx-lwaftr-${INT}.conf --on-a-stick $PCI
+sudo usr/local/bin/snabb lwaftr run --conf snabbvmx-lwaftr-${INT}.conf --on-a-stick $PCI
 EOF
   cp snabbvmx-lwaftr-${INT}.cfg test-snabbvmx-lwaftr-${INT}.cfg
   sed -i "s/cache_refresh_interval.*/cache_refresh_interval = 0,\n    next_hop_mac = \"02:02:02:02:02:02\",/" test-snabbvmx-lwaftr-${INT}.cfg
   cat > test_snabb_snabbvmx_${INT}.sh <<EOF
 #!/bin/bash
 echo "launching snabb snabbvmx on-a-stick on PCI $PCI"
-usr/local/bin/snabb snabbvmx lwaftr --conf test-snabbvmx-lwaftr-${INT}.cfg --id $INT --pci $PCI --mac $MAC
+sudo usr/local/bin/snabb snabbvmx lwaftr --conf test-snabbvmx-lwaftr-${INT}.cfg --id $INT --pci $PCI --mac $MAC
 EOF
   chmod a+rx test_snabb_*sh
 
