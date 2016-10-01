@@ -20,7 +20,7 @@ param $id = "all";
 
 match / {
   <op-script-results> {
-    var $lwaftr = document("/tmp/stats.xml");
+    var $lwaftr = document("/tmp/snabb_stats.xml");
     if ($id == "all") {
       var $fmt = "%-4s%-6s%-18s%-18s%12s%12s%10s%10s";
       <output> jcs:printf($fmt, "Id", "Pid", "Nexthop v4", "Nexthop v6", "rxPackets",
