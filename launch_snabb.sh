@@ -5,6 +5,7 @@
 INT=$1
 
 DEV=$(cat pci_$INT)
+MAC=$(cat mac_$INT)
 CORE=${DEV#*/}
 PCI=${DEV%/*}
 SLEEP=${INT:2:1}
@@ -28,8 +29,23 @@ do
     SNABB=/snabb
   fi
 
+  # prepare test launch scripts for troubleshooting
+  cat > test_snabb_lwaftr_${INT}.sh <<EOF
+#!/bin/bash
+echo "launching snabb lwaftr on-a-stick on PCI $PCI"
+usr/local/bin/snabb lwaftr run --conf snabbvmx-lwaftr-${INT}.conf --on-a-stick $PCI
+EOF
+  cp snabbvmx-lwaftr-${INT}.cfg test-snabbvmx-lwaftr-${INT}.cfg
+  sed -i "s/cache_refresh_interval.*/cache_refresh_interval = 0,\n    next_hop_mac = \"02:02:02:02:02:02\",/" test-snabbvmx-lwaftr-${INT}.cfg
+  cat > test_snabb_snabbvmx_${INT}.sh <<EOF
+#!/bin/bash
+echo "launching snabb snabbvmx on-a-stick on PCI $PCI"
+usr/local/bin/snabb snabbvmx lwaftr --conf test-snabbvmx-lwaftr-${INT}.cfg --id $INT --pci $PCI --mac $MAC
+EOF
+  chmod a+rx test_snabb_*sh
+
   echo "launch snabbvmx for $INT on cpu $CORE (node $NODE) after $SLEEP seconds ..."
-  CMD="$NUMACTL $SNABB snabbvmx lwaftr --conf snabbvmx-lwaftr-${INT}.cfg --id $INT --pci $PCI --mac `cat mac_$INT` --sock %s.socket"
+  CMD="$NUMACTL $SNABB snabbvmx lwaftr --conf snabbvmx-lwaftr-${INT}.cfg --id $INT --pci $PCI --mac $MAC --sock %s.socket"
   echo $CMD
   sleep $SLEEP
   touch /tmp/snabb_${INT}.log
