@@ -51,10 +51,11 @@ class OpServer():
 	try:
 	    with open(SNABB_FILENAME, "r") as f:
 		output = f.read()
+		mutex.release()
 	except Exception as e:
 	    print "lwaftr_snmp hit exception: ", e.message
 	    output = self.lwaftr()
-	mutex.release()
+	    mutex.release()
 	return output
 	
 

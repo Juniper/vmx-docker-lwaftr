@@ -98,11 +98,16 @@ class lwaftr_stats:
             jcs.output("%s" %e.message)
             exit(0)
         # newstats contains all the latest stats
+        instance_id = ""
+        for i in range(0,len(argv)):
+            if argv[i] == "id":
+                instance_id = argv[i+1]
+                break
         newtime = time.time()
         root = ET.fromstring(newstats)
 	found = 0
         for instance in root:
-	  if len(argv) != 1 and instance.findall("./id")[0].text != argv[2]:
+	  if instance_id != "" and instance.findall("./id")[0].text != argv[2]:
 	    pass
 	  else:
 	    self.id = instance.findall("./id")[0].text
