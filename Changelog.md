@@ -1,3 +1,7 @@
+## v1.1.5:
+
+- Increase vMX RE /config disk to 6GB (from 2GB)
+
 ## v1.1.4:
 
 - snabb syncd to igalia/lwaftr 7277beca69e50536a1a6d8e861301855e5220a40 (Fri Oct 7 11:42:37 2016 +0200)

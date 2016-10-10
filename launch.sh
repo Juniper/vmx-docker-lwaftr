@@ -134,7 +134,7 @@ function mount_hugetables {
 
 function create_vmxhdd {
   >&2 echo "Creating empty vmxhdd.img for vRE ..."
-  qemu-img create -f qcow2 /tmp/vmxhdd.img 2G >/dev/null
+  qemu-img create -f qcow2 /tmp/vmxhdd.img 6G >/dev/null
   echo "/tmp/vmxhdd.img"
 }
 
