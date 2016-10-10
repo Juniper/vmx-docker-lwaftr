@@ -235,7 +235,7 @@ EOF
 echo "YANG import started"
 ls /var/db/vmm/vmxlwaftr
 echo "arg=$yangcmd"
-/bin/sh /usr/libexec/ui/yang-pkg add -X -i lwaftr $yangcmd
+/bin/sh /usr/libexec/ui/yang-pkg add -X -i lwaft $yangcmd
 echo "YANG import completed"
 cp /var/etc/mosquitto.conf /var/etc/mosquitto.conf.orig
 cp /var/db/vmm/mosquitto.conf.new /var/etc/mosquitto.conf
