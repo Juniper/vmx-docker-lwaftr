@@ -3,7 +3,7 @@ version "16.1-20160807.0 [builder]";
 system {
     host-name lwaftr1;
     root-authentication {
-        encrypted-password "$5$XZSErpYB$QPbnlFXutnXy4jrpwUrtor/FtmVq94dIcaenN6KH013"; ## SECRET-DATA
+        encrypted-password "$5$Pam8O2S7$nZv0IMdl5AoYKEJm3j5ybrGe8GiUvuDdMz9fQ.vgui7"; ## SECRET-DATA
     }
     scripts {
         op {
