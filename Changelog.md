@@ -1,3 +1,18 @@
+## v1.1.4:
+
+- snabb syncd to igalia/lwaftr 7277beca69e50536a1a6d8e861301855e5220a40 (Fri Oct 7 11:42:37 2016 +0200)
+- YANG package ID limited to 5 characters (set to lwaft from lwaftr)
+- fix monitor lwaftr v4 per second counters
+- document lab and root password in test configuration files (lab/lab123 root/lab123)
+- Fixed minor issue in the lwaftr monitor & a mutex issue in the daemonized app.
+- use snabb_stats.xml provided by JET
+- changed formatting output in monitor lwaftr
+- use sudo in test scripts for snabb
+- fix dynamic rendering for counters in show lwaftr statistics
+- enhance support-info doc
+- let JET daemon do the statistics gathering
+- create test scripts for offline support use
+
 ## v1.1.3:
 
 - Updated scripts and yang files for JET
