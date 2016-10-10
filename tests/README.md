@@ -1,6 +1,10 @@
 # Test cases
 
 This directory contains a few test cases with and without physical 10GE interfaces.
+All configuration files use the following default passwords:
+
+lab/lab123
+root/lab123
 
 ## lwaftr1 (no physical ports required)
 
