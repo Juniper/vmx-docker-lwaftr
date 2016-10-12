@@ -230,5 +230,34 @@ module jnx-aug-softwire {
         grace period between jit.flush() in seconds
         ";
     }
+    leaf max_fragments_per_reassembly_packet {
+      type uint32;
+      default 40;
+      description
+        "
+        maximum number of fragments allowed for any given packet to reassembly. 
+        Defaults to 40 fragments per packet.
+        ";
+    }
+    leaf max_ipv4_reassembly_packets {
+      type uint32;
+      default 20000;
+      description
+        "
+        maximum number of outstanding/incomplete IPv4 packets to reassemble. 
+        Also seen as packet depth of the reassembly buffer for IPv4.
+        Defaults to 20000 IPv4 packets.
+        ";
+    }
+    leaf max_ipv6_reassembly_packets {
+      type uint32;
+      default 20000;
+      description
+        "
+        maximum number of outstanding/incomplete IPv6 packets to reassemble. 
+        Also seen as packet depth of the reassembly buffer for IPv6.
+        Defaults to 20000 IPv6 packets.
+        ";
+    }
   }
 }

@@ -297,6 +297,9 @@ EOF
       print LWA "policy_icmpv4_outgoing = $instance->{'policy_icmpv4_outgoing'},\n" if $instance->{'policy_icmpv4_outgoing'};
       print LWA "policy_icmpv6_incoming = $instance->{'policy_icmpv6_incoming'},\n" if $instance->{'policy_icmpv6_incoming'};
       print LWA "policy_icmpv6_outgoing = $instance->{'policy_icmpv6_outgoing'},\n" if $instance->{'policy_icmpv6_outgoing'};
+      print LWA "max_fragments_per_reassembly_packet = $instance->{'max_fragments_per_reassembly_packet'},\n" if $instance->{'max_fragments_per_reassembly_packet'};
+      print LWA "max_ipv4_reassembly_packets = $instance->{'max_ipv4_reassembly_packets'},\n" if $instance->{'max_ipv4_reassembly_packets'};
+      print LWA "max_ipv6_reassembly_packets = $instance->{'max_ipv6_reassembly_packets'},\n" if $instance->{'max_ipv6_reassembly_packets'};
       close LWA;
 
       my $rv = &process_binding_table_file($bdf);

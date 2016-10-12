@@ -1,3 +1,7 @@
+## v1.1.6:
+
+- Add fragmentation config knobs in YANG for lwaftr app
+
 ## v1.1.5:
 
 - Increase vMX RE /config disk to 6GB (from 2GB)
