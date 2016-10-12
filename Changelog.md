@@ -1,6 +1,8 @@
 ## v1.1.6:
 
+- Sync Snabb to igalia/lwaftr commit f6272b03864705dc401f088d6d87c4e3ed2fba0b, Oct 10
 - Add fragmentation config knobs in YANG for lwaftr app
+- fix typo (Statisitics)
 
 ## v1.1.5:
 
