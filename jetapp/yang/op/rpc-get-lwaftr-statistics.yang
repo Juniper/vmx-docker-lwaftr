@@ -395,7 +395,7 @@ rpc get-lwaftr-statistics {
 
        container statistics-format {
          junos-odl:cli-format;
-       	 junos-odl:header "Snabb Statisitics \n";
+       	 junos-odl:header "Snabb Statistics \n";
        	junos-odl:picture "
 @\\n
 @\\n
