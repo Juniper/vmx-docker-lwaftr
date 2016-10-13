@@ -524,6 +524,15 @@ for DEV in $LIST; do # ============= loop thru interfaces start
   INTNR=$(($INTNR + 1))
 done # ===================================== loop thru interfaces done
 echo "Done walking interface list"
+if [ -z "$NETDEVS" ]; then
+  echo "ERROR: no interfaces for vMX found"
+  echo "NETDEVS=$NETDEVS"
+  echo "INTERFACES=$@"
+  echo "ETHLIST=$ETHLIST"
+  echo "specify PCI interface address after the vMX bundle name "
+  echo "or attach docker virtual networks before launching the container"
+  exit 1
+fi
 
 QEMUVFPNUMA="numactl --membind=$NUMANODE"
 if [ ! -z "$QEMUVFPCPUS" ]; then
