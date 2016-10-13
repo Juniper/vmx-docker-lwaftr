@@ -19,7 +19,7 @@ function show_help {
 Usage:
 
 docker run --name <name> --rm -v \$PWD:/u:ro
-  --privileged -i -t marcelwiget/vmxlwaftr[:version]
+  --privileged -i -t vmx-docker-lwaftr[:version]
   -c <junos_config_file> -I identity -l license_file
   [-V <# of cores>] [-W <# of cores>] [-P <cores>] [-R <cores>]
   [-m <kbytes>] [-M <kBytes>]
