@@ -23,14 +23,16 @@ docker run --name <name> --rm -v \$PWD:/u:ro
   -c <junos_config_file> -I identity -l license_file
   [-V <# of cores>] [-W <# of cores>] [-P <cores>] [-R <cores>]
   [-m <kbytes>] [-M <kBytes>]
-  <image> [<pci-address> <pci-address> ..]
+  <image> [<pci-address>/<core> <pci-address>/<core> ..]
 
   -c:  Junos configuration file
   -I:  SSH private key matching the public key for use snabbvmx in the Junos configuration
   -l:  Junos license key file to load
 
   <image>       Juniper vMX Software image (e.g. vmx-bundle-16.1Rx.y.tgz)
-  <pci-address> Interface PCI addresses, e.g. 0000:05:00.0 0000:05:00.1
+  <pci-address> Interface PCI addresses, e.g. 0000:05:00.00 0000:05:00.1
+  <core>        CPU core to pin the interface to
+
 EOF
 }
 #---------------------------------------------------------------------------
