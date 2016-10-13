@@ -20,14 +20,14 @@ Usage:
 
 docker run --name <name> --rm -v \$PWD:/u:ro
   --privileged -i -t marcelwiget/vmxlwaftr[:version]
-  -c <junos_config_file> -I identity [-l license_file]
+  -c <junos_config_file> -I identity -l license_file
   [-V <# of cores>] [-W <# of cores>] [-P <cores>] [-R <cores>]
   [-m <kbytes>] [-M <kBytes>]
   <image> [<pci-address> <pci-address> ..]
 
   -c:  Junos configuration file
   -I:  SSH private key matching the public key for use snabbvmx in the Junos configuration
-  -l:  Optional Junos license key file to load
+  -l:  Junos license key file to load
 
   <image>       Juniper vMX Software image (e.g. vmx-bundle-16.1Rx.y.tgz)
   <pci-address> Interface PCI addresses, e.g. 0000:05:00.0 0000:05:00.1
