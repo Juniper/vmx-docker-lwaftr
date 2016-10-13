@@ -1,3 +1,7 @@
+## v1.1.7:
+
+- check if vMX has been given any interfaces and terminate if not
+
 ## v1.1.6:
 
 - Sync Snabb to igalia/lwaftr commit f6272b03864705dc401f088d6d87c4e3ed2fba0b, Oct 10
