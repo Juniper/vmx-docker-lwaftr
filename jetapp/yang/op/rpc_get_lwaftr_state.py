@@ -50,7 +50,7 @@ def main(argv):
     :return: Dictionary of instances state information
     """
     try:
-        server = xmlrpclib.ServerProxy('http://127.0.0.1:9191', verbose=True)
+        server = xmlrpclib.ServerProxy('http://127.0.0.1:9191', verbose=False)
 	output = server.lwaftr()
     except Exception as e:
         output = "Failed to connect to jetapp " + e.message+ " user: "+ str(os.geteuid()) 
