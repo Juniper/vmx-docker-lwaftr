@@ -1,3 +1,7 @@
+## v1.1.8:
+
+- fixed Error: File "/tmp/snabb_xe0.log" is empty.
+
 ## v1.1.7:
 
 - check if vMX has been given any interfaces and terminate if not
