@@ -1,5 +1,6 @@
 ## v1.1.8:
 
+- set vlan tag info in lwaftr .conf file, not snabbvmx .cfg
 - fixed Error: File "/tmp/snabb_xe0.log" is empty.
 
 ## v1.1.7:
