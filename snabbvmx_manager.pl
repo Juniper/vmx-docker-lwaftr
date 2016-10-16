@@ -280,7 +280,6 @@ EOF
       my $hairpinning = $instance->{'hairpinning'} ? $instance->{'hairpinning'} : "false";
       print LWA <<EOF;
 hairpinning = $hairpinning,
-vlan_tagging = false,
 binding_table = $bdf.s,
 aftr_ipv6_ip = 2001:db8::1,
 aftr_ipv4_ip = $instance->{"ipv4_address"},
