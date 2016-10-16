@@ -239,8 +239,6 @@ return {
   lwaftr = \"$snabbvmx_lwaftr_file\",
   settings = {
 EOF
-    print CFG "    ipv4_vlan = $instance->{'ipv4_vlan'},\n" if $instance->{'ipv4_vlan'};
-    print CFG "    ipv6_vlan = $instance->{'ipv6_vlan'},\n" if $instance->{'ipv6_vlan'};
     print CFG "    ingress_drop_action = \"$instance->{'ingress_drop_action'}\",\n" if $instance->{'ingress_drop_action'};
     print CFG "    ingress_drop_threshold = $instance->{'ingress_drop_threshold'},\n" if $instance->{'ingress_drop_threshold'};
     print CFG "    ingress_drop_interval = $instance->{'ingress_drop_interval'},\n" if $instance->{'ingress_drop_interval'};
@@ -293,6 +291,13 @@ next_hop6_mac = 02:02:02:02:02:02,
 ipv4_mtu = $ipv4_mtu,
 ipv6_mtu = $ipv6_mtu,
 EOF
+      if ($instance->{'ipv4_vlan'} or $instance->{'ipv6_vlan'}) {
+        print LWA "vlan_tagging = true,\n";
+        print LWA "v4_vlan_tag = $instance->{'ipv4_vlan'},\n" if $instance->{'ipv4_vlan'};
+        print LWA "v6_vlan_tag = $instance->{'ipv6_vlan'},\n" if $instance->{'ipv6_vlan'};
+      } else {
+        print LWA "vlan_tagging = false,\n";
+      }
       print LWA "policy_icmpv4_incoming = $instance->{'policy_icmpv4_incoming'},\n" if $instance->{'policy_icmpv4_incoming'};
       print LWA "policy_icmpv4_outgoing = $instance->{'policy_icmpv4_outgoing'},\n" if $instance->{'policy_icmpv4_outgoing'};
       print LWA "policy_icmpv6_incoming = $instance->{'policy_icmpv6_incoming'},\n" if $instance->{'policy_icmpv6_incoming'};
