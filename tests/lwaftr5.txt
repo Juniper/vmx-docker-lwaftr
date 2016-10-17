@@ -205,6 +205,8 @@ ietf-softwire:softwire-config {
                     jnx-aug-softwire:ipv4_address 172.20.2.16;
                     jnx-aug-softwire:cache_refresh_interval 1;
                     jnx-aug-softwire:ingress_drop_action flush;
+                    jnx-aug-softwire:ipv4_vlan 100;
+                    jnx-aug-softwire:ipv6_vlan 100;
                 }
             }
             jnx-aug-softwire:binding-table-file binding_table_60k.txt;
