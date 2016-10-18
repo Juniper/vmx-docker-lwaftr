@@ -1,3 +1,10 @@
+## v1.1.9:
+
+- Updated snabb submodule to commit 'Remove old benchmarking tools'
+- Updated snabb submodule with fix for 'Snabbvmx ignores vlan settings in .conf file'
+- Updated snabb submodule to [Igalia/snabb] Merge v2016.10 (#483)
+- lwaftr5 test case to use vlan tag on 0/0/1
+
 ## v1.1.8:
 
 - set vlan tag info in lwaftr .conf file, not snabbvmx .cfg
