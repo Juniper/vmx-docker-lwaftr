@@ -100,12 +100,15 @@ def snabb_statistics(output,argv):
     root = ET.fromstring(output)
     print "<snabb>"
     found = 0
+    instance_id = ""
+    for i in range(0,len(argv)):
+        if argv[i] == "id":
+            instance_id = argv[i+1]
+            break
+
     for instance in root:
-        if len(argv) != 1 :
-                if instance.findall("./id")[0].text == argv[-1]:
-                    stats_per_instance(instance)
-		    print "</snabb>"
-                    return
+        if instance_id != '' and instance.findall("./id")[0].text != argv[2]:
+            pass
         else:
 	    found += 1
             stats_per_instance(instance)
