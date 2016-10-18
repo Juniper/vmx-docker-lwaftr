@@ -1,3 +1,7 @@
+## v1.1.10:
+
+- Fixed xml output for 'show lwaftr statistics | disolay xml'
+
 ## v1.1.9:
 
 - Updated snabb submodule to commit 'Remove old benchmarking tools'
