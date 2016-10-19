@@ -21,7 +21,6 @@ def PRINT_TAG(node, tag):
 def snabb_state(query_output):
     root = ET.fromstring(query_output)
     print ("<snabb>")
-    print os.geteuid()
     for instance in root:
         # In each instance, we need to query the id, pci, pid.
         print ("<instance>")
