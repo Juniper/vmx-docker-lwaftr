@@ -96,7 +96,6 @@ def stats_per_instance(instance):
         print "</statistics>"
 
 def snabb_statistics(output,argv):
-    print "Displaying the snabb state counters"
     root = ET.fromstring(output)
     print "<snabb>"
     found = 0
