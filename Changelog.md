@@ -1,3 +1,9 @@
+## v1.1.11:
+
+- Snabb Misc. cleanup of the program/lwaftr/ subtree (#501)
+- Snabbb Merge pull request #500 from Igalia/merge-next-to-lwaftr
+- Removing the stale print statements for show lwaftr |display xml
+
 ## v1.1.10:
 
 - Fixed xml output for 'show lwaftr statistics | disolay xml'
