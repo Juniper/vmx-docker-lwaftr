@@ -1,3 +1,7 @@
+## v1.1.12:
+
+- JET Python client package added into jet-python
+
 ## v1.1.11:
 
 - Snabb Misc. cleanup of the program/lwaftr/ subtree (#501)
