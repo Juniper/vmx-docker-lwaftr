@@ -45,14 +45,6 @@ SNABB_V4_TEMPLATE = r"""
 
 class lwaftr_stats:
     def __init__(self):
-        self.lwaftr_v4_rx = "0.00"
-        self.lwaftr_v4_tx = "0.00"
-        self.lwaftr_v4_txdrop = "0.00"
-        self.lwaftr_v6_rx = "0.00"
-        self.lwaftr_v6_tx = "0.00"
-        self.lwaftr_v6_txdrop = "0.00"
-	self.id = "0"
-
         #Index array that will be used in the modifier
         self.index_dict = {
             "in-ipv6-packets"                   : 0,
@@ -74,22 +66,14 @@ class lwaftr_stats:
             "out-ipv4-frag"                     : 16,
             "out-ipv4-frag-not"                 : 17
         }
-        #lwaftr cumulative counters
-        self.lwaftr = []
-        #lwaftr old cumulative counters
-        self.lwaftr_old = []
-        #lwaftr persec counters
-        self.lwaftr_ps = []
-        #nic counters
-        self.lwaftr_ifInDiscards = "0"
-        self.lwaftr_ifInDiscards_old = "0"
-        self.lwaftr_ifInDiscards_ps = 0.0
+	self.ids = [] 
+        self.lwaftr = {} 
+        self.lwaftr_old = {} 
+        self.lwaftr_ps = {} 
+        self.lwaftr_ifInDiscards = {}
+        self.lwaftr_ifInDiscards_old = {}
+        self.lwaftr_ifInDiscards_ps = {}
         self.previous_poll = 0
-
-        for i in range(0,len(self.index_dict)):
-            self.lwaftr.append("0")
-            self.lwaftr_old.append("0")
-            self.lwaftr_ps.append(0.0)
 
     def monitor(self, server, argv):
         try:
@@ -110,7 +94,21 @@ class lwaftr_stats:
 	  if instance_id != "" and instance.findall("./id")[0].text != argv[2]:
 	    pass
 	  else:
-	    self.id = instance.findall("./id")[0].text
+	    id = instance.findall("./id")[0].text
+	    if id in self.ids:
+	        pass
+	    else:
+		self.ids.append(id)
+		self.lwaftr[id] = []
+		self.lwaftr_old[id] = []
+		self.lwaftr_ps[id]=[]
+		self.lwaftr_ifInDiscards[id]= "0"
+		self.lwaftr_ifInDiscards_old[id] = "0"
+		self.lwaftr_ifInDiscards_ps[id] = 0.0
+		for i in range(0,len(self.index_dict)):
+		    self.lwaftr[id].append("0")
+                    self.lwaftr_old[id].append("0")
+                    self.lwaftr_ps[id].append(0.0)
 	    found = 1
             for child_instance in instance:
                 if child_instance.tag == "apps":
@@ -123,30 +121,31 @@ class lwaftr_stats:
                                     if lwaftr_child.text.strip() == "":
                                         # TODO should we just leave it like that?
                                         # as of now i am just updating the old vales to the new one and set ps to 0
-                                        self.lwaftr_old[self.index_dict[tag]] = self.lwaftr[self.index_dict[tag]]
-                                        self.lwaftr_ps[self.index_dict[tag]] = 0.0
+					self.lwaftr_old[id][self.index_dict[tag]] = 0
+					self.lwaftr[id][self.index_dict[tag]] = 0
+					self.lwaftr_ps[id][self.index_dict[tag]] = 0.0
                                     else:
-                                        self.lwaftr_old[self.index_dict[tag]] = self.lwaftr[self.index_dict[tag]]
-                                        self.lwaftr[self.index_dict[tag]] = lwaftr_child.text.strip()
+                                        self.lwaftr_old[id][self.index_dict[tag]] = self.lwaftr[id][self.index_dict[tag]]
+                                        self.lwaftr[id][self.index_dict[tag]] = lwaftr_child.text.strip()
                                         if self.previous_poll != 0:
                                             delta = float(newtime - self.previous_poll)
-                                            nwval = float(int(self.lwaftr[self.index_dict[tag]])-int(self.lwaftr_old[self.index_dict[tag]]))
+                                            nwval = float(int(self.lwaftr[id][self.index_dict[tag]])-int(self.lwaftr_old[id][self.index_dict[tag]]))
 					    nwval = round(nwval,2)
-                                            self.lwaftr_ps[self.index_dict[tag]] = nwval/delta
+                                            self.lwaftr_ps[id][self.index_dict[tag]] = nwval/delta
                                 else:
                                     if tag == "ingress-packet-drops":
                                         if lwaftr_child.text.strip() == "":
-                                            self.lwaftr_ifInDiscards_old = self.lwaftr_ifInDiscards
-                                            self.lwaftr_ifInDiscards_ps = 0.0
+                                            self.lwaftr_ifInDiscards_old[id] = self.lwaftr_ifInDiscards[id]
+                                            self.lwaftr_ifInDiscards_ps[id] = 0.0
                                         else:
-                                            self.lwaftr_ifInDiscards_old = self.lwaftr_ifInDiscards
-                                            self.lwaftr_ifInDiscards = lwaftr_child.text.strip()
+                                            self.lwaftr_ifInDiscards_old[id] = self.lwaftr_ifInDiscards[id]
+                                            self.lwaftr_ifInDiscards[id] = lwaftr_child.text.strip()
                                             if self.previous_poll != 0:
                                                 delta = float(newtime - self.previous_poll)
-                                                nwval = float(int(self.lwaftr_ifInDiscards)-int(self.lwaftr_ifInDiscards_old))
+                                                nwval = float(int(self.lwaftr_ifInDiscards[id])-int(self.lwaftr_ifInDiscards_old[id]))
 					        nwval = round(nwval,2)
-                                                self.lwaftr_ifInDiscards_ps = nwval/delta
-            self.display_monitor()
+                                                self.lwaftr_ifInDiscards_ps[id] = nwval/delta
+            self.display_monitor(id)
 	if found == 0:
 	    jcs.output("Invalid instance")
 	    exit(0)
@@ -154,31 +153,31 @@ class lwaftr_stats:
         self.previous_poll = newtime
 
 
-    def display_monitor(self):
+    def display_monitor(self,id):
         try:
             os.system('clear')
 	    ltime = datetime.datetime.now()
-            jcs.output(SNABB_V6_TEMPLATE %(ltime,self.id,
-                       self.lwaftr[0], self.lwaftr_ps[0],
-                       self.lwaftr[1], self.lwaftr_ps[1],
-                       self.lwaftr[2], self.lwaftr_ps[2],
-                       self.lwaftr[3], self.lwaftr_ps[3],
-                       self.lwaftr[4], self.lwaftr_ps[4],
-                       self.lwaftr[5], self.lwaftr_ps[5],
-                       self.lwaftr[6], self.lwaftr_ps[6],
-                       self.lwaftr[7], self.lwaftr_ps[7],
-                       self.lwaftr[8], self.lwaftr_ps[8]))
+            jcs.output(SNABB_V6_TEMPLATE %(ltime,id,
+                       self.lwaftr[id][0], self.lwaftr_ps[id][0],
+                       self.lwaftr[id][1], self.lwaftr_ps[id][1],
+                       self.lwaftr[id][2], self.lwaftr_ps[id][2],
+                       self.lwaftr[id][3], self.lwaftr_ps[id][3],
+                       self.lwaftr[id][4], self.lwaftr_ps[id][4],
+                       self.lwaftr[id][5], self.lwaftr_ps[id][5],
+                       self.lwaftr[id][6], self.lwaftr_ps[id][6],
+                       self.lwaftr[id][7], self.lwaftr_ps[id][7],
+                       self.lwaftr[id][8], self.lwaftr_ps[id][8]))
 
-            jcs.output(SNABB_V4_TEMPLATE %(self.lwaftr_ifInDiscards, self.lwaftr_ifInDiscards_ps,
-                       self.lwaftr[9], self.lwaftr_ps[9],
-                       self.lwaftr[10], self.lwaftr_ps[10],
-                       self.lwaftr[11], self.lwaftr_ps[1],
-                       self.lwaftr[12], self.lwaftr_ps[2],
-                       self.lwaftr[13], self.lwaftr_ps[3],
-                       self.lwaftr[14], self.lwaftr_ps[4],
-                       self.lwaftr[15], self.lwaftr_ps[5],
-                       self.lwaftr[16], self.lwaftr_ps[6],
-                       self.lwaftr[17], self.lwaftr_ps[17]))
+            jcs.output(SNABB_V4_TEMPLATE %(self.lwaftr_ifInDiscards[id], self.lwaftr_ifInDiscards_ps[id],
+                       self.lwaftr[id][9], self.lwaftr_ps[id][9],
+                       self.lwaftr[id][10], self.lwaftr_ps[id][10],
+                       self.lwaftr[id][11], self.lwaftr_ps[id][1],
+                       self.lwaftr[id][12], self.lwaftr_ps[id][2],
+                       self.lwaftr[id][13], self.lwaftr_ps[id][3],
+                       self.lwaftr[id][14], self.lwaftr_ps[id][4],
+                       self.lwaftr[id][15], self.lwaftr_ps[id][5],
+                       self.lwaftr[id][16], self.lwaftr_ps[id][6],
+                       self.lwaftr[id][17], self.lwaftr_ps[id][17]))
 
         except Exception as e:
             pass
