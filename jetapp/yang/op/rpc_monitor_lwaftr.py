@@ -171,12 +171,12 @@ class lwaftr_stats:
             jcs.output(SNABB_V4_TEMPLATE %(self.lwaftr_ifInDiscards[id], self.lwaftr_ifInDiscards_ps[id],
                        self.lwaftr[id][9], self.lwaftr_ps[id][9],
                        self.lwaftr[id][10], self.lwaftr_ps[id][10],
-                       self.lwaftr[id][11], self.lwaftr_ps[id][1],
-                       self.lwaftr[id][12], self.lwaftr_ps[id][2],
-                       self.lwaftr[id][13], self.lwaftr_ps[id][3],
-                       self.lwaftr[id][14], self.lwaftr_ps[id][4],
-                       self.lwaftr[id][15], self.lwaftr_ps[id][5],
-                       self.lwaftr[id][16], self.lwaftr_ps[id][6],
+                       self.lwaftr[id][11], self.lwaftr_ps[id][11],
+                       self.lwaftr[id][12], self.lwaftr_ps[id][12],
+                       self.lwaftr[id][13], self.lwaftr_ps[id][13],
+                       self.lwaftr[id][14], self.lwaftr_ps[id][14],
+                       self.lwaftr[id][15], self.lwaftr_ps[id][15],
+                       self.lwaftr[id][16], self.lwaftr_ps[id][16],
                        self.lwaftr[id][17], self.lwaftr_ps[id][17]))
 
         except Exception as e:
