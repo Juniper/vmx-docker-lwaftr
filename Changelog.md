@@ -1,3 +1,8 @@
+## v1.1.13:
+
+- Fixed typo in the index number for ps counters for monitor lwaftr
+- Fixed the negative counter and the merge issue in the igalia branch due to my commit.
+
 ## v1.1.12:
 
 - JET Python client package added into jet-python
