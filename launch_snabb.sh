@@ -49,7 +49,7 @@ EOF
   echo $CMD
   sleep $SLEEP
   touch /tmp/snabb_${INT}.log
-  $CMD | tee /tmp/snabb_${INT}.log
+  stdbuf -i0 -o0 -e0 $CMD | tee /tmp/snabb_${INT}.log
   mosquitto_pub -h 128.0.0.1 -f /tmp/snabb_${INT}.log -t snabb/$INT
   sleep 4
 done

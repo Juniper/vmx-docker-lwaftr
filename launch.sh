@@ -19,18 +19,20 @@ function show_help {
 Usage:
 
 docker run --name <name> --rm -v \$PWD:/u:ro
-  --privileged -i -t marcelwiget/vmxlwaftr[:version]
-  -c <junos_config_file> -I identity [-l license_file]
+  --privileged -i -t vmx-docker-lwaftr[:version]
+  -c <junos_config_file> -I identity -l license_file
   [-V <# of cores>] [-W <# of cores>] [-P <cores>] [-R <cores>]
   [-m <kbytes>] [-M <kBytes>]
-  <image> [<pci-address> <pci-address> ..]
+  <image> [<pci-address>/<core> <pci-address>/<core> ..]
 
   -c:  Junos configuration file
   -I:  SSH private key matching the public key for use snabbvmx in the Junos configuration
-  -l:  Optional Junos license key file to load
+  -l:  Junos license key file to load
 
   <image>       Juniper vMX Software image (e.g. vmx-bundle-16.1Rx.y.tgz)
-  <pci-address> Interface PCI addresses, e.g. 0000:05:00.0 0000:05:00.1
+  <pci-address> Interface PCI addresses, e.g. 0000:05:00.00 0000:05:00.1
+  <core>        CPU core to pin the interface to
+
 EOF
 }
 #---------------------------------------------------------------------------
@@ -134,7 +136,7 @@ function mount_hugetables {
 
 function create_vmxhdd {
   >&2 echo "Creating empty vmxhdd.img for vRE ..."
-  qemu-img create -f qcow2 /tmp/vmxhdd.img 2G >/dev/null
+  qemu-img create -f qcow2 /tmp/vmxhdd.img 7G >/dev/null
   echo "/tmp/vmxhdd.img"
 }
 
@@ -235,7 +237,7 @@ EOF
 echo "YANG import started"
 ls /var/db/vmm/vmxlwaftr
 echo "arg=$yangcmd"
-/bin/sh /usr/libexec/ui/yang-pkg add -X -i lwafr $yangcmd
+/bin/sh /usr/libexec/ui/yang-pkg add -X -i lwaft $yangcmd
 echo "YANG import completed"
 cp /var/etc/mosquitto.conf /var/etc/mosquitto.conf.orig
 cp /var/db/vmm/mosquitto.conf.new /var/etc/mosquitto.conf
@@ -522,6 +524,15 @@ for DEV in $LIST; do # ============= loop thru interfaces start
   INTNR=$(($INTNR + 1))
 done # ===================================== loop thru interfaces done
 echo "Done walking interface list"
+if [ -z "$NETDEVS" ]; then
+  echo "ERROR: no interfaces for vMX found"
+  echo "NETDEVS=$NETDEVS"
+  echo "INTERFACES=$@"
+  echo "ETHLIST=$ETHLIST"
+  echo "specify PCI interface address after the vMX bundle name "
+  echo "or attach docker virtual networks before launching the container"
+  exit 1
+fi
 
 QEMUVFPNUMA="numactl --membind=$NUMANODE"
 if [ ! -z "$QEMUVFPCPUS" ]; then

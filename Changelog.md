@@ -1,3 +1,58 @@
+## v1.1.12:
+
+- JET Python client package added into jet-python
+
+## v1.1.11:
+
+- Snabb Misc. cleanup of the program/lwaftr/ subtree (#501)
+- Snabbb Merge pull request #500 from Igalia/merge-next-to-lwaftr
+- Removing the stale print statements for show lwaftr |display xml
+
+## v1.1.10:
+
+- Fixed xml output for 'show lwaftr statistics | disolay xml'
+
+## v1.1.9:
+
+- Updated snabb submodule to commit 'Remove old benchmarking tools'
+- Updated snabb submodule with fix for 'Snabbvmx ignores vlan settings in .conf file'
+- Updated snabb submodule to [Igalia/snabb] Merge v2016.10 (#483)
+- lwaftr5 test case to use vlan tag on 0/0/1
+
+## v1.1.8:
+
+- set vlan tag info in lwaftr .conf file, not snabbvmx .cfg
+- fixed Error: File "/tmp/snabb_xe0.log" is empty.
+
+## v1.1.7:
+
+- check if vMX has been given any interfaces and terminate if not
+
+## v1.1.6:
+
+- Sync Snabb to igalia/lwaftr commit f6272b03864705dc401f088d6d87c4e3ed2fba0b, Oct 10
+- Add fragmentation config knobs in YANG for lwaftr app
+- fix typo (Statisitics)
+
+## v1.1.5:
+
+- Increase vMX RE /config disk to 6GB (from 2GB)
+
+## v1.1.4:
+
+- snabb syncd to igalia/lwaftr 7277beca69e50536a1a6d8e861301855e5220a40 (Fri Oct 7 11:42:37 2016 +0200)
+- YANG package ID limited to 5 characters (set to lwaft from lwaftr)
+- fix monitor lwaftr v4 per second counters
+- document lab and root password in test configuration files (lab/lab123 root/lab123)
+- Fixed minor issue in the lwaftr monitor & a mutex issue in the daemonized app.
+- use snabb_stats.xml provided by JET
+- changed formatting output in monitor lwaftr
+- use sudo in test scripts for snabb
+- fix dynamic rendering for counters in show lwaftr statistics
+- enhance support-info doc
+- let JET daemon do the statistics gathering
+- create test scripts for offline support use
+
 ## v1.1.3:
 
 - Updated scripts and yang files for JET

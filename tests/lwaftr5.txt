@@ -1,9 +1,9 @@
-## Last commit: 2016-09-29 21:14:35 UTC by mwiget
+## Last commit: 2016-09-30 11:04:34 UTC by mwiget
 version "16.1-20160926.0 [builder]";
 system {
     host-name lwaftr5;
     root-authentication {
-        encrypted-password "$5$XZSErpYB$QPbnlFXutnXy4jrpwUrtor/FtmVq94dIcaenN6KH013"; ## SECRET-DATA
+        encrypted-password "$5$Pam8O2S7$nZv0IMdl5AoYKEJm3j5ybrGe8GiUvuDdMz9fQ.vgui7"; ## SECRET-DATA
     }
     scripts {
         op {
@@ -152,6 +152,9 @@ interfaces {
         }
     }
 }
+snmp {
+    community public;
+}
 routing-options {
     rib inet6.0 {
         static {
@@ -202,6 +205,8 @@ ietf-softwire:softwire-config {
                     jnx-aug-softwire:ipv4_address 172.20.2.16;
                     jnx-aug-softwire:cache_refresh_interval 1;
                     jnx-aug-softwire:ingress_drop_action flush;
+                    jnx-aug-softwire:ipv4_vlan 100;
+                    jnx-aug-softwire:ipv6_vlan 100;
                 }
             }
             jnx-aug-softwire:binding-table-file binding_table_60k.txt;

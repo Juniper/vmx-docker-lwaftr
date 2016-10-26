@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set +e
 
+# JET
+echo ""
+echo "-------------------------"
+echo "building jet-python ..."
+cd /u/jet-python && python setup.py install --root=/build --single-version-externally-managed
+
 echo ""
 echo "-------------------------"
 echo "building python-tools ..."

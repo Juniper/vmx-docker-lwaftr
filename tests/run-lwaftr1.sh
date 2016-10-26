@@ -12,6 +12,12 @@ chmod 400 $IDENTITY
 LICENSE="license-eval.txt"
 INTERFACES=""
 
+DUP=$(docker ps -f name=${NAME} --format "{{ .Names }}" | grep "^${NAME}$")
+if [ -n "$DUP" ]; then
+  echo "antother container with same name $NAME exists. Kindly choose another NAME"
+  exit 1
+fi
+
 NETID=$(docker network inspect --format "{{ .Id }}" $NET 2>/dev/null)
 if [ -z "$NETID" ]; then
   echo "docker network $NET doesn't exist. Please run ./create-lwaftr1-testbed.sh first"

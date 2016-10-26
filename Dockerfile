@@ -23,11 +23,8 @@ COPY qemu-v2.4.1-snabb.tgz /
 RUN tar zxf /qemu-v*-snabb.tgz -C /usr/local/
 
 # python-tools
-COPY python-tools.tgz jet-1.tar.gz /
+COPY python-tools.tgz /
 RUN tar zxf python-tools.tgz && rm python-tools.tgz 
-
-# JET
-RUN mkdir jet-1 && cd jet-1 && tar zxf ../jet-1.tar.gz && python setup.py install && cd ..
 
 # Snabb
 COPY snabb/src/snabb /usr/local/bin/
