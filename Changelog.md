@@ -1,3 +1,8 @@
+## v1.1.14:
+
+- set icmpv6_rate_limiter_n_packets and icmpv6_rate_limiter_n_seconds in .conf file
+- fixed ingress_drop_action to become ingress_drop_monitor in snabbvmx cfg file
+
 ## v1.1.13:
 
 - Fixed typo in the index number for ps counters for monitor lwaftr
