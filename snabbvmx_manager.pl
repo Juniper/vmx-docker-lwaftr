@@ -304,6 +304,8 @@ EOF
       print LWA "max_fragments_per_reassembly_packet = $instance->{'max_fragments_per_reassembly_packet'},\n" if $instance->{'max_fragments_per_reassembly_packet'};
       print LWA "max_ipv4_reassembly_packets = $instance->{'max_ipv4_reassembly_packets'},\n" if $instance->{'max_ipv4_reassembly_packets'};
       print LWA "max_ipv6_reassembly_packets = $instance->{'max_ipv6_reassembly_packets'},\n" if $instance->{'max_ipv6_reassembly_packets'};
+      print LWA "icmpv6_rate_limiter_n_packets = $instance->{'icmpv6_rate_limiter_n_packets'},\n" if $instance->{'icmpv6_rate_limiter_n_packets'};
+      print LWA "icmpv6_rate_limiter_n_seconds = $instance->{'icmpv6_rate_limiter_n_seconds'},\n" if $instance->{'icmpv6_rate_limiter_n_seconds'};
       close LWA;
 
       my $rv = &process_binding_table_file($bdf);
