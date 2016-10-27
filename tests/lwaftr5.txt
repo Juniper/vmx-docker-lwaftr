@@ -196,7 +196,6 @@ ietf-softwire:softwire-config {
                     tunnel-path-mru 9000;
                     jnx-aug-softwire:ipv4_address 172.20.1.16;
                     jnx-aug-softwire:cache_refresh_interval 1;
-                    jnx-aug-softwire:ingress_drop_action flush;
                 }
                 br-instance 1 {
                     softwire-num-threshold 4000000;
@@ -204,7 +203,6 @@ ietf-softwire:softwire-config {
                     tunnel-path-mru 9000;
                     jnx-aug-softwire:ipv4_address 172.20.2.16;
                     jnx-aug-softwire:cache_refresh_interval 1;
-                    jnx-aug-softwire:ingress_drop_action flush;
                     jnx-aug-softwire:ipv4_vlan 100;
                     jnx-aug-softwire:ipv6_vlan 100;
                 }

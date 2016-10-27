@@ -239,7 +239,7 @@ return {
   lwaftr = \"$snabbvmx_lwaftr_file\",
   settings = {
 EOF
-    print CFG "    ingress_drop_action = \"$instance->{'ingress_drop_action'}\",\n" if $instance->{'ingress_drop_action'};
+    print CFG "    ingress_drop_monitor = \"$instance->{'ingress_drop_action'}\",\n" if $instance->{'ingress_drop_action'};
     print CFG "    ingress_drop_threshold = $instance->{'ingress_drop_threshold'},\n" if $instance->{'ingress_drop_threshold'};
     print CFG "    ingress_drop_interval = $instance->{'ingress_drop_interval'},\n" if $instance->{'ingress_drop_interval'};
     print CFG "    ingress_drop_wait = $instance->{'ingress_drop_wait'},\n" if $instance->{'ingress_drop_wait'};
