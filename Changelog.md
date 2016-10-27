@@ -1,3 +1,7 @@
+## v1.1.15:
+
+- Update snabb to bd3811f Add unit test for ipv4_cache_trigger
+
 ## v1.1.14:
 
 - set icmpv6_rate_limiter_n_packets and icmpv6_rate_limiter_n_seconds in .conf file
