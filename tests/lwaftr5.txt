@@ -196,6 +196,8 @@ ietf-softwire:softwire-config {
                     tunnel-path-mru 9000;
                     jnx-aug-softwire:ipv4_address 172.20.1.16;
                     jnx-aug-softwire:cache_refresh_interval 1;
+		    jnx-aug-softwire:icmpv6_rate_limiter_n_packets 5;
+		    jnx-aug-softwire:icmpv6_rate_limiter_n_seconds 1;
                 }
                 br-instance 1 {
                     softwire-num-threshold 4000000;

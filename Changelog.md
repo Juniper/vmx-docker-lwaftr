@@ -1,3 +1,8 @@
+## v1.1.16:
+
+- Update snabb to 9c07396: Let out-ipv6-* counters also count internally generated ICMPv6 packets, and update docs (#547))
+- remove stats.xml from collector. No longer exists
+
 ## v1.1.15:
 
 - Update snabb to bd3811f Add unit test for ipv4_cache_trigger
