@@ -22,7 +22,7 @@ docker network create net-lwaftr1-2
 docker network create net-lwaftr1-3
 
 docker rm $NAME 2>/dev/null
-docker create --name $NAME -ti --privileged -v $PWD:/u:ro $CONTAINER -I $IDENTITY -l $LICENSE -c $CFG $1 $VMX $INTERFACES
+docker create --name $NAME -ti --privileged -v $PWD:/u:ro $CONTAINER -I $IDENTITY -l $LICENSE -c $CFG -m 4000 $1 $VMX $INTERFACES
 docker network connect $NET $NAME
 docker network connect net-lwaftr1-1 $NAME
 docker network connect net-lwaftr1-2 $NAME
