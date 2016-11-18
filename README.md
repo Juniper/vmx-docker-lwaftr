@@ -3,6 +3,8 @@
 
 The vmx-docker-lwaftr Docker Container contains everything thats required to successfully launch vMX 16.1 and newer images with a configuration file and license key. This document describes how that Container can be built from source. The actual vMX images is NOT part of the Container. It will be loaded from the official vMX tar file placed in the local directory from where the Container is launched.
 
+Consult the Juniper White Paper on [vMX Lightweight 4over6 Virtual Network Function](https://www.juniper.net/assets/us/en/local/pdf/whitepapers/2000648-en.pdf) for a solution overview.
+
 ## Build instructions
 
 The Container vmx-docker-lwaftr is based on the official Ubuntu Docker 14.04.5 base Container and includes the following elements:
