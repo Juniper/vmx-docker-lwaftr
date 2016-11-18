@@ -105,4 +105,3 @@ docker run --name <name> --rm -v \$PWD:/u:ro \\
 See tests/run0.sh, tests/run1.sh and tests/run2.sh for examples on how to launch. The 
 vMX distribution tar file must be on the local directory from which the container
 is launched.
-
