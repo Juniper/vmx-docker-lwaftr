@@ -15,6 +15,12 @@ The build process requires a Docker Engine and the make tool. Please follow the 
 [Install Docker Engine on Linux](https://docs.docker.com/engine/installation/linux/) guide. Docker engine 1.12.1 
 or newer is required to run the lwaftr1 simulation in the tests directory. 
 
+Clone the repo with submodules:
+
+```
+git clone --recursive https://github.com/Juniper/vmx-docker-lwaftr
+```
+
 A single top level execution of make will build Snabb, Qemu and, dumb-init with a temporary build container and create the vmx-docker-lwaftr Docker container plus the b4cpe client simulator container.
 
 ```
@@ -57,7 +63,7 @@ $ ls -l vmx-docker-lwaftr-v1.2.0.img
 ```
 docker run --name <name> --rm -v \$PWD:/u:ro \\
    --privileged -i -t marcelwiget/vmx-docker-lwaftr[:version] \\
-   -c <junos_config_file> -i identity [-l license_file]\\
+   -c <junos_config_file> -I identity [-l license_file]\\
    [-V <# of cores>] [-W <# of cores>] [-P <cores>] [-R <cores>] \\
    [-m <kbytes>] [-M <kBytes>] \\
    <image> <pci-address/core> [<pci-address/core> ...]
@@ -75,9 +81,9 @@ docker run --name <name> --rm -v \$PWD:/u:ro \\
                  the Snabb process to. For simulation purposes use
                  'tap' instead of the pci-address. 
 
- -i  username,password for the JETapp to communicate with the Junos
-     control plane. Must also be configured in the Junos config with
-     super-user privileges
+ -I  username,password for the JETapp to communicate with the Junos
+     control plane or ssh private key file. Must also be configured in 
+     the Junos config with super-user privileges
 
  -c  Junos configuration file
 

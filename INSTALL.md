@@ -1,6 +1,6 @@
-# vmxlwaftr Install Guide
+# vmx-docker-lwaftr Install Guide
  
-This step by step guide walks thru the download, build and install of one or more vmxlwaftr Docker Containers serving as AFTR for Lightweight 4over6 on bare metal server.
+This step by step guide walks thru the download, build and install of one or more vmx-docker-lwaftr Docker Containers serving as AFTR for Lightweight 4over6 on bare metal server.
 
 ## Ubuntu Xenial 16.04 (LTS) Server
 
@@ -31,29 +31,29 @@ Don't forget to add your user accounts that need to build and run the containers
 
 ## Download and build the Container
 
-The automated build instructions together with the download of the required open source projects of specific version of Qemu and Snabb are part of the public repository currently at [https://github.com/mwiget/vmxlwaftr.git](). To get a specific release, e.g. v0.11, use the following command:
+The automated build instructions together with the download of the required open source projects of specific version of Qemu and Snabb are part of the public repository currently at [https://github.com/Juniper/vmx-docker-lwaftr](). To get a specific release, e.g. v0.11, use the following command:
 
 ```
-git clone -b v0.11 https://github.com/mwiget/vmxlwaftr.git
+git clone -b v1.1.17 --recursive https://github.com/Juniper/vmx-docker-lwaftr.git
 ```
 
-This downloads the tagged version (v0.11 in this example) into the directory vmxlwaftr, which must be empty before the command can be run. 
+This downloads the tagged version (v1.1.17 in this example) into the directory vmx-docker-lwaftr, which must be empty before the command can be run. 
 Now change into the new directory and run make:
 
 ```
-cd vmxlwaftr
+cd vmx-docker-lwaftr
 make
 ```
 
-This will take some time, download and build ubuntu development containers to build the various components and finally build the vmxlwaftr container and the optional b4cpe lw4o6 B4 client simulator container.
-Details about the build elements can be found here [https://github.com/mwiget/vmxlwaftr/blob/igalia/README.md]().
+This will take some time, download and build ubuntu development containers to build the various components and finally build the vmx-docker-lwaftr container and the optional b4cpe lw4o6 B4 client simulator container.
+Details about the build elements can be found here [https://github.com/Juniper/vmx-docker-lwaftr/blob/master/README.md]().
 
 If successful, you will find the containers ready for use:
 
 ```
 $ docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-vmxlwaftr           v0.11               14a4d9a46a7c        10 seconds ago      253.2 MB
+vmx-docker-lwaftr   v1.1.16             14a4d9a46a7c        10 seconds ago      311 MB
 b4cpe               v0.1                9ac09292c767        2 minutes ago       258.6 MB
 build-dumb-init     latest              739c273e6d08        5 minutes ago       347.8 MB
 buildqemu           latest              28ddb74e9866        9 minutes ago       432.5 MB
@@ -61,9 +61,9 @@ buildsnabb          latest              977a8bee455d        16 minutes ago      
 ubuntu              14.04.5             4a725d3b3b1c        2 weeks ago         188 MB
 ```
 
-## Prepare server for vmxlwaftr launch
+## Prepare server for vmx-docker-lwaftr launch
 
-The vmxlwaftr container requires at least 4G of available memory hugepages, either of size 2M or 1G. The amount required is directly related to the amount of memory given to the vPFE (VFP) of the vMX via container startup options (default to 4G). You can check the available hugepages via 
+The vmx-docker-lwaftr container requires at least 4G of available memory hugepages, either of size 2M or 1G. The amount required is directly related to the amount of memory given to the vPFE (VFP) of the vMX via container startup options (default to 4G). You can check the available hugepages via 
 
 ```
 $ cat /proc/meminfo |grep -i huge
@@ -98,7 +98,7 @@ Use your Juniper account to download vMX 16.1R1 from Juniper's support site:
 
 [http://www.juniper.net/support/downloads/?p=vmx]()
 
-The file must be present in the same directory from which the container will be launched, which is ~/vmxlwaftr/tests/:
+The file must be present in the same directory from which the container will be launched, which is ~/vmx-docker-lwaftr/tests/:
 
 ```
 $ ls -ln vmx-bundle-16.1R1.7.tgz
@@ -113,15 +113,15 @@ Prepare the vMX license keys in a file to be loaded by the container at startup.
 
 ### Prepare the virtual network
 
-Now it is time to launch the vmxlwaftr container paired with a B4 test client in another container. To do so, a virtual docker network must be created first and the  server prepared to route traffic between them and to the Internet (via SNAT masquerading). All that is setup up with a small shell script found in the tests directory. Launch it either as root or give the sudo password when asked:
+Now it is time to launch the vmx-docker-lwaftr container paired with a B4 test client in another container. To do so, a virtual docker network must be created first and the  server prepared to route traffic between them and to the Internet (via SNAT masquerading). All that is setup up with a small shell script found in the tests directory. Launch it either as root or give the sudo password when asked:
 
 ```
-$ cd ~/vmxlwaftr/tests/
-~/vmxlwaftr/tests$ ./create-lwaftr1-testbed.sh
+$ cd ~/vmx-docker-lwaftr/tests/
+~/vmx-docker-lwaftr/tests$ ./create-lwaftr1-testbed.sh
 checking if docker network net-lwaftr1 already exists ... ok
 need sudo privileges:
 [sudo] password for mwiget:
-/home/mwiget/vmxlwaftr/tests
+/home/mwiget/vmx-docker-lwaftr/tests
 creating network net-lwaftr1 ...ok
 adding IPv6 network for lwaftr1 ...  on br-ceb0c9a339d3 ok
 adding static route to AFTR fd00:4600:8888::2 via gw fd00:4600:1110::2 ... ok
@@ -129,16 +129,16 @@ adding static route to 193.5.1.0/24 via 172.20.0.2 ... ok
 Adding SNAT masquerading via interface eth0 all set.
 ```
 
-### Launch vmxlwaftr container
+### Launch vmx-docker-lwaftr container
 
-There is a shell script ready to launch a vmxlwaftr container with a basic configuration with a handful binding entries, all from the same tests directory. Have a look at the script to see what options it needs, particularly the presence of the license file. The Junos config lwfatr1.txt it references is also present in this directory:
+There is a shell script ready to launch a vmx-docker-lwaftr container with a basic configuration with a handful binding entries, all from the same tests directory. Have a look at the script to see what options it needs, particularly the presence of the license file. The Junos config lwfatr1.txt it references is also present in this directory:
 
 ```
-$ cd cd ~/vmxlwaftr/tests/
-~/vmxlwaftr/tests$ ./run-lwaftr1.sh
+$ cd cd ~/vmx-docker-lwaftr/tests/
+~/vmx-docker-lwaftr/tests$ ./run-lwaftr1.sh
 c814c93868eb16fb9e0730a3bbcc33d02086eb05723797dcd6cea3dc00b047f
 Juniper Networks vMX lwaftr Docker Container
-vmxlwaftr:v0.11
+vmx-docker-lwaftr:v1.1.16
 Sun Sep 11 20:34:53 UTC 2016
 
 Launching with arguments: -I snabbvmx.key -l license-eval.txt -c lwaftr1.txt vmx-bundle-16.1R1.7.tgz
@@ -191,7 +191,7 @@ lab@lwaftr1>
 From another shell, launch the B4 client with the shell script, then try to ping a public host on the Internet, e.g. the Google DNS server at 8.8.8.8. 
 
 ```
-~/vmxlwaftr/tests$ ./run-b4cpe1.sh
+~/vmx-docker-lwaftr/tests$ ./run-b4cpe1.sh
 
 b4cpe:v0.1 Sun Sep 11 20:32:33 UTC 2016
 
@@ -221,6 +221,6 @@ rtt min/avg/max/mdev = 14.282/14.582/15.009/0.297 ms
 root@5e5937635073:/#
 ```
 
-More details about the test setup can be found at [https://github.com/mwiget/vmxlwaftr/tree/v0.11/tests]().
+More details about the test setup can be found at [https://github.com/Juniper/vmx-docker-lwaftr/master/tests]().
 
 
