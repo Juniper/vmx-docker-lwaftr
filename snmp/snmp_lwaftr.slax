@@ -1,3 +1,6 @@
+/* Copyright (c) 2016, Juniper Networks, Inc.
+ * All rights reserved.
+ */
 version 1.0;
 
 ns junos = "http://xml.juniper.net/junos/*/junos";
