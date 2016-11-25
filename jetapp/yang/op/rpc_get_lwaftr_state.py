@@ -1,4 +1,6 @@
 #!/usr/bin/python
+__author__ = "Amish Anand"
+__copyright__ = "Copyright (c) 2015 Juniper Networks, Inc."
 """
 This script will be used by the yang file for retrieving the statistics
 """
@@ -38,6 +40,9 @@ def snabb_state(query_output):
                         	PRINT_TAG(pci_child,"txpackets")
                         	PRINT_TAG(pci_child,"rxdrop")
                         	PRINT_TAG(pci_child,"txdrop")
+	    if child.tag == "engine":
+			for engine_child in child:
+				PRINT_TAG(engine_child, "breaths")
         print "</instance>"
     print ("</snabb>")
     return

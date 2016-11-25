@@ -1,3 +1,8 @@
+"""
+Copyright (c) 2016, Juniper Networks, Inc.
+All rights reserved.
+"""
+
 import os
 from twisted.web import xmlrpc
 import subprocess

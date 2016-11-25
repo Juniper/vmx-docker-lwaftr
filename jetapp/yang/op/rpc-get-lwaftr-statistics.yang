@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2014 Juniper Networks, Inc.
+* Copyright (c) 2016 Juniper Networks, Inc.
 * All rights reserved.
 */
 
@@ -45,6 +45,11 @@ rpc get-lwaftr-statistics {
 	     type string;
 	     description "Error connecting to snabb";
 	   }
+       	   leaf breaths {
+             junos-odl:template "\tTotal Breaths:                                    %15s";
+             type string;
+       	     description " ";
+           }
            leaf id {
              junos-odl:template "Instance id: %s";
              type string;
@@ -388,10 +393,9 @@ rpc get-lwaftr-statistics {
            }
        	   leaf out-ipv6-frag-not{
              junos-odl:template "\tIPv6 OUT not fragmented:                          %15s";
-         type string;
-       	        description " ";
+             type string;
+       	     description " ";
            }
-
 
        container statistics-format {
          junos-odl:cli-format;
@@ -400,6 +404,7 @@ rpc get-lwaftr-statistics {
 @\\n
 @\\n
 @\\n
+@<<<<<<<<<<<<<<<<<<<<<<<<
 @<<<<<<<<<<<<<<<<<<<<<<<<
 @<<<<<<<<<<<<<<<<<<<<<<<<
 @<<<<<<<<<<<<<<<<<<<<<<<<
@@ -678,6 +683,9 @@ rpc get-lwaftr-statistics {
        }
        junos-odl:line {
            junos-odl:field "out-ipv6-packets";
+       }
+       junos-odl:line {
+           junos-odl:field “breaths";
        }
      }
     }

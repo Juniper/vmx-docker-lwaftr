@@ -1,4 +1,7 @@
 #!/usr/bin/python
+__author__ = "Amish Anand"
+__copyright__ = "Copyright (c) 2015 Juniper Networks, Inc."
+
 """
 This script will be used by the yang file for retrieving the statistics
 """
@@ -20,6 +23,10 @@ def stats_per_instance(instance):
         print ("<statistics>")
         for child_instance in instance:
             PRINT_TAG(child_instance,"id")
+            if app_child.tag == "engine":
+                for engine_child in app_child:
+                    if engine_child.tag == "breaths":
+                        PRINT_TAG(engine_child,'breaths')
             if child_instance.tag == "apps":
                 for app_child in child_instance:
                     if app_child.tag == "lwaftr":

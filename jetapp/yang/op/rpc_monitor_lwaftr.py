@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+__author__ = "Amish Anand"
+__copyright__ = "Copyright (c) 2015 Juniper Networks, Inc."
+
 import os
 import xmlrpclib
 import xml.etree.ElementTree as ET
@@ -30,6 +33,7 @@ Instance ID: %s
 SNABB_V4_TEMPLATE = r"""
                                                            Total      per second
  nic ifInDiscards                                %15s    %12.2f
+ breaths                                         %15s    %12.2f
 
                                                            Total      per second
  lwaftr_v4 in-ipv4-packets                       %15s    %12.2f
@@ -73,6 +77,9 @@ class lwaftr_stats:
         self.lwaftr_ifInDiscards = {}
         self.lwaftr_ifInDiscards_old = {}
         self.lwaftr_ifInDiscards_ps = {}
+        self.breaths = {}
+        self.breaths_old = {}
+        self.breaths_ps = {}
         self.previous_poll = 0
 
     def monitor(self, server, argv):
@@ -105,6 +112,9 @@ class lwaftr_stats:
 		self.lwaftr_ifInDiscards[id]= "0"
 		self.lwaftr_ifInDiscards_old[id] = "0"
 		self.lwaftr_ifInDiscards_ps[id] = 0.0
+		self.breaths[id] = "0"
+		self.breaths_old[id] = "0"
+		self.breaths_ps[id] = 0.0
 		for i in range(0,len(self.index_dict)):
 		    self.lwaftr[id].append("0")
                     self.lwaftr_old[id].append("0")
@@ -121,16 +131,16 @@ class lwaftr_stats:
                                     if lwaftr_child.text.strip() == "":
                                         # TODO should we just leave it like that?
                                         # as of now i am just updating the old vales to the new one and set ps to 0
-					self.lwaftr_old[id][self.index_dict[tag]] = 0
-					self.lwaftr[id][self.index_dict[tag]] = 0
-					self.lwaftr_ps[id][self.index_dict[tag]] = 0.0
+                                        self.lwaftr_old[id][self.index_dict[tag]] = 0
+                                        self.lwaftr[id][self.index_dict[tag]] = 0
+                                        self.lwaftr_ps[id][self.index_dict[tag]] = 0.0
                                     else:
                                         self.lwaftr_old[id][self.index_dict[tag]] = self.lwaftr[id][self.index_dict[tag]]
                                         self.lwaftr[id][self.index_dict[tag]] = lwaftr_child.text.strip()
                                         if self.previous_poll != 0:
                                             delta = float(newtime - self.previous_poll)
                                             nwval = float(int(self.lwaftr[id][self.index_dict[tag]])-int(self.lwaftr_old[id][self.index_dict[tag]]))
-					    nwval = round(nwval,2)
+                                            nwval = round(nwval,2)
                                             self.lwaftr_ps[id][self.index_dict[tag]] = nwval/delta
                                 else:
                                     if tag == "ingress-packet-drops":
@@ -143,9 +153,25 @@ class lwaftr_stats:
                                             if self.previous_poll != 0:
                                                 delta = float(newtime - self.previous_poll)
                                                 nwval = float(int(self.lwaftr_ifInDiscards[id])-int(self.lwaftr_ifInDiscards_old[id]))
-					        nwval = round(nwval,2)
+                                                nwval = round(nwval,2)
                                                 self.lwaftr_ifInDiscards_ps[id] = nwval/delta
-            self.display_monitor(id)
+
+                if child_instance.tag == "engine":
+                    for engine_child in child_instance:
+                        if engine_child.tag == "breaths":
+                            if engine_child.text.strip() == "":
+                                self.breaths_old[id] = self.breaths[id]
+                                self.breaths_ps[id] = 0.0
+                            else:
+                                self.breaths_old[id] = self.breaths[id]
+                                self.breaths[id] = engine_child.text.strip()
+                                if self.previous_poll != 0:
+                                    delta = float(newtime - self.previous_poll)
+                                    nwval = float(int(self.breaths[id])-int(self.breaths_old[id]))
+                                    nwval = round(nwval,2)
+                                    self.breaths_ps[id] = nwval/delta
+
+                self.display_monitor(id)
 	if found == 0:
 	    jcs.output("Invalid instance")
 	    exit(0)
@@ -169,6 +195,7 @@ class lwaftr_stats:
                        self.lwaftr[id][8], self.lwaftr_ps[id][8]))
 
             jcs.output(SNABB_V4_TEMPLATE %(self.lwaftr_ifInDiscards[id], self.lwaftr_ifInDiscards_ps[id],
+                       self.breaths[id],self.breaths_ps[id],
                        self.lwaftr[id][9], self.lwaftr_ps[id][9],
                        self.lwaftr[id][10], self.lwaftr_ps[id][10],
                        self.lwaftr[id][11], self.lwaftr_ps[id][11],

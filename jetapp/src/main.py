@@ -4,7 +4,7 @@ __copyright__ = "Copyright (c) 2015 Juniper Networks, Inc."
 
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER
 #
-# Copyright (c) 2015 Juniper Networks, Inc.
+# Copyright (c) 2016 Juniper Networks, Inc.
 # All rights reserved.
 #
 # Use is subject to license terms.
