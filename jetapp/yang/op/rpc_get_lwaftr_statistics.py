@@ -23,8 +23,8 @@ def stats_per_instance(instance):
         print ("<statistics>")
         for child_instance in instance:
             PRINT_TAG(child_instance,"id")
-            if app_child.tag == "engine":
-                for engine_child in app_child:
+            if child_instance.tag == "engine":
+                for engine_child in child_instance:
                     if engine_child.tag == "breaths":
                         PRINT_TAG(engine_child,'breaths')
             if child_instance.tag == "apps":
