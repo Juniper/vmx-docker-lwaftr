@@ -5,14 +5,16 @@ IMPORTS
     MODULE-IDENTITY, OBJECT-TYPE,
     Unsigned32, Counter64
         FROM SNMPv2-SMI
+	TEXTUAL-CONVENTION, DisplayString
+		FROM SNMPv2-TC
     CounterBasedGauge64                  
-        FROM HCNUM-TC 		
+        FROM HCNUM-TC       
     jnxSDKApplicationsRoot
         FROM JUNIPER-SMI;
 
 softwireMIB MODULE-IDENTITY
-    LAST-UPDATED "201606080000Z" 							-- June 8, 2016
-    ORGANIZATION "Juniper Networks, Inc."     				-- TBD
+    LAST-UPDATED "201611240000Z"                            -- Nov 24, 2016
+    ORGANIZATION "Juniper Networks, Inc."                   -- TBD
     CONTACT-INFO
             "Juniper Technical Assistance Center
                       Juniper Networks, Inc.
@@ -24,25 +26,34 @@ softwireMIB MODULE-IDENTITY
             "This document defines a MIB data model for the statistics of
             IPv4-in-IPv6 Softwire Border Routers and Customer
             Premises Equipment."
-    
+
+    REVISION            "201611240000Z"             
+    DESCRIPTION         "Added lw4over6InstanceTable to provide instance
+                        level details like name, breaths counter etc."        
 
     
-    ::= { jnxSDKApplicationsRoot 151 }              		-- TBD
+    ::= { jnxSDKApplicationsRoot 151 }                      -- TBD
     
 
 -- ***************************************************************
 --  lw4over6 stats table per instance and family type (v4/v6)
 -- ***************************************************************
 
+    Lw4over6InstanceIdentifier ::= TEXTUAL-CONVENTION
+        STATUS      current
+        DESCRIPTION "A number identifying the instance id of lw4over6 entity."
+        SYNTAX      Unsigned32
+
+        
     lw4over6StatTable OBJECT-TYPE
         SYNTAX      SEQUENCE OF Lw4over6StatEntry
         MAX-ACCESS  not-accessible
         STATUS      current
         DESCRIPTION
             "This table presents lw4over6 instance of 
-			v4 or v6 statistics."
+            v4 or v6 statistics."
         ::= { softwireMIB 1 }
-		
+        
     lw4over6StatEntry OBJECT-TYPE
         SYNTAX      Lw4over6StatEntry
         MAX-ACCESS  not-accessible
@@ -57,12 +68,12 @@ softwireMIB MODULE-IDENTITY
     Lw4over6StatEntry ::=
         SEQUENCE {
         -- Table indexed with instance id, and v4/v6 protocol
-		
-        lw4over6InstanceId              Unsigned32,
+        
+        lw4over6InstanceId              Lw4over6InstanceIdentifier,
         lw4over6Protocol                INTEGER,
 
         -- instance name
-        lw4over6Name					DisplayString,
+        lw4over6Name                    DisplayString,
         
         -- packet/byte stats for ingress traffic
         lw4over6HCInOctets              Counter64,
@@ -77,15 +88,16 @@ softwireMIB MODULE-IDENTITY
         lw4over6HCPktDrops              Counter64
     }
     
-    --input packet/byte stats for unicast traffic
+    -- Unique instance id of the lw4over6 instance
     lw4over6InstanceId OBJECT-TYPE 
-        SYNTAX      Unsigned32 
+        SYNTAX      Lw4over6InstanceIdentifier 
         MAX-ACCESS  not-accessible 
         STATUS      current
         DESCRIPTION
             "The instance id of lw4over6." 
         ::= { lw4over6StatEntry 1 }
 
+    -- Protocol identifier v4/v6
     lw4over6Protocol OBJECT-TYPE 
         SYNTAX      INTEGER {
                         ipv4 (1),
@@ -94,17 +106,18 @@ softwireMIB MODULE-IDENTITY
         MAX-ACCESS  not-accessible 
         STATUS      current
         DESCRIPTION
-            "The protocol type of lw4over6" 
+            "The protocol type v4/v6 of lw4over6." 
         ::= { lw4over6StatEntry 2 }
         
+    -- Instance name
     lw4over6Name OBJECT-TYPE 
         SYNTAX      DisplayString
         MAX-ACCESS  not-accessible 
         STATUS      current
         DESCRIPTION
-            "The protocol type of lw4over6" 
+            "The Instance name." 
         ::= { lw4over6StatEntry 3 }
-		
+        
     --input packet/byte stats for unicast traffic
     lw4over6HCInOctets OBJECT-TYPE
         SYNTAX      Counter64
@@ -158,5 +171,71 @@ softwireMIB MODULE-IDENTITY
         DESCRIPTION
             "The total number of packets dropped."
         ::= { lw4over6StatEntry 9 }
+
+
+-- ***************************************************************
+--  lw4over6 Instance table for providing instance details name, breaths counter..
+-- ***************************************************************
+
+    lw4over6InstanceTable OBJECT-TYPE
+        SYNTAX      SEQUENCE OF Lw4over6InstanceEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+            "This table presents lw4over6 instance  
+            level details."
+        ::= { softwireMIB 2 }
+        
+    lw4over6InstanceEntry OBJECT-TYPE
+        SYNTAX      Lw4over6InstanceEntry
+        MAX-ACCESS  not-accessible
+        STATUS      current
+        DESCRIPTION
+            "This table presents lw4over6 instance level details."
+            
+        INDEX       { lw4over6EntityInstanceId }
+        ::= { lw4over6InstanceTable 1 }
+        
+
+    Lw4over6InstanceEntry ::=
+        SEQUENCE {
+        
+        -- Table indexed with instance id       
+        lw4over6EntityInstanceId                Lw4over6InstanceIdentifier,
+
+        -- instance name
+        lw4over6InstanceName                    DisplayString,
+        
+        -- breaths counter
+        lw4over6InstanceBreaths                 Counter64
+    }
+    
+    -- Unique instance id of the lw4over6 instance
+    lw4over6EntityInstanceId OBJECT-TYPE 
+        SYNTAX      Lw4over6InstanceIdentifier 
+        MAX-ACCESS  not-accessible 
+        STATUS      current
+        DESCRIPTION
+            "The instance id of lw4over6 instance." 
+        ::= { lw4over6InstanceEntry 1 }
+
+    -- lw4over6 Instance name
+    lw4over6InstanceName OBJECT-TYPE 
+        SYNTAX      DisplayString
+        MAX-ACCESS  not-accessible 
+        STATUS      current
+        DESCRIPTION
+            "The protocol type of lw4over6" 
+        ::= { lw4over6InstanceEntry 2 }     
+        
+    -- breaths counter
+    lw4over6InstanceBreaths OBJECT-TYPE
+        SYNTAX      Counter64
+        MAX-ACCESS  read-only
+        STATUS      current
+        DESCRIPTION
+            "The total number breaths."
+        ::= { lw4over6InstanceEntry 3 }   
+
         
 END
