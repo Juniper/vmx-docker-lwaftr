@@ -45,15 +45,15 @@ rpc get-lwaftr-statistics {
 	     type string;
 	     description "Error connecting to snabb";
 	   }
-           leaf id {
-             junos-odl:template "Instance id: %s";
-             type string;
-             description "ID of instance";
-           }
        	   leaf breaths {
              junos-odl:template "\tTotal Breaths:                                    %15s";
              type string;
        	     description " ";
+           }
+           leaf id {
+             junos-odl:template "Instance id: %s";
+             type string;
+             description "ID of instance";
            }
        	   leaf drop-all-ipv4-iface-bytes {
              junos-odl:template "\tIPv4 interface drop bytes:                        %15s";
