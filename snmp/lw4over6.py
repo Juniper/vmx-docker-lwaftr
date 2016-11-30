@@ -173,7 +173,7 @@ def populate_stats():
           breaths = None
           lwaftr_entry = None
           for instance in state_rsp:
-            jcs.syslog("external.info", instance.tag)
+            #jcs.syslog("external.info", instance.tag)
             if (instance.tag == 'name'):
                 instance_name = instance.text.strip()
                 continue
@@ -190,8 +190,8 @@ def populate_stats():
                 breaths = long(breaths)
                 instance_id = long(instance_id)
                 lwaftr_instance_dict[instance_name] = instance_id
-                message = "#####Adding instance: " + instance_name
-                jcs.syslog("external.info", message)
+                #message = "#####Adding instance: " + instance_name
+                #jcs.syslog("external.info", message)
                 lwaftr_entry = lwaftr_statistics(instance_name, breaths)
 
             if (instance.tag == 'apps'):
@@ -415,9 +415,9 @@ def snmp_getnext_value(leaf, instance, protocol):
     if (value is None):
         return (None, None, None, None)
     message = "Inside snmp_getnext_value " + value
-    jcs.syslog("external.info", message)
+    #jcs.syslog("external.info", message)
     message = "(" + str(leaf) + " " + str(instance) + " " + str(protocol) + " " + str(value) + ")"
-    jcs.syslog("external.info", message)
+    #jcs.syslog("external.info", message)
     return (leaf, instance, protocol, value)
 
 
@@ -481,15 +481,17 @@ def main():
         instance_id = oid_list[14]
         instance_id = int(instance_id)
 
-    if (operation == SNMP_GETNEXT and table_type == LW4OVER6_STAT_TABLE):
+    if (table_type == LW4OVER6_STAT_TABLE):
         if (oid_list_len > 15):
             protocol = oid_list[15]
             protocol = int(protocol)
-            (recv_leaf, recv_instance, recv_protocol, value) = snmp_getnext_value(leaf, instance_id, protocol)
-            if (value is None):
-                table_type = LW4OVER6_INSTANCE_TABLE
-                instance_id = None
-                leaf = None
+			
+    if (table_type == LW4OVER6_STAT_TABLE and operation == SNMP_GETNEXT):
+        (recv_leaf, recv_instance, recv_protocol, value) = snmp_getnext_value(leaf, instance_id, protocol)
+        if (value is None):
+            table_type = LW4OVER6_INSTANCE_TABLE
+            instance_id = None
+            leaf = None
 
     if (table_type == LW4OVER6_STAT_TABLE):
         message = "Parameters "
