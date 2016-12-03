@@ -1,3 +1,13 @@
+## v1.1.17:
+
+- updated test scripts to 16.1R3.10
+- Add white paper link to README.md
+- Added copyright and breaths count to the Snabb show and monitor CLIs
+- Added MIB support for breath counters
+- Added logs for the snmp script
+- Fixed the breath display issue
+- fix parsing of binding table filename
+
 ## v1.1.16:
 
 - Update snabb to 9c07396: Let out-ipv6-* counters also count internally generated ICMPv6 packets, and update docs (#547))
