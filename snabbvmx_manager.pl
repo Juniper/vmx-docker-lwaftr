@@ -113,7 +113,7 @@ sub check_config {
     $_ =~ s/jnx-aug-softwire://;  # remove namespace prefix for our parsing
     $_ =~ s/ietf-softwire://;  # remove namespace prefix for our parsing
     print NEW $_;
-    if ($_ =~ /binding-table-file\"\s+:\s+\"([\w.]+)\"/) {
+    if ($_ =~ /binding-table-file\"\s+:\s+\"([^\"]+)\"/) {
       $file=$1;
       print("getting file $file from $ip ...\n");
       my $f="/var/db/scripts/commit/$file";
