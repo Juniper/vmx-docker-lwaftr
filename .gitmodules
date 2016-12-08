@@ -1,6 +1,6 @@
 [submodule "snabb"]
 	path = snabb
-	url = https://github.com/igalia/snabb.git
+	url = https://github.com/mwiget/snabb.git
 [submodule "qemu"]
 	path = qemu
 	url = https://github.com/qemu/qemu.git
