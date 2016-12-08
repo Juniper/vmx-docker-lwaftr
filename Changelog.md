@@ -1,3 +1,7 @@
+## v1.1.18:
+
+- update snabb with binding table reload fix
+
 ## v1.1.17:
 
 - updated test scripts to 16.1R3.10
