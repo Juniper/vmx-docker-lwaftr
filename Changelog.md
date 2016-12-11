@@ -1,5 +1,10 @@
 ## v1.1.18:
 
+- Move to using ubuntu 14.04 base container instead of specific minor version
+  due to build conflicts with outdated containers
+
+## v1.1.18:
+
 - update snabb with binding table reload fix
 
 ## v1.1.17:

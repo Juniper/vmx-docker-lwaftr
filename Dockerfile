@@ -1,7 +1,7 @@
 # Copyright (c) 2016, Juniper Networks, Inc.
 # All rights reserved.
 
-FROM ubuntu:14.04.5
+FROM ubuntu:14.04
 MAINTAINER Marcel Wiget
 
 # install tools required in the running container
