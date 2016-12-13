@@ -1,5 +1,3 @@
-## Last commit: 2016-06-25 16:48:36 UTC by mwiget
-version 16.1R1.6;
 system {
     host-name lwaftr2;
     root-authentication {
@@ -50,11 +48,6 @@ system {
     services {
         ssh;
         extension-service {
-            request-response {
-                thrift {
-                    clear-text;
-                }
-            }
             notification {
                 port 1883;
                 allow-clients {

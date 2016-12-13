@@ -1,5 +1,5 @@
-## Last commit: 2016-09-30 11:04:34 UTC by mwiget
-version "16.1-20160926.0 [builder]";
+## Last commit: 2016-12-13 03:29:15 UTC by root
+version 16.1R3.10;
 system {
     host-name lwaftr5;
     root-authentication {
@@ -53,11 +53,6 @@ system {
     services {
         ssh;
         extension-service {
-            request-response {
-                thrift {
-                    clear-text;
-                }
-            }
             notification {
                 port 1883;
                 allow-clients {
