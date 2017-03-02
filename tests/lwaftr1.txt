@@ -100,6 +100,11 @@ system {
         server 172.17.0.1;
     }
 }
+chassis {
+  fpc 0 {
+    lite-mode;
+  }
+}
 interfaces {
     ge-0/0/0 {
         mtu 9000;
