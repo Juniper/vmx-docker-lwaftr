@@ -1,3 +1,13 @@
+## v1.1.20:
+
+- Add --mirror flag to snabbvmx (use 'snabb lwaftr monitor' to activate or disable)
+- Removed monitor.sh script. 
+- Added lite-mode to lwaftr1.txt configuration
+
+## v1.1.19:
+
+- Use latest Ubuntu base container
+
 ## v1.1.18:
 
 - Move to using ubuntu 14.04 base container instead of specific minor version
