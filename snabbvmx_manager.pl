@@ -107,9 +107,14 @@ sub check_config {
   open NEW, ">$newfile" or die "can't write to file $newfile";
   open IP, "/tmp/config.new1" or die "can't open file /tmp/config.new1";
   my $file;
+  my $R3 = 0;
+  $R3 = 1 if -e "/tmp/junos-vmx-x86-64-16.1R3.10.qcow2";
   while (<IP>) {
     # fix a JSON formatting bug 
-    $_ =~ s/\s+\"jnx-aug-softwire:/,\"/;
+    if ($R3) {
+      # 16.1R3 has a bug omitting ',' for augmented leafs. R4 has this fixed
+      $_ =~ s/\s+\"jnx-aug-softwire:/,\"/;
+    }
     $_ =~ s/jnx-aug-softwire://;  # remove namespace prefix for our parsing
     $_ =~ s/ietf-softwire://;  # remove namespace prefix for our parsing
     print NEW $_;
