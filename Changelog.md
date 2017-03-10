@@ -1,3 +1,8 @@
+## v1.1.21:
+
+- Support for 16.1R4.7 and 17.1R1.8 added (by limiting JSON fix to 16.1R3)
+- Enable lite PFE mode in tests/lwaftr5.txt
+
 ## v1.1.20:
 
 - Add --mirror flag to snabbvmx (use 'snabb lwaftr monitor' to activate or disable)
