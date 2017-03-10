@@ -4,7 +4,9 @@ NAME="lwaftr1"
 NET="net-lwaftr1"
 
 CFG="lwaftr1.txt"
-VMX="vmx-bundle-16.1R3.10.tgz"
+#VMX="vmx-bundle-16.1R3.10.tgz"
+VMX="vmx-bundle-16.1R4.7.tgz"
+#VMX="vmx-bundle-17.1R1.8.tgz"
 
 CONTAINER="$(cat ../VERSION)"
 IDENTITY="snabbvmx.key"
