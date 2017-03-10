@@ -1,7 +1,7 @@
 
 # Juniper Networks vMX lwaftr Docker Container
 
-The vmx-docker-lwaftr Docker Container contains everything thats required to successfully launch vMX 16.1 and newer images with a configuration file and license key. This document describes how that Container can be built from source. The actual vMX images is NOT part of the Container. It will be loaded from the official vMX tar file placed in the local directory from where the Container is launched.
+The vmx-docker-lwaftr Docker Container contains everything thats required to successfully launch vMX 16.1R3 and newer images with a configuration file and license key. This document describes how that Container can be built from source. The actual vMX images is NOT part of the Container. It will be loaded from the official vMX tar file placed in the local directory from where the Container is launched.
 
 Consult the Juniper White Paper on [vMX Lightweight 4over6 Virtual Network Function](https://www.juniper.net/assets/us/en/local/pdf/whitepapers/2000648-en.pdf) for a solution overview and listen to the podcast on Software Gone Wild by Ivan Pepelnjak, Dec 2016: [Blog](http://blog.ipspace.net/2016/12/snabb-switch-with-vmx-control-plane-on.html), [MP3](http://stream.ipspace.net/nuggets/podcast/Show_68-lwAFTR_Snabb_Data_Plane_with_vMX_Control_Plane.mp3).
 
@@ -84,7 +84,7 @@ docker run --name <name> --rm -v \$PWD:/u:ro \\
                  docker is executed from (ro forces read-only access)
                  The file will be copied from this location
 
- <image>         vMX distribution tar file, e.g. vmx-bundle-16.1R1.6.tgz
+ <image>         vMX distribution tar file, e.g. vmx-bundle-16.1R3.10.tgz
 
  <pci-address/core> [<pci-address/core> ..]
                  One or more PCI addresses and physical core to lock
