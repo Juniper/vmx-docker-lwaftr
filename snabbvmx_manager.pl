@@ -144,6 +144,31 @@ sub check_config {
 }
 
 #------------------------------------------------------------------
+sub check_config_packetblaster {
+  my ($ip, $identity) = @_;
+  `/usr/bin/ssh -o StrictHostKeyChecking=no -i $identity snabbvmx\@$ip \"show conf packetblaster:instances|display json\" > /tmp/config.pb.new1`;
+
+  my $newfile = "/tmp/config.pb.new";
+  open NEW, ">$newfile" or die "can't write to file $newfile";
+  open IP, "/tmp/config.pb.new1" or die "can't open file /tmp/config.pb.new1";
+  my $file;
+  while (<IP>) {
+    print NEW $_;
+  }
+  close IP;
+  close NEW;
+
+  my $delta = `/usr/bin/diff /tmp/config.pb.new /tmp/config.pb.old 2>&1`;
+  if ($delta eq "") {
+    print("snabbvmx_manager: no config change for packetblaster found\n");
+  } else {
+    print("snabbvmx_manager: updated config for packetblaster!\n");
+    unlink "/tmp/config.pb.old";
+    rename "/tmp/config.pb.new","/tmp/config.pb.old";
+    &process_new_packetblaster("/tmp/config.pb.old");
+  }
+}
+#------------------------------------------------------------------
 #------------------------------------------------------------------
 sub process_new_config {
   my ($file) = @_;
@@ -349,6 +374,121 @@ EOF
   }
 }
 
+#------------------------------------------------------------------
+sub process_new_packetblaster {
+  my ($file) = @_;
+  my $json;
+  {
+    local $/; # enable slurp mode
+    open my $fh,"<", $file;
+    $json = <$fh>;
+    close $fh;
+  }
+
+  my %snabbpid;
+  print ("process_new_config\n");
+  # get list of nics, required for cleanup
+  my @files = </tmp/mac_*>;
+  foreach my $file (@files) {
+    my $id;
+    $file =~ /_(\w+)/;
+    if ($1) {
+      $snabbpid{$1} = -1;
+    }
+  }
+  # get list of running snabb instances 
+  @files = </run/snabb/*/nic/id>;
+  foreach my $file (@files) {
+    my $id;
+    $file =~ /(\d+)/;
+    my $pid = $1;
+    open(my $fh, "$file") or die "cannot open file $file";
+    $id = <$fh>;
+    $id = substr($id,0,3);  # we actually get a string of 256 characters, mostly \0
+    close($fh);
+    my $len=length($id);
+    $snabbpid{$id} = $pid;
+    my $psid = $snabbpid{$id};
+    print "psid for $id is $psid\n";
+  }
+
+  if ($json) {
+    my $data = decode_json($json);
+
+    my $instances = $data->{"packetblaster:instances"}{"instance"};
+    my $reload = 0;
+
+    foreach my $instance (@$instances) {
+
+      my $id = "xe" . $instance->{"id"};
+      print "--------> snabb $id:\n";
+
+      my $snabbvmx_config_file = "snabbvmx-lwaftr-$id.cfg";
+      my $snabbvmx_lwaftr_file = "snabbvmx-lwaftrgen-$id.conf";
+
+      open CFG,">$snabbvmx_config_file.new" or die $@;
+      print CFG <<EOF;
+return {
+  lwaftrgen = \"$snabbvmx_lwaftr_file\",
+  settings = {
+  },
+  ipv6_interface = {
+    cache_refresh_interval = 1,
+  },
+  ipv4_interface = {
+    ipv4_address = \"$instance->{"lwaftr"}{"ipv4_address"}\",
+    cache_refresh_interval = 1,
+  },
+}
+EOF
+      close CFG;
+
+      my $mac = "00:00:00:00:00:00";
+      if (-f "mac_$id") {
+        $mac = do{local(@ARGV,$/)="mac_$id";<>};
+        chomp $mac;
+      }
+
+      open LWA,">$snabbvmx_lwaftr_file.new" or die $@;
+      my $snabbrate = $instance->{"lwaftr"}{"rate"} / 1000;
+      print LWA <<EOF;
+vlan_tagging = false,
+count = $instance->{"lwaftr"}{"count"},
+aftr_ipv6 = $instance->{"lwaftr"}{"aftr_ipv6_address"},
+public_ipv4 = 8.8.8.8,
+rate = $snabbrate,
+b4_ipv6 = $instance->{"lwaftr"}{"b4_ipv6_address"},
+b4_ipv4 = $instance->{"lwaftr"}{"b4_ipv4_address"},
+b4_port = $instance->{"lwaftr"}{"b4_port"},
+EOF
+      close LWA;
+
+      my $psid = $snabbpid{$id};
+      print "psid of snabb process for $id is $psid\n";
+      delete $snabbpid{$id}; # avoid getting killed during cleanup at the end of this function
+
+      if (0 < &file_changed($snabbvmx_lwaftr_file) + &file_changed($snabbvmx_config_file)) {
+        if ($psid) {
+          print "sending TERM to snabb process for $id ($psid)\n"; 
+          `kill -TERM $psid`;
+        }
+      }
+    }
+  }
+
+  # cleanup of snabb processes no longer needed
+  print "cleanup\n";
+  foreach my $id (keys %snabbpid) {
+    print "cleanup for $id\n";
+    my $f1 = sprintf("snabbvmx-lwaftr-%s.cfg", $id);
+    unlink "snabbvmx-lwaftr-$id.cfg";
+    unlink "snabbvmx-lwaftr-$id.conf";
+    if ($snabbpid{$id} > 0) {
+      print "send TERM to snabb process for $id. Has no longer a lwaftr config\n";
+      `kill -TERM $snabbpid{$id}`;
+    }
+  }
+}
 #===============================================================
 # main()
 #===============================================================
@@ -380,6 +520,7 @@ while (defined($line=<CMD>)) {
   if ($line =~ /<syslog-events>/ or $line =~ /UI_COMMIT_COMPLETED/) {
     print("check for config change...\n");
     &check_config($ip, $identity);
+    &check_config_packetblaster($ip, $identity);
   }
 }
 close CMD;

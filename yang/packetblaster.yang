@@ -1,0 +1,80 @@
+module packetblaster {
+
+  yang-version "1";
+  namespace "http://yang.juniper.net/customyang/packetblaster";
+  prefix "packetblaster";
+
+  import ietf-inet-types {prefix inet; }
+  import ietf-yang-types {prefix yang; }
+
+  organization
+    "Juniper Networks";
+
+  description
+    "A demo custom Yang module for snabb packetblaster";
+
+  revision "2017-03-11" {
+    description
+      "Initial revision";
+  }
+
+  container instances {
+    list instance {
+      key "id";
+      leaf id {
+        type uint16;
+        mandatory true;
+        description "An instance identifier.";
+      }
+      leaf vlan {
+        description "Optional VLAN Id";
+        type uint16 {
+          range 0..4094;
+        }
+      }
+      container lwaftr {
+        description "Configure lwaftr packet generator";
+        leaf ipv4_address {
+          type inet:ipv4-address;
+          mandatory true;
+          description "Packets with this destination IPv4 address bypass the tunnel and are sent to vMX instead";
+        }
+        leaf b4_ipv6_address {
+          type inet:ipv6-address;
+          mandatory true;
+          description "Start B4 client IPv6 address";
+        }
+        leaf b4_ipv4_address {
+          type inet:ipv4-address;
+          mandatory true;
+          description "Start B4 client IPv4 address";
+        }
+        leaf b4_port {
+          type uint16;
+          mandatory true;
+          description "Start Port number. Incremented by the the same port number, then rollover to next IPv4";
+        }
+        leaf aftr_ipv6_address {
+          type inet:ipv6-address;
+          mandatory true;
+          description "IPv6 address of lwaftr server (softwire tunnel endpoint)";
+        }
+        leaf count {
+          type uint32;
+          mandatory true;
+          description "Number of B4 clients to simulate.";
+        }
+        leaf rate {
+          type int32;
+          mandatory true;
+          description "Rate in kPPS for the generated traffic. Fractions are allowed (e.g. 3148 for IMIX line rate).";
+        }
+        leaf packet_size {
+          type string;
+          description "Comma seperated list of packet sizes. Defaults to 64,64,64,64,64,64,64,594,594,594,1500 (IMIX)";
+        }
+      }
+    }    
+  }
+}
+

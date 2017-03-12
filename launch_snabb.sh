@@ -45,7 +45,11 @@ EOF
   chmod a+rx test_snabb_*sh
 
   echo "launch snabbvmx for $INT on cpu $CORE (node $NODE) after $SLEEP seconds ..."
-  CMD="$NUMACTL $SNABB snabbvmx lwaftr --conf snabbvmx-lwaftr-${INT}.cfg --id $INT --pci $PCI --mac $MAC --sock %s.socket --mirror $INT"
+  if [ -z "`grep lwaftrgen snabbvmx-lwaftr-${INT}.cfg`" ]; then
+    CMD="$NUMACTL $SNABB snabbvmx lwaftr --conf snabbvmx-lwaftr-${INT}.cfg --id $INT --pci $PCI --mac $MAC --sock %s.socket --mirror $INT"
+  else 
+    CMD="$NUMACTL $SNABB snabbvmx lwaftrgen --conf snabbvmx-lwaftr-${INT}.cfg --id $INT --pci $PCI --mac $MAC --sock %s.socket"
+  fi
   echo $CMD
   sleep $SLEEP
   touch /tmp/snabb_${INT}.log
