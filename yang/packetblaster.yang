@@ -49,6 +49,11 @@ module packetblaster {
           mandatory true;
           description "Start B4 client IPv4 address";
         }
+        leaf public_ipv4_address {
+          type inet:ipv4-address;
+          mandatory true;
+          description "Destination Public IPv4 address";
+        }
         leaf b4_port {
           type uint16;
           mandatory true;

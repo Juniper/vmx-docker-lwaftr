@@ -455,7 +455,7 @@ EOF
 vlan_tagging = false,
 count = $instance->{"lwaftr"}{"count"},
 aftr_ipv6 = $instance->{"lwaftr"}{"aftr_ipv6_address"},
-public_ipv4 = 8.8.8.8,
+public_ipv4 = $instance->{"lwaftr"}{"public_ipv4_address"},
 rate = $snabbrate,
 b4_ipv6 = $instance->{"lwaftr"}{"b4_ipv6_address"},
 b4_ipv4 = $instance->{"lwaftr"}{"b4_ipv4_address"},
