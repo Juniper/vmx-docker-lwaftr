@@ -1,4 +1,4 @@
-## Last commit: 2017-03-13 10:48:01 UTC by mwiget
+## Last commit: 2017-03-13 18:30:04 UTC by root
 version 16.1R3.10;
 system {
     host-name lwaftr;
@@ -132,6 +132,18 @@ interfaces {
             }
         }
     }
+    xe-0/0/2 {
+        mtu 9000;
+        unit 0 {
+            description xe2;
+            family inet {
+                address 172.20.0.2/24;
+            }
+            family inet6 {
+                address fd00:4600:1110::2/64;
+            }
+        }
+    }
     fxp0 {
         unit 0 {
             description mgmt;
@@ -153,6 +165,14 @@ interfaces {
 }
 snmp {
     community public;
+}
+forwarding-options {
+    hash-key {
+        family inet {
+            layer-3;
+            layer-4;
+        }
+    }
 }
 routing-options {
     ppm {
@@ -245,6 +265,22 @@ policy-options {
         }
     }
 }
+routing-instances {
+    R1 {
+        instance-type virtual-router;
+        interface xe-0/0/2.0;
+        routing-options {
+            rib R1.inet6.0 {
+                static {
+                    route ::/0 next-hop fd00:4600:1110::1;
+                }
+            }
+            static {
+                route 0.0.0.0/0 next-hop 172.20.0.1;
+            }
+        }
+    }
+}
 ietf-softwire:softwire-config {
     binding {
         br {
@@ -263,8 +299,64 @@ ietf-softwire:softwire-config {
                     jnx-aug-softwire:ipv4_address 172.20.2.16;
                     jnx-aug-softwire:cache_refresh_interval 1;
                 }
+                br-instance 2 {
+                    softwire-num-threshold 4000000;
+                    tunnel-payload-mtu 9000;
+                    tunnel-path-mru 9000;
+                    binding-table {
+                        binding-entry fd00:4600::1001 {
+                            binding-ipv4-addr 193.5.1.2;
+                            port-set {
+                                psid-offset 0;
+                                psid-len 6;
+                                psid 1;
+                            }
+                            br-ipv6-addr fd00:4600:8888::2;
+                        }
+                        binding-entry fd00:4600::1002 {
+                            binding-ipv4-addr 193.5.1.2;
+                            port-set {
+                                psid-offset 0;
+                                psid-len 6;
+                                psid 2;
+                            }
+                            br-ipv6-addr fd00:4600:8888::2;
+                        }
+                        binding-entry fd00:4600::1003 {
+                            binding-ipv4-addr 193.5.1.2;
+                            port-set {
+                                psid-offset 0;
+                                psid-len 6;
+                                psid 3;
+                            }
+                            br-ipv6-addr fd00:4600:8888::2;
+                        }
+                        binding-entry fd00:4600::1004 {
+                            binding-ipv4-addr 193.5.1.2;
+                            port-set {
+                                psid-offset 0;
+                                psid-len 6;
+                                psid 4;
+                            }
+                            br-ipv6-addr fd00:4600:8888::2;
+                        }
+                        binding-entry fd00:4600::1005 {
+                            binding-ipv4-addr 193.5.1.2;
+                            port-set {
+                                psid-offset 0;
+                                psid-len 6;
+                                psid 5;
+                            }
+                            br-ipv6-addr fd00:4600:8888::2;
+                        }
+                    }
+                    jnx-aug-softwire:ipv4_address 172.20.0.2;
+                    jnx-aug-softwire:cache_refresh_interval 1;
+                    jnx-aug-softwire:icmpv6_rate_limiter_n_packets 300000;
+                    jnx-aug-softwire:icmpv6_rate_limiter_n_seconds 4;
+                }
             }
-            jnx-aug-softwire:binding-table-file binding_table_60k.txt;
+            jnx-aug-softwire:binding-table-file binding_table_2m.txt;
         }
     }
 }

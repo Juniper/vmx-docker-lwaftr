@@ -1,4 +1,4 @@
-## Last commit: 2017-03-13 10:50:11 UTC by mwiget
+## Last commit: 2017-03-14 05:01:55 UTC by mwiget
 version 16.1R3.10;
 system {
     host-name lwb4sim;
@@ -139,6 +139,14 @@ interfaces {
 snmp {
     community public;
 }
+forwarding-options {
+    hash-key {
+        family inet {
+            layer-3;
+            layer-4;
+        }
+    }
+}
 routing-options {
     ppm {
         no-delegate-processing;
@@ -247,7 +255,7 @@ packetblaster:instances {
             public_ipv4_address 8.8.8.8;
             b4_port 1024;
             aftr_ipv6_address 2001:db8:ffff::100;
-            count 60000;
+            count 2000000;
             rate 3100;
         }
     }
@@ -259,7 +267,7 @@ packetblaster:instances {
             public_ipv4_address 8.8.8.8;
             b4_port 1024;
             aftr_ipv6_address 2001:db8:ffff::100;
-            count 60000;
+            count 2000000;
             rate 3100;
         }
     }
