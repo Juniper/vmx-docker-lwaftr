@@ -30,9 +30,10 @@ rpc monitor-lwaftr {
         }
     }
 
-    junos:command "monitor lwaftr";
-    junos:action-execute {
-    junos:script "rpc_monitor_lwaftr.py";
+    junos:command "monitor lwaftr" {
+      junos:action-execute {
+        junos:script "rpc_monitor_lwaftr.py";
+      }
     }
 }
 

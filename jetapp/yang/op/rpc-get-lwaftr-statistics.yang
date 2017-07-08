@@ -29,9 +29,10 @@ rpc get-lwaftr-statistics {
             type string;
         }
     }
-    junos:command "show lwaftr statistics";
-    junos:action-execute {
-    junos:script "rpc_get_lwaftr_statistics.py";
+    junos:command "show lwaftr statistics" {
+      junos:action-execute {
+        junos:script "rpc_get_lwaftr_statistics.py";
+      }
     }
     output {
        container statistics {
@@ -685,7 +686,7 @@ rpc get-lwaftr-statistics {
            junos-odl:field "out-ipv6-packets";
        }
        junos-odl:line {
-           junos-odl:field “breaths";
+           junos-odl:field "breaths";
        }
      }
     }

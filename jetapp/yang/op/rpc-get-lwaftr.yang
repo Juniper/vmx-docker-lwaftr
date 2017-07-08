@@ -23,9 +23,10 @@ module rpc-get-lwaftr {
 
 rpc get-lwaftr-state {
     description "Fetch state information of all the Snabb instances";
-    junos:command "show lwaftr state";
-    junos:action-execute {
+    junos:command "show lwaftr state" {
+      junos:action-execute {
         junos:script "rpc_get_lwaftr_state.py";
+      }
      }
      output {
        container instance {
