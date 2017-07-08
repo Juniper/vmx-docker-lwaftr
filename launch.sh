@@ -361,26 +361,30 @@ for DEV in $LIST; do # ============= loop thru interfaces start
   echo "$PCI/$CORE" > /tmp/pci_$INT
   echo "$macaddr" > /tmp/mac_$INT
 
-  TAP="$INTID${INTNR}"    # -> tap/monitor interfaces xe0, xe1 etc
+  TAP="tap${INTNR}"    # -> tap/monitor interfaces tap0, tap1 etc
   ip tuntap add dev $TAP mode tap
-  echo "created tap interface $TAP"
+  ifconfig $TAP up
+  echo "created tap interface $TAP for monitoring"
 
-  NETDEVS="$NETDEVS -chardev socket,id=char$INTNR,path=./${INT}.socket,server \
-        -netdev type=vhost-user,id=net$INTNR,chardev=char$INTNR \
-        -device virtio-net-pci,netdev=net$INTNR,mac=$macaddr"
+  # we run without VM, so the original ethX interface is renamed to ethXin
+  # for snabb and we create a new tap interface with the original ethX name for rio
+ 
+  if [ "eth" == "${PCI:0:3}" ]; then
+    echo "renaming $PCI to $INT ..."
+    mymac=$(ifconfig $PCI |grep HWaddr|awk {'print $5'})
+    ifconfig $PCI down
+    macchanger -A $PCI
+    ip link set $PCI name $INT  # rename ethX to xeX
+    echo "rename done"
+    ifconfig $INT hw ether $mymac up
+  fi
+  ip tuntap add dev $PCI mode tap
+  ifconfig $PCI up
+  echo "$PCI <-> snabbvmx <-> $INT"
 
   INTNR=$(($INTNR + 1))
 done # ===================================== loop thru interfaces done
 echo "Done walking interface list"
-if [ -z "$NETDEVS" ]; then
-  echo "ERROR: no interfaces for vMX found"
-  echo "NETDEVS=$NETDEVS"
-  echo "INTERFACES=$@"
-  echo "ETHLIST=$ETHLIST"
-  echo "specify PCI interface address after the vMX bundle name "
-  echo "or attach docker virtual networks before launching the container"
-  exit 1
-fi
 
 QEMUVCPNUMA="numactl --membind=$NUMANODE"
 if [ ! -z "$QEMUVCPCPUS" ]; then
