@@ -134,6 +134,15 @@ system {
     }
   }
 }
+interfaces {
+lo0 {
+  unit 0 {
+    family inet {
+      address 127.0.0.1/24;
+    }
+  }
+}
+}
 EOF
 
 # auto-add op scripts to config
@@ -369,18 +378,16 @@ for DEV in $LIST; do # ============= loop thru interfaces start
   # we run without VM, so the original ethX interface is renamed to ethXin
   # for snabb and we create a new tap interface with the original ethX name for rio
  
+  ip link add ext$INT type veth peer name $INT
+  ifconfig ext$INT up
+
   if [ "eth" == "${PCI:0:3}" ]; then
-    echo "renaming $PCI to $INT ..."
     mymac=$(ifconfig $PCI |grep HWaddr|awk {'print $5'})
-    ifconfig $PCI down
-    macchanger -A $PCI
-    ip link set $PCI name $INT  # rename ethX to xeX
-    echo "rename done"
+    echo "copy mac address of $PCI to $INT: $mymac"
+    echo "$mymac" > /tmp/mac_$INT
+    ifconfig $INT down
     ifconfig $INT hw ether $mymac up
   fi
-  ip tuntap add dev $PCI mode tap
-  ifconfig $PCI up
-  echo "$PCI <-> snabbvmx <-> $INT"
 
   INTNR=$(($INTNR + 1))
 done # ===================================== loop thru interfaces done

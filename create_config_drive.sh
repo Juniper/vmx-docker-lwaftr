@@ -98,11 +98,11 @@ if [ ! -z "$yangfiles" ]; then
     done
   fi
   cat > config_drive/var/db/vmm/etc/rc.vmm <<EOF
-echo "YANG import started"
+echo "------------> YANG import started"
 ls /var/db/vmm/scripts
-echo "arg=$yangcmd"
-/bin/sh /usr/libexec/ui/yang-pkg add -X -i lwaft $yangcmd
-echo "YANG import completed"
+echo "/bin/sh /usr/libexec/ui/yang-pkg add -X -i lwaftr $yangcmd"
+/bin/sh /usr/libexec/ui/yang-pkg add -X -i lwaftr $yangcmd
+echo "------------> YANG import completed"
 cp /var/etc/mosquitto.conf /var/etc/mosquitto.conf.orig
 cp /var/db/vmm/mosquitto.conf.new /var/etc/mosquitto.conf
 cp /var/db/vmm/scripts/op/* /var/db/scripts/op/

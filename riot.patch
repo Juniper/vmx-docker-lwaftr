@@ -5,7 +5,7 @@
      # Build a list of network interfaces available and skip those
      # we know we don't want to use
 -    local vif_list=$(\ls -1 /sys/class/net/ | grep -v "br\|ext\|^int\|lo\|sit\|tap\|eth0")
-+    local vif_list=$(\ls -1 /sys/class/net/ | grep -v "br\|ext\|^int\|lo\|sit\|tap\|eth0\|em1\|fxp0")
++    local vif_list=$(\ls -1 /sys/class/net/ | grep -v "br\|ext\|^int\|lo\|sit\|tap\|eth\|em1\|fxp0")
      skipped_intf=0
  
      # In case we are using config file to generate pcap intf list.   

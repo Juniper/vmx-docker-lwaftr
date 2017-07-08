@@ -6,6 +6,9 @@ services:
     privileged: true
     tty: true
     stdin_open: true
+    ports:
+      - "1024:22"
+      - "1834:830"
     environment:
       - ID=lwaftr1
       - LICENSE=license-eval.txt
