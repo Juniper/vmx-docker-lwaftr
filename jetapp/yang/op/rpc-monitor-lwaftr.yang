@@ -7,10 +7,6 @@ module rpc-monitor-lwaftr {
   namespace "http://yang.juniper.net/yang/1.1/jrpc";
   prefix jrpc;
 
-  import junos-extension-odl{
-    prefix junos-odl;
-  }
-
   import junos-extension{
     prefix junos;
   }
