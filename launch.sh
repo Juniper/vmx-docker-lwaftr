@@ -136,6 +136,27 @@ system {
 }
 EOF
 
+# auto-add op scripts to config
+opfiles=$(ls /op/*slax)
+if [ ! -z "$opfiles" ]; then
+  cat >> /tmp/$CONFIG <<EOF
+system {
+  scripts {
+    op {
+EOF
+  for file in $opfiles; do
+    file=${file##*/}
+    echo "adding op script $file to config"
+    echo "      file $file;" >> /tmp/$CONFIG
+  done
+  cat >> /tmp/$CONFIG <<EOF
+    }
+    language python;
+  }
+}
+EOF
+fi
+
 # append user provided config. Doing this after our initial settings ubove
 # allows a user to overwrite our defaults, like host-name
 if [ -f /u/$CONFIG ]; then
