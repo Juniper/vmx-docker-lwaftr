@@ -6,6 +6,9 @@ build:	Dockerfile.build
 	docker build -f Dockerfile.build -t build .
 	docker run -ti --rm -v $$PWD:/u build
 
+shell:
+	docker exec -ti $$(docker ps |grep vmxdockerlwaftr|cut -d' ' -f1) bash
+
 b4cpe: b4cpe/Dockerfile
 	$(MAKE) -C b4cpe
 

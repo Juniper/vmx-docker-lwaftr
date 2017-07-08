@@ -1,4 +1,5 @@
 .git
+*.qcow2
 *.orig
 *.img
 snabb/lib

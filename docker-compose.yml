@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  lwaftr1:
+    image: vmx-docker-lwaftr:latest
+    privileged: true
+    tty: true
+    stdin_open: true
+    environment:
+      - ID=lwaftr1
+      - LICENSE=license-eval.txt
+      - IMAGE=junos-vmx-x86-64-17.3B1.1.qcow2
+      - PUBLICKEY=id_rsa.pub
+    volumes:
+      - $PWD:/u:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      net-0:
+      net-1:
+      net-2:
+
+networks:
+  net-0:
+  net-1:
+  net-2:

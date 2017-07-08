@@ -1,9 +1,3 @@
-[submodule "qemu"]
-	path = qemu
-	url = https://github.com/qemu/qemu.git
-[submodule "dumb-init"]
-	path = dumb-init
-	url = https://github.com/Yelp/dumb-init.git
 [submodule "snabb"]
 	path = snabb
 	url = https://github.com/mwiget/snabb.git
