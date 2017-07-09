@@ -100,8 +100,7 @@ sub process_binding_table_file {
 #------------------------------------------------------------------
 #------------------------------------------------------------------
 sub check_config {
-  my ($ip, $identity) = @_;
-  `/usr/bin/ssh -o StrictHostKeyChecking=no -i $identity snabbvmx\@$ip \"show conf ietf-softwire:softwire-config|display json\" > /tmp/config.new1`;
+  `/usr/bin/ssh -o StrictHostKeyChecking=no 128.0.0.1 \"show conf ietf-softwire:softwire-config|display json\" > /tmp/config.new1`;
 
   my $newfile = "/tmp/config.new";
   open NEW, ">$newfile" or die "can't write to file $newfile";
@@ -120,9 +119,9 @@ sub check_config {
     print NEW $_;
     if ($_ =~ /binding-table-file\"\s+:\s+\"([^\"]+)\"/) {
       $file=$1;
-      print("getting file $file from $ip ...\n");
+      print("getting file $file from 128.0.0.1 ...\n");
       my $f="/var/db/scripts/commit/$file";
-      `/usr/bin/scp -o StrictHostKeyChecking=no -i $identity snabbvmx\@$ip:$f .`;
+      `/usr/bin/scp -o StrictHostKeyChecking=no 128.0.0.1:$f .`;
       my $md5sum=`md5sum $file`;
       chomp $md5sum;
       print NEW ",\"md5sum\" : \"$md5sum\"\n";
@@ -353,33 +352,20 @@ EOF
 # main()
 #===============================================================
 
-my $ip = shift;
+my $file = shift;
 
-unless ($ip) {
-  print <<EOF;
-
-Usage: $0 <ip-address> <ssh-private-identity-file>
-       $0 <junos-ietf-softwire-config-file-in-json-format>
-
-EOF
-  exit(1);
-}
-
-my $identity = shift;
-
-if ("" eq $identity && -f $ip) {
-  my $file = $ip;
+if (-f $file) {
   &process_new_config($file);
   exit(0);
 }
 
-open CMD,'-|',"echo '<rpc><get-syslog-events> <stream>messages</stream> <event>UI_COMMIT_COMPLETED</event></get-syslog-events></rpc>'|/usr/bin/ssh -T -s -p830 -o StrictHostKeyChecking=no -i $identity snabbvmx\@$ip netconf" or die $@;
+open CMD,'-|',"echo '<rpc><get-syslog-events> <stream>messages</stream> <event>UI_COMMIT_COMPLETED</event></get-syslog-events></rpc>'|/usr/bin/ssh -T -s -p830 -o StrictHostKeyChecking=no 128.0.0.1 netconf" or die $@;
 my $line;
 while (defined($line=<CMD>)) {
   chomp $line;
   if ($line =~ /<syslog-events>/ or $line =~ /UI_COMMIT_COMPLETED/) {
     print("check for config change...\n");
-    &check_config($ip, $identity);
+    &check_config();
   }
 }
 close CMD;

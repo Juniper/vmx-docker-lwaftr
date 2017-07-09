@@ -1,29 +1,17 @@
 #!/bin/bash
-# Copyright (c) 2016, Juniper Networks, Inc.
+# Copyright (c) 2017, Juniper Networks, Inc.
 # All rights reserved.
 
-MGMTIP=$1
-IDENTITY=$2
-BINDINGS=$3
+BINDINGS=$1
 
-echo "$0: launching snabbvmx manager $MGMTIP $IDENTITY $BINDINGS"
-
-if [ -z "$IDENTITY" ]; then
-  echo "Usage: $0 management-ip-address identity.key"
-  exit 1
-fi
+echo "$0: launching snabbvmx manager $BINDINGS"
 
 if [ -f "$BINDINGS" ]; then
-  /add_bindings.sh $MGMTIP $IDENTITY $BINDINGS 
+  /add_bindings.sh $BINDINGS 
 fi
 
 while :
 do
-  MANAGER=/snabbvmx_manager.pl
-  if [ -f /u/snabbvmx_manager.pl ]; then
-     cp /u/snabbvmx_manager.pl /tmp/ 2>/dev/null
-     MANAGER=/tmp/snabbvmx_manager.pl
-  fi
-  $MANAGER $MGMTIP $IDENTITY
+  /snabbvmx_manager.pl
   sleep 5
 done

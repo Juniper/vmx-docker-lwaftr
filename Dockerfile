@@ -9,7 +9,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update && apt-get install -y -q qemu-kvm qemu-utils dosfstools pwgen \
     openssh-client bridge-utils ethtool bsdmainutils wget ca-certificates patch \
     rsh-client psmisc libpcap0.8 iputils-arping pciutils tcpdump macchanger \
-    python-twisted mosquitto-clients python-setuptools numactl \
+    python-twisted mosquitto-clients python-setuptools numactl libjson-xs-perl \
     libc6:i386 libncurses5:i386 libstdc++6:i386 \
     --no-install-recommends \
   && echo "dash dash/sh boolean false" | debconf-set-selections \

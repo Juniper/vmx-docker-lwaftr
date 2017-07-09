@@ -24,7 +24,7 @@ ls /u
 
 echo "Launching with arguments: $@"
 
-while getopts "h?V:m:c:l:p:I:R:d" opt; do
+while getopts "h?V:m:c:l:p:R:d" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -39,8 +39,6 @@ while getopts "h?V:m:c:l:p:I:R:d" opt; do
     l)  LICENSE=$OPTARG
       ;;
     p)  PUBLICKEY=$OPTARG
-      ;;
-    I)  IDENTITY=$OPTARG
       ;;
     R)  QEMUVCPCPUS=$OPTARG
       ;;
@@ -109,6 +107,7 @@ echo "ethernet interfaces: $ethlist"
 echo "creating ssh public/private keypair to communicate with Junos"
 ssh-keygen -t rsa -f /root/.ssh/id_rsa -N ''
 JETPUBKEY=$(cat /root/.ssh/id_rsa.pub)
+IDENTITY="/root/.ssh/id_rsa"
 
 if [ ! -f "/u/$PUBLICKEY" ]; then
   echo "WARNING: Can't read ssh public key file $PUBLICKEY"
@@ -436,20 +435,14 @@ for INT in $INTLIST; do
   cd /tmp && numactl --membind=$NUMANODE /launch_snabb.sh $INT &
 done
 
-
 export PFE_SRC
 sh /start_pfe.sh &
 
-if [ ! -z "${JETUSER}${IDENTITY}" ]; then
-  if [ -z "$JETUSER" ]; then
-    cd /tmp && numactl --membind=$NUMANODE /launch_snabbvmx_manager.sh $MGMTIP $IDENTITY $BINDINGS &
-  else
-    cd /tmp && numactl --membind=$NUMANODE /launch_jetapp.sh $MGMTIP $JETUSER $JETPASS &
-  fi
-  # no longer required. JET daemon on Junos does the job now
-  # cd /tmp && numactl --membind=$NUMANODE /launch_snabb_query.sh $MGMTIP $IDENTITY &
-  cd /tmp && /launch_opserver.sh &
-fi
+echo "launching JET opserver ..."
+cd /tmp && /launch_opserver.sh &
+
+echo "launching snabbvmx_manager.pl ..."
+cd /tmp && /launch_snabbvmx_manager.sh 128.0.0.1 $IDENTITY $BINDINGS &
 
 cd /tmp
 qemu-system-x86_64 -M pc --enable-kvm -cpu host -smp $VCPU -m $VCPMEM \
