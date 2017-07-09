@@ -1,4 +1,4 @@
-# Copyright (c) 2016, Juniper Networks, Inc.
+# Copyright (c) 2017, Juniper Networks, Inc.
 # All rights reserved.
 
 FROM ubuntu:14.04
@@ -31,17 +31,12 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs)  stable" \
     && apt-get update && apt-get -y -q --no-install-recommends install docker-ce
 
+# dumb-init
+COPY dumb-init/dumb-init /usr/bin/
+
 # python-tools
 COPY python-tools.tgz /
 RUN tar zxf python-tools.tgz && rm python-tools.tgz 
-
-ENV TINI_VERSION v0.15.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini.asc /tini.asc
-RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 \
-  && gpg --verify /tini.asc
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--"]
 
 # Snabb
 COPY snabb/src/snabb /usr/local/bin/
@@ -76,4 +71,5 @@ RUN date >> /VERSION
 
 VOLUME /u /var/run/docker.sock
 
-CMD ["/tini", "/launch.sh"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+CMD ["/usr/bin/dumb-init", "/launch.sh"]

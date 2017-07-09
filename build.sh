@@ -20,3 +20,9 @@ make
 md5sum src/snabb
 echo "done"
 
+echo ""
+echo "-------------------------"
+echo "building dumb-init ..."
+cd /u/dumb-init
+CC=musl-gcc make
+echo "done."
