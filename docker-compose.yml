@@ -24,6 +24,17 @@ services:
       net-2:
         ipv4_address: 172.20.2.16
 
+  packetblaster:
+    build: packetblaster/
+    privileged: true
+    tty: true
+    stdin_open: true
+    command: --b4 2001:db8::40,10.10.0.0,1024 --aftr 2001:db8:ffff::100 --count 60000 --rate 0.010 --size 128
+    depends_on:
+      - lwaftr
+    networks:
+      net-1:
+
 networks:
   net-0:
   net-1:
