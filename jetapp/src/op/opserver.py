@@ -33,7 +33,8 @@ def Main():
 
     except Exception as e:
         # log device initialization failed
-        LOG.critical("JET app exiting due to exception: %s" %str(e.message))
+        print("JET app exiting due to exception: %s" %str(e.message))
+#        LOG.critical("JET app exiting due to exception: %s" %str(e.message))
         os._exit(0)
     return
 

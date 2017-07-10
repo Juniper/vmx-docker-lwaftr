@@ -6,6 +6,7 @@ __copyright__ = "Copyright (c) 2015 Juniper Networks, Inc."
 This script will be used by the yang file for retrieving the statistics
 """
 import sys
+import os
 import xmlrpclib
 import xml.etree.ElementTree as ET
 

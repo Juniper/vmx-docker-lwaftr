@@ -32,7 +32,7 @@ class OpServer():
     def lwaftr(self):
 	print "Called for lwaftr service"
         try:
-            rpcclient = TimeoutServerProxy('http://128.0.0.100:9191', timeout=5)
+            rpcclient = TimeoutServerProxy('http://128.0.0.16:9191', timeout=5)
             output = ''
             output = rpcclient.lwaftr()
         except Exception as e:
@@ -42,7 +42,7 @@ class OpServer():
     def top(self, instance_id):
 	print "Called for top output"
 	try:
-	    rpcclient = TimeoutServerProxy('http://128.0.0.100:9191', timeout=5)
+	    rpcclient = TimeoutServerProxy('http://128.0.0.16:9191', timeout=5)
 	    output = ''
 	    output = rpcclient.top(instance_id)
 	except Exception as e:
@@ -68,7 +68,7 @@ def poll_snabb():
     """
     while True:
         try:
-            rpcclient = TimeoutServerProxy('http://128.0.0.100:9191', timeout=5)
+            rpcclient = TimeoutServerProxy('http://128.0.0.16:9191', timeout=5)
             output = ''
             output = rpcclient.lwaftr()
         except Exception as e:
@@ -85,7 +85,7 @@ def poll_snabb():
 class MyHTTPConnect(httplib.HTTPConnection):
     def __init__(self, host, port=None, strict=None,
 		timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
-        self.host = '128.0.0.100'
+        self.host = '128.0.0.16'
         self.port = 9191
         HTTPConnection.__init__(self,host, port, strict, timeout);
 

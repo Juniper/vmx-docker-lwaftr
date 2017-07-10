@@ -141,6 +141,16 @@ system {
       any notice;
     }
   }
+  extensions {
+    extension-service {
+      application {
+        file rpc-jet.py {
+          daemonize;
+          username root;
+        }
+      }
+    }
+  }
 }
 interfaces {
 lo0 {
@@ -448,6 +458,7 @@ echo "launching snabbvmx_manager.pl ..."
 cd /tmp && /launch_snabbvmx_manager.sh 128.0.0.1 $IDENTITY $BINDINGS &
 
 cd /tmp
+
 qemu-system-x86_64 -M pc --enable-kvm -cpu host -smp $VCPU -m $VCPMEM \
   -smbios type=0,vendor=Juniper \
   -smbios type=1,manufacturer=VMX,product=VM-vcp_vmx1-161-re-0,version=0.1.0 \
