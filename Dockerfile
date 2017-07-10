@@ -62,7 +62,7 @@ COPY snmp/snmp_lwaftr.slax snmp/lw4over6.py snmp/
 COPY launch.sh launch_snabb.sh top.sh topl.sh README.md VERSION \
   launch_jetapp.sh launch_opserver.sh create_config_drive.sh \
   launch_snabbvmx_manager.sh snabbvmx_manager.pl show_affinity.sh \
-  add_bindings.sh launch_snabb_query.sh \
+  add_bindings.sh \
   riot.patch start_pfe.sh fix_network_order.sh /
 
 RUN chmod a+rx /*.sh
