@@ -33,15 +33,14 @@ interfaces {
     ge-0/0/0 {
         mtu 9000;
         unit 0 {
-            description xe0;
             family inet {
                 address 172.20.1.16/24 {
-                    arp 172.20.1.1 mac 02:02:02:02:02:02;
+                    arp 172.20.1.100 mac 02:02:02:02:02:02;
                 }
             }
             family inet6 {
                 address fd00:4601::16/64 {
-                    ndp fd00:4601::1 mac 02:02:02:02:02:02;
+                    ndp fd00:4601::100 mac 02:02:02:02:02:02;
                 }
             }
         }
@@ -52,12 +51,12 @@ interfaces {
             description xe1;
             family inet {
                 address 172.20.2.16/24 {
-                    arp 172.20.2.1 mac 02:02:02:02:02:02;
+                    arp 172.20.2.100 mac 02:02:02:02:02:02;
                 }
             }
             family inet6 {
                 address fd00:4602::16/64 {
-                    ndp fd00:4602::1 mac 02:02:02:02:02:02;
+                    ndp fd00:4602::100 mac 02:02:02:02:02:02;
                 }
             }
         }
@@ -69,11 +68,11 @@ snmp {
 routing-options {
     rib inet6.0 {
         static {
-            route ::/0 next-hop fd00:4601::1;
+            route ::/0 next-hop fd00:4601::100;
         }
     }
     static {
-        route 0.0.0.0/0 next-hop 172.20.1.1;
+        route 0.0.0.0/0 next-hop 172.20.1.100;
     }
 }
 routing-instances {
@@ -83,11 +82,11 @@ routing-instances {
         routing-options {
             rib R1.inet6.0 {
                 static {
-                    route ::/0 next-hop fd00:4602::1;
+                    route ::/0 next-hop fd00:4602::100;
                 }
             }
             static {
-                route 0.0.0.0/0 next-hop 172.20.2.1;
+                route 0.0.0.0/0 next-hop 172.20.2.100;
             }
         }
     }
