@@ -48,7 +48,6 @@ interfaces {
     ge-0/0/1 {
         mtu 9000;
         unit 0 {
-            description xe1;
             family inet {
                 address 172.20.2.16/24 {
                     arp 172.20.2.100 mac 02:02:02:02:02:02;
