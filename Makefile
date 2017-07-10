@@ -5,6 +5,7 @@ build:	Dockerfile.build
 	docker build -f Dockerfile.build -t build .
 	docker run -ti --rm -v $$PWD:/u build
 	docker build -t $$(cat VERSION) .
+	docker-compose build
 
 up:
 	docker-compose up -d
