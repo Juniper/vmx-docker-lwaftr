@@ -13,5 +13,6 @@ fi
 while :
 do
   /snabbvmx_manager.pl
+  echo "snabbvmx_manager.pl terminated. Restarting in 5 seconds ..."
   sleep 5
 done

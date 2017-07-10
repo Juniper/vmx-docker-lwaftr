@@ -1,28 +1,36 @@
 version: "3"
 
 services:
-  lwaftr1:
+  lwaftr:
     image: vmx-docker-lwaftr:latest
     privileged: true
     tty: true
     stdin_open: true
     ports:
-      - "1024:22"
-      - "1834:830"
+      - "22"
+      - "830"
     environment:
-      - ID=lwaftr1
       - LICENSE=license-eval.txt
       - IMAGE=junos-vmx-x86-64-17.3B1.1.qcow2
       - PUBLICKEY=id_rsa.pub
+      - CONFIG=lwaftr.conf.txt
     volumes:
       - $PWD:/u:ro
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       net-0:
       net-1:
+        ipv4_address: 172.20.1.16
       net-2:
+        ipv4_address: 172.20.2.16
 
 networks:
   net-0:
   net-1:
+    ipam:
+      config:
+        - subnet: 172.20.1.0/24
   net-2:
+    ipam:
+      config:
+        - subnet: 172.20.2.0/24

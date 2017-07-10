@@ -6,7 +6,6 @@
 
 VCPMEM="${VCPMEM:-1024}"
 VCPU="${VCPU:-1}"
-ID="${ID:-$HOSTNAME}"
 NUMANODE="${NUMANOdE:-0}"
 
 echo 1 > /var/jnx/docker
@@ -72,8 +71,13 @@ ROOTPASSWORD=$(pwgen 24 1)
 SALT=$(pwgen 8 1)
 HASH=$(openssl passwd -1 -salt $SALT $ROOTPASSWORD)
 myip=$(ifconfig eth0|grep 'inet addr'|cut -d: -f2|awk '{print $1}')
+# extract container name via id
+hostname=$(docker ps --format '{{.Names}}' -f id=$HOSTNAME)
+hostname="${hostname:-$HOSTNAME}" # in case the name extract magic failed
+id=$(echo $hostname|rev | cut -d'_' -f 1 | rev)   # get index, e.g. 3 from vmxdockerlight_vmx_3
+export myip hostname id
 echo "-----------------------------------------------------------------------"
-echo "vMX $ID ($myip) root password to $ROOTPASSWORD"
+echo "vMX $hostname ($myip) root password to $ROOTPASSWORD"
 echo "-----------------------------------------------------------------------"
 echo ""
 
@@ -118,7 +122,7 @@ fi
 
 cat > /tmp/$CONFIG <<EOF
 system {
-  host-name $ID;
+  host-name $hostname;
   root-authentication {
     encrypted-password "$HASH";
     ssh-rsa "$SSHPUBLIC";
@@ -130,6 +134,11 @@ system {
     }
     netconf {
       ssh;
+    }
+  }
+  syslog {
+    file messages {
+      any notice;
     }
   }
 }
@@ -163,12 +172,6 @@ EOF
   }
 }
 EOF
-fi
-
-# append user provided config. Doing this after our initial settings ubove
-# allows a user to overwrite our defaults, like host-name
-if [ -f /u/$CONFIG ]; then
-  cat /u/$CONFIG >> /tmp/$CONFIG
 fi
 
 if [ ! -z "$SSHPUBLIC" ]; then

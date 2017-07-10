@@ -100,7 +100,7 @@ sub process_binding_table_file {
 #------------------------------------------------------------------
 #------------------------------------------------------------------
 sub check_config {
-  `/usr/bin/ssh -o StrictHostKeyChecking=no 128.0.0.1 \"show conf ietf-softwire:softwire-config|display json\" > /tmp/config.new1`;
+  `/usr/bin/ssh -o StrictHostKeyChecking=no 128.0.0.1 \"cli show conf ietf-softwire:softwire-config\\|display json\" > /tmp/config.new1`;
 
   my $newfile = "/tmp/config.new";
   open NEW, ">$newfile" or die "can't write to file $newfile";
@@ -355,6 +355,7 @@ EOF
 my $file = shift;
 
 if (-f $file) {
+
   &process_new_config($file);
   exit(0);
 }
