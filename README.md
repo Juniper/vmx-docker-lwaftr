@@ -9,15 +9,9 @@ Consult the Juniper White Paper on [vMX Lightweight 4over6 Virtual Network Funct
 
 The Container vmx-docker-lwaftr is based on the official Ubuntu Docker 14.04.5 base Container and includes the following elements:
 
-* Qemu 2.4.1 with reconnect patch downloaded and built from source in qemu/
-* Snabb, downloaded and built from source in snabb/
+* Qemu 
+* Snabb
 * JET Python Client Library
-
-The build process requires a Docker Engine and the make tool. Please follow the official 
-[Install Docker Engine on Linux](https://docs.docker.com/engine/installation/linux/) guide. Docker engine 1.12.1 
-or newer is required to run the lwaftr1 simulation in the tests directory. 
-
-The Qemu patch used to build Qemu comes from https://github.com/snabbco/snabb/pull/332. 
 
 Clone the repo with submodules:
 
@@ -31,29 +25,18 @@ Or to clone a specific version by tag, use git option '-b' to specify a specific
 git clone -b v1.2.0 https://github.com/juniper/vmx-docker-lwaftr
 ```
 
-A single top level execution of make will build Snabb, Qemu and, dumb-init with a temporary build container and create the vmx-docker-lwaftr Docker container plus the b4cpe client simulator container.
+A single top level execution of make will build the containers for vmx-docker-lwaftr and packetblaster. Check the Makefile on how to use docker-compose build directly.
 
 ```
 make
 ```
 
-The name and version of the Container can be found the toplevel file VERSION:
-
 ```
-$ cat VERSION
-vmx-docker-lwaftr:v1.2.0
-```
-
-```
-$ mwiget@st:~/vmx-docker-lwaftr$ docker images
-REPOSITORY              TAG                 IMAGE ID            CREATED              SIZE
-vmx-docker-lwaftr       v1.2.0               2779b5c29172        About a minute ago   253.2 MB
-buildqemu               latest              dfcbe71b7896        2 minutes ago        432.5 MB
-buildsnabb              latest              60f090d9d3e0        4 minutes ago        344.7 MB
-build-dumb-init         latest              866eb14689e5        6 minutes ago        347.8 MB
-b4cpe                   v0.1                fb4f557e6249        3 days ago           258.6 MB
-ubuntu                  14.04.4             38c759202e30        10 weeks ago         196.6 MB
-...
+$ docker images |head
+REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
+vmxdockerlwaftr_packetblaster        latest              2779cc4e2b4e        9 minutes ago       8.24MB
+vmxdockerlwaftr_lwaftr               latest              407b7c3f1128        25 minutes ago      525MB...
+vmxdockerlwaftr_b4cpe                latest              b24271e3fd10        3 seconds ago       260MB
 ```
 
 The image build be removed via 'make clean' from the qemu, respectively snabb directory. Only the 'vmx-docker-lwaftr' Container is required.

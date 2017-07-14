@@ -19,9 +19,6 @@ attach:
 	./getpass.sh | grep lwaftr
 	docker attach $$(docker ps |grep _lwaftr|cut -d' ' -f1) 
 
-b4cpe: b4cpe/Dockerfile
-	$(MAKE) -C b4cpe
-
 clean:
 	docker rmi `docker images | grep "^<none>" | awk '{print $$3}'` 2>/dev/null || true
 

@@ -35,6 +35,17 @@ services:
     networks:
       net-1:
 
+  b4cpe:
+    build: b4cpe/
+    privileged: true
+    tty: true
+    stdin_open: true
+    command: 193.5.1.2 1024-2047 fd00:4600::1 fd00:4600:8888::2
+    depends_on:
+      - lwaftr
+    networks:
+      net-2:
+
 networks:
   net-0:
   net-1:
