@@ -13,11 +13,11 @@ down:
 	docker-compose down
 
 shell:
-	docker exec -ti $$(docker ps |grep lwaftr|cut -d' ' -f1) bash
+	docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) bash
 
 attach:
 	./getpass.sh | grep lwaftr
-	docker attach $$(docker ps |grep lwaftr|cut -d' ' -f1) 
+	docker attach $$(docker ps |grep _lwaftr|cut -d' ' -f1) 
 
 b4cpe: b4cpe/Dockerfile
 	$(MAKE) -C b4cpe
