@@ -9,8 +9,6 @@ VCPU="${VCPU:-1}"
 NUMANODE="${NUMANOdE:-0}"
 
 echo 1 > /var/jnx/docker
-JUNOSDIR=/home/pfe/junos
-PFE_SRC=/usr/share/pfe
 
 echo -n "Juniper Networks vMX lwaftr Docker Container "
 cat /VERSION
@@ -238,7 +236,7 @@ for eth in $ethlist; do
   if [ "eth0" == $eth ]; then
     mygw=$(ip -4 route list 0/0 |cut -d' ' -f3)
     mymac=$(ifconfig $eth |grep HWaddr|awk {'print $5'})
-    echo "Bridging $eth ($myipmask/$mymac) with fxp0"
+    echo "Bridging $eth ($myipmask/$mymac) with fxp0 (mygw $mygw)"
     brctl addbr br-ext
     ip link set up br-ext
     ip tuntap add dev fxp0 mode tap
@@ -274,14 +272,23 @@ EOF
   ip addr flush dev $eth
 done
 
-cat >> /tmp/$CONFIG <<EOF
+if [ ! -z "$mygw" ]; then
+  cat >> /tmp/$CONFIG <<EOF
     }
     routing-options {
-      static {
-        route 0.0.0.0/0 next-hop $mygw;
-      }
-    }
-  }
+     static {
+       route 0.0.0.0/0 next-hop $mygw;
+     }
+   }
+EOF
+else
+  cat >> /tmp/$CONFIG <<EOF
+     }
+   }
+EOF
+fi
+
+cat >> /tmp/$CONFIG <<EOF
 }
 apply-groups docker-networking;
 EOF

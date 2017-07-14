@@ -1,4 +1,4 @@
-version: "3"
+version: "2.1"
 
 services:
   lwaftr:
@@ -35,16 +35,17 @@ services:
     networks:
       net-1:
 
-  b4cpe:
+  b4cpe1:
     build: b4cpe/
     privileged: true
     tty: true
     stdin_open: true
-    command: 193.5.1.2 1024-2047 fd00:4600::1 fd00:4600:8888::2
+    command: 193.5.1.2 1024-2047 fd00:4602::1 fd00:4602:8888::2
     depends_on:
       - lwaftr
     networks:
       net-2:
+        ipv6_address: fd00:4602::1001
 
 networks:
   net-0:
@@ -53,6 +54,9 @@ networks:
       config:
         - subnet: 172.20.1.0/24
   net-2:
+    enable_ipv6: true
     ipam:
       config:
         - subnet: 172.20.2.0/24
+          gateway: 172.20.2.1
+        - subnet: fd00:4602::/64

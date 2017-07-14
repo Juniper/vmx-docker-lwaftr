@@ -3,6 +3,7 @@
 # All rights reserved.
 #
 
+PFE_SRC=/usr/share/pfe
 
 # Start broadcasting Gratuitous ARP and ping
 #  required to keep VCP arp table up-to-date
@@ -20,7 +21,7 @@ echo "Done [$(($end - $start))s]"
 
 # patch riot to allow macvlan interfaces too
 echo "patching riot.tgz ..."
-cd tmp
+cd /tmp
 rcp 128.0.0.1:/usr/share/pfe/riot_lnx.tgz .
 tar zxf riot_lnx.tgz
 patch -p0 < /riot.patch
