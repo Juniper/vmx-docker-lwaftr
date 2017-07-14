@@ -2,7 +2,7 @@ version: "3"
 
 services:
   lwaftr:
-    image: vmx-docker-lwaftr:latest
+    build: src/
     privileged: true
     tty: true
     stdin_open: true

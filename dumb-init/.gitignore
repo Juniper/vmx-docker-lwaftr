@@ -1,0 +1,9 @@
+dumb-init
+dist/
+*.deb
+*.egg-info
+.tox
+build/
+__pycache__/
+*.py[cod]
+.cache

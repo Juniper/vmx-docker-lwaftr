@@ -22,13 +22,13 @@ The Qemu patch used to build Qemu comes from https://github.com/snabbco/snabb/pu
 Clone the repo with submodules:
 
 ```
-git clone --recursive https://github.com/Juniper/vmx-docker-lwaftr
+git clone https://github.com/Juniper/vmx-docker-lwaftr
 ```
 
 Or to clone a specific version by tag, use git option '-b' to specify a specific tag:
 
 ```
-git clone --recursive -b v1.1.19 https://github.com/juniper/vmx-docker-lwaftr
+git clone -b v1.2.0 https://github.com/juniper/vmx-docker-lwaftr
 ```
 
 A single top level execution of make will build Snabb, Qemu and, dumb-init with a temporary build container and create the vmx-docker-lwaftr Docker container plus the b4cpe client simulator container.

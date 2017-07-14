@@ -1,13 +1,14 @@
 ## v1.2.0:
 
 - Native forwarding engine (riot). Requires Junos 17.3
+- Replaced submodules with build stages in Dockerfile (no more git --recursive)
+- Using docker-compose to build and run
 - No longer custom compile qemu, using ubuntu package (it was required for VFP, which has 
   been replaced with riot running native in the container
 - Specify junos-vmx-x86-64-17.3B1.1.qcow2 image instead of vmx-bundle for faster startup
 - No longer requires identity private ssh key: auto-generates unique ssh pair at startup
   to communicate between the JET apps and Junos
 - auto-provision interface IP for virtual interfaces and loopback 
-
 
 ## v1.1.21:
 
