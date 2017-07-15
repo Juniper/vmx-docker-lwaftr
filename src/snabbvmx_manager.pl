@@ -92,7 +92,7 @@ sub process_binding_table_file {
   copy $btfsourcenew, $btfsource;
   # trigger binding table compilation
   print "Binding table $btfsource changed. Recompiling ...";
-  `/usr/local/bin/snabb lwaftr compile-binding-table $btfsource`;
+  `snabb lwaftr compile-binding-table $btfsource`;
   print "done.\n\n";
   return 1;
 } # /process_binding_table_file/
@@ -131,7 +131,7 @@ sub check_config {
   close IP;
   close NEW;
 
-  my $delta = `/usr/bin/diff /tmp/config.new /tmp/config.old 2>&1`;
+  my $delta = `diff /tmp/config.new /tmp/config.old 2>&1`;
   if ($delta eq "") {
     print("snabbvmx_manager: no config change related to snabbvmx found\n");
   } else {
@@ -321,7 +321,7 @@ EOF
         # reload binding table
         if ($psid) {
           print "forcing binding table reload for $id ($psid)\n";
-          `/usr/local/bin/snabb lwaftr control $psid reload`;
+          `snabb lwaftr control $psid reload`;
         }
       }
 

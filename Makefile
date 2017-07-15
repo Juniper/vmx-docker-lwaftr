@@ -9,6 +9,9 @@ up: build
 ps:
 	docker-compose ps
 
+logs:
+	docker logs $$(docker ps |grep _lwaftr|cut -d' ' -f1)
+
 down:
 	docker-compose down
 
@@ -20,5 +23,5 @@ attach:
 	docker attach $$(docker ps |grep _lwaftr|cut -d' ' -f1) 
 
 clean:
-	docker rmi `docker images | grep "^<none>" | awk '{print $$3}'` 2>/dev/null || true
+	docker system prune -f
 

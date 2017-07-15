@@ -71,7 +71,6 @@ RUN buildDeps='gcc libc6-dev make git python-pip python-dev' \
 
 COPY yang/ietf-inet-types.yang yang/ietf-yang-types.yang \
   yang/ietf-softwire.yang \
-  jetapp/yang/op/junos-extension.yang jetapp/yang/op/junos-extension-odl.yang \
   jetapp/yang/op/rpc-get-lwaftr.yang jetapp/yang/op/rpc-get-lwaftr-statistics.yang \
   jetapp/yang/op/rpc-monitor-lwaftr.yang \
   yang/jnx-aug-softwire.yang yang/jnx-softwire-dev.yang yang/
