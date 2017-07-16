@@ -202,7 +202,6 @@ If one of the instances is down, check its log file. For the main vmxdockerlwaft
 
 ```
 $ make logs
-$ make logs
 docker logs -f $(docker ps -a|grep _lwaftr|cut -d' ' -f1)
 Juniper Networks vMX lwaftr Docker Container Sun Jul 16 14:12:59 UTC 2017
 
@@ -342,5 +341,16 @@ out-ipv6-packets: 9
 xe2: lwAFTR operational counters (non-zero)
 
 xe3: lwAFTR operational counters (non-zero)
+```
+
+The counters can also be checked, in a different format, on the vMX CLI:
+
+```
+root@vmxdockerlwaftr_lwaftr_1> op lwaftr
+Id  Pid   Nexthop v4        Nexthop v6           rxPackets   txPackets   rxDrops   txDrops
+0   971   02:42:ac:14:01:fe 02:42:ac:14:01:fe     32281024    32281050                   0
+1   991   00:00:00:00:00:00 00:00:00:00:00:00           43         811                   0
+2   995   00:00:00:00:00:00 00:00:00:00:00:00            0         125         0         0
+3   1022  00:00:00:00:00:00 00:00:00:00:00:00            0         125         0         0
 ```
 
