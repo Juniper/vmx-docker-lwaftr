@@ -11,6 +11,7 @@ Consult the Juniper White Paper on [vMX Lightweight 4over6 Virtual Network Funct
 - Linux kernel 3.13.0+, e.g. as part of Ubuntu 14.04+ or any other Linux distribution
 - [Docker Engine 1.12.0+](https://docs.docker.com/engine/installation/)
 - [Docker Compose 1.14.0](https://docs.docker.com/compose/install/)
+- make (install this e.g. via sudo apt-get make)
 
 ## Build instructions
 
