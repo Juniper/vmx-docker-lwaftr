@@ -1,4 +1,4 @@
-all: build b4cpe
+all: build 
 
 build:	src/Dockerfile
 	docker-compose build
@@ -50,6 +50,9 @@ shell:
 attach:
 	./getpass.sh | grep lwaftr
 	docker attach $$(docker ps |grep _lwaftr|cut -d' ' -f1) 
+
+cpe:
+	docker exec -ti $$(docker ps | grep b4cpe|cut -d' ' -f1) bash
 
 clean:
 	docker system prune -f
