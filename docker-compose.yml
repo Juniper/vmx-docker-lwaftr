@@ -14,6 +14,7 @@ services:
       - IMAGE=junos-vmx-x86-64-17.3B1.1.qcow2
       - PUBLICKEY=id_rsa.pub
       - CONFIG=lwaftr.conf.txt
+      - INTERFACES=0000:03:00.0/10 0000:04:00.0/12
     volumes:
       - $PWD:/u:ro
       - /var/run/docker.sock:/var/run/docker.sock

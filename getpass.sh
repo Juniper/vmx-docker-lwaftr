@@ -2,9 +2,9 @@
 # Copyright (c) 2017, Juniper Networks, Inc.
 # All rights reserved.
 #
-# simple script to extract root passwords from vmx log file
+# simple script to extract root passwords from lwaftr log file
 
-list=$(docker ps --format '{{.Names}}' | grep vmx)
+list=$(docker ps --format '{{.Names}}' | grep _lwaftr)
 for vmx in $list; do
   pass=$(docker logs $vmx | grep ' password ')
 #  docker inspect $vmx --format '{{.NetworkSettings.IPAddress}}'

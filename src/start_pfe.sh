@@ -4,6 +4,7 @@
 #
 
 PFE_SRC=/usr/share/pfe
+echo 1 > /var/jnx/docker
 
 # Start broadcasting Gratuitous ARP and ping
 #  required to keep VCP arp table up-to-date

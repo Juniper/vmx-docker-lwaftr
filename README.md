@@ -5,18 +5,32 @@ The vmx-docker-lwaftr Docker Container contains everything thats required to suc
 
 Consult the Juniper White Paper on [vMX Lightweight 4over6 Virtual Network Function](https://www.juniper.net/assets/us/en/local/pdf/whitepapers/2000648-en.pdf) for a solution overview and listen to the podcast on Software Gone Wild by Ivan Pepelnjak, Dec 2016: [Blog](http://blog.ipspace.net/2016/12/snabb-switch-with-vmx-control-plane-on.html), [MP3](http://stream.ipspace.net/nuggets/podcast/Show_68-lwAFTR_Snabb_Data_Plane_with_vMX_Control_Plane.mp3).
 
+## Requirements
+
+- [Juniper vMX 17.3 or newer](http://www.juniper.net/support/downloads/?p=vmx)
+- Linux kernel 3.13.0+, e.g. as part of Ubuntu 14.04+ or any other Linux distribution
+- [Docker Engine 1.12.0+](https://docs.docker.com/engine/installation/)
+- [Docker Compose 1.14.0](https://docs.docker.com/compose/install/)
+
 ## Build instructions
 
-The Container vmx-docker-lwaftr is based on the official Ubuntu Docker 14.04.5 base Container and includes the following elements:
+The Container vmx-docker-lwaftr is based on the official Ubuntu Docker 14.04 base Container and includes the following elements:
 
 * Qemu 
 * Snabb
 * JET Python Client Library
 
-Clone the repo with submodules:
+Starting with version 1.2.0, the build process has been simplified, thanks to docker-compose and
+Junos 17.3, which allows the forwarding engine to run natively in the Linux container and hence
+removes the need for a custom Qemu version. Instead of submodules, specific branches are pulled 
+and built as part of the build process.
+
+### Clone the repo
+
+[wip] until a 1.2.0 tag is set, clone branch criot from mwiget instead of Juniper.
 
 ```
-git clone https://github.com/Juniper/vmx-docker-lwaftr
+git clone -b criot https://github.com/mwiget/vmx-docker-lwaftr
 ```
 
 Or to clone a specific version by tag, use git option '-b' to specify a specific tag:
@@ -25,28 +39,45 @@ Or to clone a specific version by tag, use git option '-b' to specify a specific
 git clone -b v1.2.0 https://github.com/juniper/vmx-docker-lwaftr
 ```
 
-A single top level execution of make will build the containers for vmx-docker-lwaftr and packetblaster. Check the Makefile on how to use docker-compose build directly.
+### Build Container
+
+The build process is now managed via the [docker-compose.yml](docker-compose.yml) file. 
+In addition, a [Makefile](Makefile) is also provided to drive the various docker-compose tools
+with make, but its use is optional.
 
 ```
-make
+docker-compose build
 ```
 
+This will take several minutes and requires Internet access. Use 'docker-compose images' to 
+show the various containers built:
+
+
 ```
-$ docker images |head
-REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
-vmxdockerlwaftr_packetblaster        latest              2779cc4e2b4e        9 minutes ago       8.24MB
-vmxdockerlwaftr_lwaftr               latest              407b7c3f1128        25 minutes ago      525MB...
-vmxdockerlwaftr_b4cpe                latest              b24271e3fd10        3 seconds ago       260MB
+$ docker-compose images
+           Container                       Repository              Tag       Image Id      Size
+           -------------------------------------------------------------------------------------------------
+           vmxdockerlwaftr_b4cpe_1           vmxdockerlwaftr_b4cpe           latest   62dcf1646dd4   248 MB
+           vmxdockerlwaftr_lwaftr_1          vmxdockerlwaftr_lwaftr          latest   93ced775afe5   510 MB
+           vmxdockerlwaftr_packetblaster_1   vmxdockerlwaftr_packetblaster   latest   efc7db6754eb   13.7 MB
+           vmxdockerlwaftr_server_1          vmxdockerlwaftr_server          latest   6c60bb084491   18.5 MB
 ```
 
-The image build be removed via 'make clean' from the qemu, respectively snabb directory. Only the 'vmx-docker-lwaftr' Container is required.
+| Container Image | Description |
+|===|===|
+| vmxdockerlwaftr_lwaftr_1 | Main container to launch Junos vMX image |
+| vmxdockerlwaftr_packetblaster_1 | Generates low PPS traffic into xe-0/0/0 over linux bridges |
+| vmxdockerlwaftr_b4cpe_1 | B4 test client for one subscriber connected to xe-0/0/1 |
+| vmxdockerlwaftr_server_1 | Reachable test server for the B4 client via ping and http at 1.1.1.1 |
+
 
 ### 5. Save vmx-docker-lwaftr Container to file
 
 To save the vmx-docker-lwaftr Container into an image file use:
 
 ```
-$ docker save -o vmx-docker-lwaftr-v1.2.0.img vmx-docker-lwaftr:v1.2.0
+$ docker save -o vmx-docker-lwaftr-v1.2.0.img vmxdockerlwaftr_lwaftr_1
+
 $ ls -l vmx-docker-lwaftr-v1.2.0.img
 -rw------- 1 mwiget staff 262911488 Sep  11 21:40 vmx-docker-lwaftr-v1.2.0.img
 ```

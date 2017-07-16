@@ -53,8 +53,38 @@ interfaces {
             }
         }
     }
-}
-snmp {
+    ge-0/0/2 {
+      mtu 9000;
+      unit 0 {
+        family inet {
+          address 172.20.3.16/24 {
+            arp 172.20.3.1 mac 02:02:02:02:02:02;
+          }
+        }
+        family inet6 {
+          address fd00:4603::16/64 {
+            ndp fd00:4603::1 mac 02:02:02:02:02:02;
+          }
+        }
+      }
+    }
+    ge-0/0/3 {
+      mtu 9000;
+      unit 0 {
+        family inet {
+          address 172.20.4.16/24 {
+            arp 172.20.4.1 mac 02:02:02:02:02:02;
+          }
+        }
+        family inet6 {
+          address fd00:4604::16/64 {
+            ndp fd00:4604::1 mac 02:02:02:02:02:02;
+          }
+        }
+      }
+    }
+ }
+ snmp {
     community public;
 }
 routing-instances {
@@ -83,6 +113,34 @@ routing-instances {
             }
             static {
                 route 0.0.0.0/0 next-hop 172.20.2.254;
+            }
+        }
+    }
+    R3 {
+        instance-type virtual-router;
+        interface ge-0/0/2.0;
+        routing-options {
+            rib R3.inet6.0 {
+                static {
+                    route ::/0 next-hop fd00:4603::1;
+                }
+            }
+            static {
+                route 0.0.0.0/0 next-hop 172.20.3.1;
+            }
+        }
+    }
+    R4 {
+        instance-type virtual-router;
+        interface ge-0/0/3.0;
+        routing-options {
+            rib R4.inet6.0 {
+                static {
+                    route ::/0 next-hop fd00:4604::1;
+                }
+            }
+            static {
+                route 0.0.0.0/0 next-hop 172.20.4.1;
             }
         }
     }
@@ -153,6 +211,24 @@ ietf-softwire:softwire-config {
                             br-ipv6-addr fd00:4602::16;
                         }
                     }
+                }
+                br-instance 2 {
+                    softwire-num-threshold 4000000;
+                    tunnel-payload-mtu 9000;
+                    tunnel-path-mru 9000;
+                    jnx-aug-softwire:ipv4_address 172.20.3.16;
+                    jnx-aug-softwire:cache_refresh_interval 1;
+		    jnx-aug-softwire:icmpv6_rate_limiter_n_packets 5;
+		    jnx-aug-softwire:icmpv6_rate_limiter_n_seconds 1;
+                }
+                br-instance 3 {
+                    softwire-num-threshold 4000000;
+                    tunnel-payload-mtu 9000;
+                    tunnel-path-mru 9000;
+                    jnx-aug-softwire:ipv4_address 172.20.4.16;
+                    jnx-aug-softwire:cache_refresh_interval 1;
+		    jnx-aug-softwire:icmpv6_rate_limiter_n_packets 5;
+		    jnx-aug-softwire:icmpv6_rate_limiter_n_seconds 1;
                 }
             }
             jnx-aug-softwire:binding-table-file binding_table_60k.txt;

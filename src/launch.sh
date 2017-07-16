@@ -8,8 +8,6 @@ VCPMEM="${VCPMEM:-1024}"
 VCPU="${VCPU:-1}"
 NUMANODE="${NUMANOdE:-0}"
 
-echo 1 > /var/jnx/docker
-
 echo -n "Juniper Networks vMX lwaftr Docker Container "
 cat /VERSION
 echo ""
@@ -52,6 +50,9 @@ if [ ! -z "$1" ]; then
   IMAGE=$1
   shift
 fi
+
+# env beats command line arguments:
+PCI_INTERFACES="${INTERFACES:-$@}"
 
 if [ ! -f "/u/$IMAGE" ]; then
   echo "vMX tar file $IMAGE not found"
@@ -299,7 +300,9 @@ EOF
 # It will simply use the numanode of the last PCI.
 # Using cards on different Nodes is not recommended 
 
-for DEV in $@; do # ============= loop thru interfaces start
+echo "walking PCI interface list: $PCI_INTERFACES"
+
+for DEV in $PCI_INTERFACES; do # ============= loop thru interfaces start
   PCI=${DEV%/*} 
   if [ "eth" != "${PCI:0:3}" ]; then
     CPU=$(cat /sys/class/pci_bus/${PCI%:*}/cpulistaffinity | cut -d'-' -f1 | cut -d',' -f1)
@@ -354,8 +357,8 @@ MACP=$(printf "02:%02X:%02X:%02X:%02X" $[RANDOM%256] $[RANDOM%256] $[RANDOM%256]
 
 CPULIST=""  # collect cores given to PCIDEVS
 ETHLIST=$(ifconfig|grep ^eth|grep -v eth0|cut -f1 -d' '|tr '\n' ' ')
-LIST="$@ $ETHLIST"
-echo "walking thru list of interfaces: $@ $ETHLIST ..."
+LIST="$ETHLIST $PCI_INTERFACES"
+echo "walking thru list of interfaces: $PCI_INTERFACES $ETHLIST ..."
 for DEV in $LIST; do # ============= loop thru interfaces start
 
   # 0000:05:00.0/7 -> PCI=0000:05:00.0, CORE=7
@@ -388,6 +391,10 @@ for DEV in $LIST; do # ============= loop thru interfaces start
   # add PCI to list
   PCIDEVS="$PCIDEVS $PCI"
   INTLIST="$INTLIST $INT"
+
+  echo "PCIDEVS=$PCIDEVS"
+  echo "INTLIST=$INTLIST"
+
   echo "$PCI/$CORE" > /tmp/pci_$INT
   echo "$macaddr" > /tmp/mac_$INT
 
@@ -404,11 +411,14 @@ for DEV in $LIST; do # ============= loop thru interfaces start
 
   if [ "eth" == "${PCI:0:3}" ]; then
     mymac=$(ifconfig $PCI |grep HWaddr|awk {'print $5'})
-    echo "copy mac address of $PCI to $INT: $mymac"
     echo "$mymac" > /tmp/mac_$INT
-    ifconfig $INT down
-    ifconfig $INT hw ether $mymac up
+  else
+    # for PCI ports we can take the generated one from /tmp/mac_$INT
+    mymac=$(cat /tmp/mac_$INT)
   fi
+  echo "copy mac address of $PCI to $INT: $mymac"
+  ifconfig $INT down
+  ifconfig $INT hw ether $mymac up
 
   INTNR=$(($INTNR + 1))
 done # ===================================== loop thru interfaces done

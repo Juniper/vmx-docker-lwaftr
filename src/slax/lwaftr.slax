@@ -27,8 +27,8 @@ match / {
                 "txPackets", "rxDrops", "txDrops");
      for-each ($lwaftr/snabb/instance) {
        
-      var $rxpackets = .//rxpackets;
-      var $txpackets = .//txpackets;
+      var $rxpackets = .//*[starts-with(name(), 'eth') or starts-with(name(), '_')]/rxpackets;
+      var $txpackets = .//*[starts-with(name(), 'eth') or starts-with(name(), '_')]/txpackets;
       var $rxdrops = .//rxdrop;
       var $txdrops = .//txdrop;
 

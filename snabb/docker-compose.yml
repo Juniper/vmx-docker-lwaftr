@@ -1,0 +1,19 @@
+version: "2.1"
+
+services:
+  selftest:
+    build: .
+    privileged: true
+    tty: true
+    stdin_open: true
+    environment:
+      - SNABB_PCI0=0000:03:00.0
+      - SNABB_PCI1=0000:03:00.1
+    command: snsh -t apps.intel.intel_app
+
+  gen1:
+    build: .
+    privileged: true
+    tty: true
+    stdin_open: true
+    command: packetblaster lwaftr --pci 0000:03:00.1 --src_mac 02:02:02:02:02:02 --dst_mac 02:89:ae:0b:03:00 --b4 2001:db8::40,10.10.0.0,1024 --aftr 2001:db8:ffff::100 --count 60000 --rate 1

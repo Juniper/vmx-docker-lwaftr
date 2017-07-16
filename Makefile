@@ -19,10 +19,16 @@ query:
 	@echo 
 	@echo -n "xe1: "
 	@docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) snabb lwaftr query xe1
+	@echo 
+	@echo -n "xe2: "
+	@docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) snabb lwaftr query xe2
+	@echo 
+	@echo -n "xe3: "
+	@docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) snabb lwaftr query xe3
 
 
 logs:
-	docker logs -f $$(docker ps |grep _lwaftr|cut -d' ' -f1)
+	docker logs -f $$(docker ps -a|grep _lwaftr|cut -d' ' -f1)
 
 down:
 	docker-compose down
