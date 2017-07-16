@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 LABEL maintainer Juniper Networks
 
 # install tools required in the running container
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends ethtool \
   net-tools iproute2 tcpdump tcpreplay iptables wget lynx python-pip \
   && pip install scapy
 

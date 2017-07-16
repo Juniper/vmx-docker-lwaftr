@@ -18,10 +18,10 @@ services:
       - $PWD:/u:ro
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      net-0:
-      net-1:
+      default:
+      net-xe0:
         ipv4_address: 172.20.1.16
-      net-2:
+      net-xe1:
         ipv4_address: 172.20.2.16
 
   packetblaster:
@@ -33,30 +33,44 @@ services:
     depends_on:
       - lwaftr
     networks:
-      net-1:
+      net-xe0:
+        ipv4_address: 172.20.1.254
+        ipv6_address: fd00:4601::100
 
-  b4cpe1:
+  b4cpe:
     build: b4cpe/
     privileged: true
     tty: true
     stdin_open: true
-    command: 193.5.1.2 1024-2047 fd00:4602::1 fd00:4602:8888::2
+    command: 193.5.1.2 1024-2047 fd00:4602::16 fd00:4602::16
     depends_on:
       - lwaftr
     networks:
-      net-2:
+      net-xe1:
         ipv6_address: fd00:4602::1001
 
+  server:
+    build: server/
+    privileged: true
+    tty: true
+    stdin_open: true
+    depends_on:
+      - lwaftr
+    networks:
+      net-xe1:
+        ipv4_address: 172.20.2.254
+
 networks:
-  net-0:
-  net-1:
+  default:
+  net-xe0:
+    enable_ipv6: true
     ipam:
       config:
         - subnet: 172.20.1.0/24
-  net-2:
+        - subnet: fd00:4601::/64
+  net-xe1:
     enable_ipv6: true
     ipam:
       config:
         - subnet: 172.20.2.0/24
-          gateway: 172.20.2.1
         - subnet: fd00:4602::/64

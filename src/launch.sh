@@ -65,6 +65,9 @@ if [ $HPFREE = 0 ]; then
    exit 1
 fi
 
+# fix network interface order due to https://github.com/docker/compose/issues/4645
+/fix_network_order.sh
+
 ROOTPASSWORD=$(pwgen 24 1)
 SALT=$(pwgen 8 1)
 HASH=$(openssl passwd -1 -salt $SALT $ROOTPASSWORD)
@@ -75,12 +78,10 @@ hostname="${hostname:-$HOSTNAME}" # in case the name extract magic failed
 id=$(echo $hostname|rev | cut -d'_' -f 1 | rev)   # get index, e.g. 3 from vmxdockerlight_vmx_3
 export myip hostname id
 echo "-----------------------------------------------------------------------"
-echo "vMX $hostname ($myip) root password to $ROOTPASSWORD"
+echo "vMX $hostname ($myip) root password $ROOTPASSWORD"
 echo "-----------------------------------------------------------------------"
 echo ""
 
-# fix network interface order due to https://github.com/docker/compose/issues/4645
-/fix_network_order.sh
 
 if [[ "$IMAGE" =~ \.qcow2$ ]]; then
   echo "using qcow2 image $IMAGE"
@@ -224,6 +225,8 @@ ifdescrlist=$(docker inspect --format='{{range $p, $conf := .NetworkSettings.Net
 echo "ifdescr array = $ifdescrlist"
 IFS=' ' read -r -a ifdarray <<< "$ifdescrlist"
 
+mygw=$(ip -4 route list 0/0 |cut -d' ' -f3)
+
 index=0
 ifdindex=0
 for eth in $ethlist; do
@@ -234,7 +237,6 @@ for eth in $ethlist; do
   ifdindex=$(($ifdindex + 1))
   echo "ifdescr=$ifdescr"
   if [ "eth0" == $eth ]; then
-    mygw=$(ip -4 route list 0/0 |cut -d' ' -f3)
     mymac=$(ifconfig $eth |grep HWaddr|awk {'print $5'})
     echo "Bridging $eth ($myipmask/$mymac) with fxp0 (mygw $mygw)"
     brctl addbr br-ext
@@ -283,12 +285,12 @@ if [ ! -z "$mygw" ]; then
 EOF
 else
   cat >> /tmp/$CONFIG <<EOF
-     }
    }
 EOF
 fi
 
 cat >> /tmp/$CONFIG <<EOF
+ }
 }
 apply-groups docker-networking;
 EOF

@@ -6,6 +6,8 @@
 
 list=$(docker ps --format '{{.Names}}' | grep vmx)
 for vmx in $list; do
-  pass=$(docker logs $vmx | grep 'password to')
+  pass=$(docker logs $vmx | grep ' password ')
+#  docker inspect $vmx --format '{{.NetworkSettings.IPAddress}}'
   echo "$vmx: $pass"
 done
+

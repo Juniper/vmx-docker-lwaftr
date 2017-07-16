@@ -36,7 +36,18 @@ fi
 MYIP6=$(ifconfig eth0|grep inet6|grep -v fe80|awk '{print $3}'|cut -f1 -d/)
 ip -6 tunnel add mytun mode ipip6 remote $AFTR local $MYIP6 dev eth0
 ip link set dev mytun up
+
+#sysctl -w net.ipv4.conf.all.send_redirects = 0
+#sysctl -w net.ipv4.conf.all.accept_redirects = 0
+
+# need to turn of TCP checksum offload, otherwise wget to 1.1.1.1 will fail
+ethtool -K eth0 tx off  
+
+GW=$(ip route|grep default|awk  '{print $3}')
+echo "my default gw is $GW"
+
 ip route del default
+
 ip route add default dev mytun
 route -6 add default gw $GW6
 

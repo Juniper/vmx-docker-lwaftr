@@ -1,5 +1,12 @@
 #!/bin/ash
 
+
+
+ifconfig eth0:1 1.1.1.1 netmask 255.255.255.0
+
+ethtool -K eth0 tx off
+ethtool -K eth0:1 tx off
+
 echo "removing default route"
 ip route del default
 
@@ -18,7 +25,11 @@ gw=$(dig +short lwaftr)
 echo "adding default route via lwaftr ($gw)"
 ip route add default via $gw
 
-dstmac=$(arp -na | awk '{print $4}')
-srcmac=$(ifconfig eth0|grep HWaddr|awk '{print $5}')
-echo "srcmac=$srcmac -> dstmac=$dstmac"
-/usr/bin/snabb packetblaster lwaftr --src_mac $srcmac --dst_mac $dstmac --int eth0 $@
+cat > /var/www/localhost/htdocs/index.html <<EOF
+
+$HOSTNAME - container server running 
+Using lwaftr at $gw as default gateway.
+
+EOF
+
+lighttpd -D -f /etc/lighttpd/lighttpd.conf

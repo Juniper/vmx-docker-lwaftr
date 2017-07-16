@@ -4,7 +4,7 @@
 FROM alpine:3.6
 MAINTAINER Marcel Wiget
 
-RUN apk add --no-cache libgcc
+RUN apk add --no-cache libgcc tcpdump bind-tools
 
 RUN apk add --no-cache --virtual build-dependencies \
   gcc git ca-certificates musl-dev make linux-headers findutils \

@@ -1,4 +1,5 @@
 system {
+    no-redirects;
     scripts {
         snmp {
             file lw4over6.py {
@@ -34,14 +35,10 @@ interfaces {
         mtu 9000;
         unit 0 {
             family inet {
-                address 172.20.1.16/24 {
-                    arp 172.20.1.100 mac 02:02:02:02:02:02;
-                }
+                address 172.20.1.16/24;
             }
             family inet6 {
-                address fd00:4601::16/64 {
-                    ndp fd00:4601::100 mac 02:02:02:02:02:02;
-                }
+                address fd00:4601::16/64;
             }
         }
     }
@@ -49,14 +46,10 @@ interfaces {
         mtu 9000;
         unit 0 {
             family inet {
-                address 172.20.2.16/24 {
-                    arp 172.20.2.100 mac 02:02:02:02:02:02;
-                }
+                address 172.20.2.16/24;
             }
             family inet6 {
-                address fd00:4602::16/64 {
-                    ndp fd00:4602::100 mac 02:02:02:02:02:02;
-                }
+                address fd00:4602::16/64;
             }
         }
     }
@@ -64,28 +57,32 @@ interfaces {
 snmp {
     community public;
 }
-routing-options {
-    rib inet6.0 {
-        static {
-            route ::/0 next-hop fd00:4601::100;
-        }
-    }
-    static {
-        route 0.0.0.0/0 next-hop 172.20.1.100;
-    }
-}
 routing-instances {
     R1 {
         instance-type virtual-router;
-        interface ge-0/0/1.0;
+        interface ge-0/0/0.0;
         routing-options {
             rib R1.inet6.0 {
+                static {
+                    route ::/0 next-hop fd00:4601::100;
+                }
+            }
+            static {
+                route 0.0.0.0/0 next-hop 172.20.1.254;
+            }
+        }
+    }
+    R2 {
+        instance-type virtual-router;
+        interface ge-0/0/1.0;
+        routing-options {
+            rib R2.inet6.0 {
                 static {
                     route ::/0 next-hop fd00:4602::100;
                 }
             }
             static {
-                route 0.0.0.0/0 next-hop 172.20.2.100;
+                route 0.0.0.0/0 next-hop 172.20.2.254;
             }
         }
     }
@@ -108,7 +105,7 @@ ietf-softwire:softwire-config {
                     tunnel-payload-mtu 9000;
                     tunnel-path-mru 9000;
                     jnx-aug-softwire:ipv4_address 172.20.2.16;
-                    jnx-aug-softwire:cache_refresh_interval 1;
+                    jnx-aug-softwire:cache_refresh_interval 0;
                     binding-table {
                         binding-entry fd00:4602::1001 {
                             binding-ipv4-addr 193.5.1.2;
@@ -117,7 +114,7 @@ ietf-softwire:softwire-config {
                                 psid-len 6;
                                 psid 1;
                             }
-                            br-ipv6-addr fd00:4602:8888::2;
+                            br-ipv6-addr fd00:4602::16;
                         }
                         binding-entry fd00:4602::1002 {
                             binding-ipv4-addr 193.5.1.2;
@@ -126,7 +123,7 @@ ietf-softwire:softwire-config {
                                 psid-len 6;
                                 psid 2;
                             }
-                            br-ipv6-addr fd00:4602:8888::2;
+                            br-ipv6-addr fd00:4602::16;
                         }
                         binding-entry fd00:4602::1003 {
                             binding-ipv4-addr 193.5.1.2;
@@ -135,7 +132,7 @@ ietf-softwire:softwire-config {
                                 psid-len 6;
                                 psid 3;
                             }
-                            br-ipv6-addr fd00:4602:8888::2;
+                            br-ipv6-addr fd00:4602::16;
                         }
                         binding-entry fd00:4602::1004 {
                             binding-ipv4-addr 193.5.1.2;
@@ -144,7 +141,7 @@ ietf-softwire:softwire-config {
                                 psid-len 6;
                                 psid 4;
                             }
-                            br-ipv6-addr fd00:4602:8888::2;
+                            br-ipv6-addr fd00:4602::16;
                         }
                         binding-entry fd00:4602::1005 {
                             binding-ipv4-addr 193.5.1.2;
@@ -153,7 +150,7 @@ ietf-softwire:softwire-config {
                                 psid-len 6;
                                 psid 5;
                             }
-                            br-ipv6-addr fd00:4602:8888::2;
+                            br-ipv6-addr fd00:4602::16;
                         }
                     }
                 }
