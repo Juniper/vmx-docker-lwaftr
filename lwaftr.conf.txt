@@ -98,7 +98,9 @@ routing-instances {
                 }
             }
             static {
-                route 0.0.0.0/0 next-hop 172.20.1.254;
+                route 10.10.0.0/16 next-hop 172.20.1.254;
+                route 8.8.8.0/24 next-hop 172.20.1.254;
+                route 0.0.0.0/0 next-hop 172.20.1.1;
             }
         }
     }
@@ -112,7 +114,9 @@ routing-instances {
                 }
             }
             static {
-                route 0.0.0.0/0 next-hop 172.20.2.254;
+                route 193.5.1.0/24 next-hop 172.20.2.254;
+                route 1.1.1.0/24 next-hop 172.20.2.254;
+                route 0.0.0.0/0 next-hop 172.20.2.1;
             }
         }
     }
@@ -126,6 +130,8 @@ routing-instances {
                 }
             }
             static {
+                route 10.10.0.0/16 next-hop 172.20.3.254;
+                route 8.8.8.0/24 next-hop 172.20.3.254;
                 route 0.0.0.0/0 next-hop 172.20.3.1;
             }
         }
@@ -140,6 +146,8 @@ routing-instances {
                 }
             }
             static {
+                route 10.10.0.0/16 next-hop 172.20.4.254;
+                route 8.8.8.0/24 next-hop 172.20.4.254;
                 route 0.0.0.0/0 next-hop 172.20.4.1;
             }
         }
