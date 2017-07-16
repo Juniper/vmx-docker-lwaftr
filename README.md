@@ -14,6 +14,8 @@ Consult the Juniper White Paper on [vMX Lightweight 4over6 Virtual Network Funct
 - [Docker Engine 1.12.0+](https://docs.docker.com/engine/installation/)
 - [Docker Compose 1.14.0](https://docs.docker.com/compose/install/)
 - make (install this e.g. via sudo apt-get make)
+- Hugepages activated (2M or 1GB size are fine)
+- Kernel modules loaded: kvm, loop
 
 ## Build instructions
 
@@ -102,6 +104,62 @@ Optional. Save the vmx-docker-lwaftr Container into an image file for transfer t
 $ docker save -o vmx-docker-lwaftr-v1.2.0.img vmxdockerlwaftr_lwaftr
 mwiget@sa:~/vmx-docker-lwaftr$ ls -l vmx-docker-lwaftr-v1.2.0.img
 -rw------- 1 mwiget mwiget 541005824 Jul 16 15:50 vmx-docker-lwaftr-v1.2.0.img
+```
+
+### Install hugepages
+
+Edit file /etc/default/grub and update the kernel option line:
+
+```
+GRUB_CMDLINE_LINUX_DEFAULT="nomodeset hugepages=6000 intel_iommu=off"
+$ sudo update-grub
+$ sudo reboot
+```
+
+Default hugepage size is 2M, so 6000 reserves 12GB of RAM. Make sure the reservation doesn't exceed the system's memory. Then reboot the system.
+
+Check if the hugepages are allocated properly:
+
+```
+$ cat /proc/meminfo |grep Huge
+AnonHugePages:    903168 kB
+ShmemHugePages:        0 kB
+HugePages_Total:    6000
+HugePages_Free:     5982
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+```
+
+### Kernel modules
+
+Check if the loop mount kernel module is loaded and load it otherwise:
+```
+$ lsmod|grep loop
+mwiget@sb:~$ sudo modprobe loop
+mwiget@sb:~$ lsmod|grep loop
+loop                   28672  0
+```
+
+Do the same for the kvm_intel kernel module:
+
+```
+$ lsmod|grep kvm
+kvm_intel             192512  3
+kvm                   589824  1 kvm_intel
+irqbypass              16384  1 kvm
+```
+
+To make both changes permanent, add the modules to /etc/modules:
+
+```
+$ cat /etc/modules
+# /etc/modules: kernel modules to load at boot time.
+#
+# This file contains the names of kernel modules that should be loaded
+# at boot time, one per line. Lines beginning with "#" are ignored.
+loop
+kvm_intel
 ```
 
 ## Running the vmx-docker-lwaftr Container
