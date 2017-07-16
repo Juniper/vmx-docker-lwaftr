@@ -375,7 +375,7 @@ for DEV in $LIST; do # ============= loop thru interfaces start
     CORE=""
     ifconfig $PCI mtu 9500
   else
-    macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:${PCI:0:2}:0${PCI:11:1}"
+    macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:${PCI:0:2}:0${PCI:6:1}"
     if [ "$CORE" -ge "0" ]; then
       echo "CORE=($CORE) PCI=($PCI)"
     else
