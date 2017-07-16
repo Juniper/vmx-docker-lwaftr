@@ -390,7 +390,7 @@ for DEV in $LIST; do # ============= loop thru interfaces start
   fi
 
   if [ "eth" != "${PCI:0:3}" ]; then
-    if [ -z "$(lspci | grep $PCI)" ]; then
+    if [ -z "$(lspci | grep 82599 | grep $PCI)" ]; then
       echo "No PCI hardware found at $PCI, skipping it"
       continue
     fi
