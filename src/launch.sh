@@ -364,6 +364,8 @@ for DEV in $LIST; do # ============= loop thru interfaces start
   # 0000:05:00.0/7 -> PCI=0000:05:00.0, CORE=7
   CORE=${DEV#*/}
   PCI=${DEV%/*} 
+  PCI=${PCI//0000:/}    # get rid of leading 0000:
+
   INT="${INTID}${INTNR}"
 
   # create persistent mac address based on host-name in junos config file
@@ -373,7 +375,7 @@ for DEV in $LIST; do # ============= loop thru interfaces start
     CORE=""
     ifconfig $PCI mtu 9500
   else
-    macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:${PCI:5:2}:0${PCI:11:1}"
+    macaddr="02:${h:0:2}:${h:2:2}:${h:4:2}:${PCI:0:2}:0${PCI:11:1}"
     if [ "$CORE" -ge "0" ]; then
       echo "CORE=($CORE) PCI=($PCI)"
     else
@@ -387,13 +389,17 @@ for DEV in $LIST; do # ============= loop thru interfaces start
     fi
   fi
 
+  if [ "eth" != "${PCI:0:3}" ]; then
+    if [ -z "$(lspci | grep $PCI)" ]; then
+      echo "No PCI hardware found at $PCI, skipping it"
+      continue
+    fi
+  fi
   echo "PCI=$PCI CORE=$CORE CPULIST=$CPULIST"
   # add PCI to list
   PCIDEVS="$PCIDEVS $PCI"
   INTLIST="$INTLIST $INT"
 
-  echo "PCIDEVS=$PCIDEVS"
-  echo "INTLIST=$INTLIST"
 
   echo "$PCI/$CORE" > /tmp/pci_$INT
   echo "$macaddr" > /tmp/mac_$INT
@@ -422,7 +428,12 @@ for DEV in $LIST; do # ============= loop thru interfaces start
 
   INTNR=$(($INTNR + 1))
 done # ===================================== loop thru interfaces done
-echo "Done walking interface list"
+echo "Done walking interface list: PCIDEVS=$PCIDEVS INTLIST=$INTLIST"
+
+if [ -z "$INTLIST" ]; then
+  echo "ERROR: no useable interfaces found. INTLIST ($INTLIST) is empty"
+  exit 1
+fi
 
 QEMUVCPNUMA="numactl --membind=$NUMANODE"
 if [ ! -z "$QEMUVCPCPUS" ]; then

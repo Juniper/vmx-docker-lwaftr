@@ -15,17 +15,28 @@ ps:
 query:
 	@echo 
 	@echo -n "xe0: "
-	@docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) snabb lwaftr query xe0
+	@docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) \
+	  snabb lwaftr query xe0 >/dev/null \
+	  && docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) \
+	  snabb lwaftr query xe0 || echo "(missing)"
 	@echo 
 	@echo -n "xe1: "
-	@docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) snabb lwaftr query xe1
+	@docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) \
+	  snabb lwaftr query xe1 >/dev/null \
+	  && docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) \
+	  snabb lwaftr query xe1 || echo "(missing)"
 	@echo 
 	@echo -n "xe2: "
-	@docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) snabb lwaftr query xe2
+	@docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) \
+	  snabb lwaftr query xe2 >/dev/null \
+	  && docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) \
+	  snabb lwaftr query xe2 || echo "(missing)"
 	@echo 
 	@echo -n "xe3: "
-	@docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) snabb lwaftr query xe3
-
+	@docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) \
+	  snabb lwaftr query xe3 >/dev/null \
+	  && docker exec -ti $$(docker ps |grep _lwaftr|cut -d' ' -f1) \
+	  snabb lwaftr query xe3 || echo "(missing)"
 
 logs:
 	docker logs -f $$(docker ps -a|grep _lwaftr|cut -d' ' -f1)
